@@ -1,4 +1,18 @@
+<div align="center">
+  <img src="logo.png" alt="logo" width="450">
+</div>
+
+
+
+<br/><br/><br/>
+
+___
+
+<br/><br/>
+
+
 # Helios Gateway
+
 
 Cloud-native GraphQL federation gateway built on top of Apollo Federation Gateway.
 
