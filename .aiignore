@@ -1,0 +1,6 @@
+# Secrets and local environment files
+.env
+.env.local
+.env.*.local
+application_default_credentials.json
+

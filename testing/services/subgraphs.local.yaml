@@ -1,0 +1,14 @@
+services:
+  - subgraph:
+      name: pets-service
+      port: 5001
+  - subgraph:
+      name: orders-service
+      port: 5002
+  - subgraph:
+      name: customers-service
+      port: 5003
+  - subgraph:
+      name: broken-service
+      port: 5004
+

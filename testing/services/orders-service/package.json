@@ -1,0 +1,19 @@
+{
+  "name": "orders-service",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "start": "node src/index.js",
+    "dev-orders-service": "node --watch src/index.js"
+  },
+  "dependencies": {
+    "@apollo/server": "^4.12.2",
+    "@apollo/subgraph": "^2.11.3",
+    "@graphql-tools/utils": "^10.9.1",
+    "body-parser": "^1.20.3",
+    "cors": "^2.8.5",
+    "express": "^4.21.2",
+    "graphql": "^16.11.0"
+  }
+}

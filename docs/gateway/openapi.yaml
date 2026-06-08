@@ -1,0 +1,541 @@
+openapi: 3.1.0
+info:
+  title: Apollo Cloud Gateway API
+  version: 1.0.0
+  description: |
+    REST and GraphQL endpoints exposed by Apollo Cloud Gateway.
+    Admin endpoints require Firebase Bearer token auth and admin access.
+servers:
+  - url: http://localhost:4000
+    description: Local default
+tags:
+  - name: Public
+  - name: GraphQL
+  - name: Admin
+paths:
+  /health:
+    get:
+      tags: [Public]
+      summary: Gateway liveness probe
+      operationId: getHealth
+      responses:
+        "200":
+          description: Gateway is healthy
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HealthResponse"
+              example:
+                status: ok
+                timestamp: "2026-03-22T20:00:00.000Z"
+
+  /graphql:
+    post:
+      tags: [GraphQL]
+      summary: Federated GraphQL endpoint
+      description: |
+        Accepts GraphQL POST requests. Authorization header is used when present.
+        If missing, gateway may fall back to cookie `apollo_playground_token`.
+      operationId: postGraphql
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/GraphQLRequest"
+            example:
+              query: "query { __typename }"
+              variables: {}
+      responses:
+        "200":
+          description: GraphQL response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GraphQLResponse"
+
+  /admin/config/firebase:
+    get:
+      tags: [Public]
+      summary: Admin console Firebase web config
+      description: Returns Firebase web app configuration consumed by the admin console login bootstrap.
+      operationId: getAdminFirebaseConfig
+      responses:
+        "200":
+          description: Firebase web configuration values
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/FirebaseWebConfig"
+
+  /admin/api/me:
+    get:
+      tags: [Admin]
+      summary: Current admin user
+      operationId: getAdminMe
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: Current user information
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AdminMeResponse"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+
+  /admin/api/status:
+    get:
+      tags: [Admin]
+      summary: Gateway runtime status
+      operationId: getAdminStatus
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: Runtime status
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GatewayStatus"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+
+  /admin/api/subgraphs:
+    get:
+      tags: [Admin]
+      summary: List discovered subgraphs
+      operationId: getAdminSubgraphs
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: Discovered subgraphs
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SubgraphsResponse"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+
+  /admin/api/subgraphs/health:
+    get:
+      tags: [Admin]
+      summary: Health-check discovered subgraphs
+      description: Executes `_service { sdl }` query against each discovered subgraph.
+      operationId: getAdminSubgraphsHealth
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: All subgraphs healthy
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SubgraphsHealthResponse"
+        "503":
+          description: One or more subgraphs unhealthy
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SubgraphsHealthResponse"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+
+  /admin/api/subgraphs/stream:
+    get:
+      tags: [Admin]
+      summary: Stream discovered subgraphs with health status
+      description: |
+        Emits Server-Sent Events while health-checking discovered subgraphs.
+        The stream starts with a `start` event, emits one `subgraph` event as each
+        subgraph health check completes, and ends with a `done` event.
+      operationId: streamAdminSubgraphs
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: Server-Sent Events stream of subgraph health results
+          content:
+            text/event-stream:
+              schema:
+                type: string
+                description: SSE frames containing SubgraphStreamStart, SubgraphStreamItem, and SubgraphStreamDone payloads.
+              examples:
+                subgraph:
+                  summary: Stream with one subgraph result
+                  value: |
+                    event: start
+                    data: {"total":1}
+
+                    event: subgraph
+                    data: {"name":"pets-service","url":"http://localhost:5001/graphql","status":"active","labels":{},"health":{"name":"pets-service","url":"http://localhost:5001/graphql","healthy":true}}
+
+                    event: done
+                    data: {"total":1}
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+
+  /admin/api/subgraphs/{name}/health:
+    get:
+      tags: [Admin]
+      summary: Health-check one discovered subgraph
+      description: Executes `_service { sdl }` against the specified discovered subgraph.
+      operationId: getAdminSubgraphHealth
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: name
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Discovered subgraph name.
+      responses:
+        "200":
+          description: Subgraph is healthy
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SubgraphHealth"
+        "404":
+          description: Subgraph name was not found in discovered services
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "503":
+          description: Subgraph is unhealthy
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SubgraphHealth"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+
+  /admin/api/users/roles:
+    post:
+      tags: [Admin]
+      summary: Assign Firebase roles to user
+      operationId: postAdminUsersRoles
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AssignRolesRequest"
+            examples:
+              byUid:
+                summary: Assign by uid
+                value:
+                  uid: "firebase-uid-123"
+                  roles: ["admin", "staff"]
+              byEmail:
+                summary: Assign by email
+                value:
+                  email: "user@example.com"
+                  roles: ["viewer"]
+      responses:
+        "200":
+          description: Roles assigned
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AssignRolesResponse"
+        "400":
+          description: Invalid request payload
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          description: User not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: FirebaseIDToken
+
+  responses:
+    Unauthorized:
+      description: Missing or invalid authentication token
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorResponse"
+    Forbidden:
+      description: Authenticated but lacks admin access
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorResponse"
+    InternalServerError:
+      description: Unexpected server-side failure
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorResponse"
+
+  schemas:
+    HealthResponse:
+      type: object
+      required: [status, timestamp]
+      properties:
+        status:
+          type: string
+          example: ok
+        timestamp:
+          type: string
+          format: date-time
+
+    GraphQLRequest:
+      type: object
+      required: [query]
+      properties:
+        query:
+          type: string
+        variables:
+          type: object
+          additionalProperties: true
+        operationName:
+          type: string
+
+    GraphQLResponse:
+      type: object
+      properties:
+        data:
+          type: object
+          additionalProperties: true
+        errors:
+          type: array
+          items:
+            type: object
+            additionalProperties: true
+
+    FirebaseWebConfig:
+      type: object
+      properties:
+        apiKey:
+          type: string
+        authDomain:
+          type: string
+        projectId:
+          type: string
+        storageBucket:
+          type: string
+        messagingSenderId:
+          type: string
+        appId:
+          type: string
+        measurementId:
+          type: string
+
+    AdminMeResponse:
+      type: object
+      required: [uid, roles]
+      properties:
+        uid:
+          type: string
+        email:
+          type: string
+          format: email
+          nullable: true
+        roles:
+          type: array
+          items:
+            type: string
+        tokenExpiration:
+          type: string
+          format: date-time
+          nullable: true
+
+    GatewayStatus:
+      type: object
+      required: [uptime, discoveryMode, servicesCount]
+      properties:
+        uptime:
+          type: integer
+          format: int64
+          description: Process uptime in milliseconds.
+        discoveryMode:
+          type: string
+          enum: [cloudrun, docker, none]
+        servicesCount:
+          type: integer
+          format: int32
+
+    Subgraph:
+      type: object
+      required: [name, url, status, labels]
+      properties:
+        name:
+          type: string
+        url:
+          type: string
+          format: uri
+        status:
+          type: string
+          example: active
+        labels:
+          type: object
+          additionalProperties:
+            type: string
+
+    SubgraphsResponse:
+      type: object
+      required: [subgraphs]
+      properties:
+        subgraphs:
+          type: array
+          items:
+            $ref: "#/components/schemas/Subgraph"
+
+    SubgraphHealth:
+      type: object
+      required: [name, url, healthy]
+      properties:
+        name:
+          type: string
+        url:
+          type: string
+          format: uri
+        healthy:
+          type: boolean
+        error:
+          type: string
+
+    SubgraphsHealthResponse:
+      type: object
+      required: [status, subgraphs]
+      properties:
+        status:
+          type: string
+          enum: [healthy, unhealthy]
+        subgraphs:
+          type: array
+          items:
+            $ref: "#/components/schemas/SubgraphHealth"
+
+    SubgraphStreamStart:
+      type: object
+      required: [total]
+      properties:
+        total:
+          type: integer
+          format: int32
+          description: Number of discovered subgraphs scheduled for health checks.
+
+    SubgraphStreamItem:
+      allOf:
+        - $ref: "#/components/schemas/Subgraph"
+        - type: object
+          required: [health]
+          properties:
+            health:
+              $ref: "#/components/schemas/SubgraphHealth"
+
+    SubgraphStreamDone:
+      type: object
+      required: [total]
+      properties:
+        total:
+          type: integer
+          format: int32
+          description: Number of discovered subgraphs included in the completed stream.
+
+    AssignRolesRequest:
+      type: object
+      properties:
+        uid:
+          type: string
+          minLength: 1
+        email:
+          type: string
+          format: email
+        roles:
+          type: array
+          items:
+            type: string
+            minLength: 1
+      required: [roles]
+      description: Provide exactly one identifier (`uid` or `email`).
+      oneOf:
+        - required: [uid, roles]
+        - required: [email, roles]
+
+    AssignedUser:
+      type: object
+      required: [uid, roles]
+      properties:
+        uid:
+          type: string
+        email:
+          type: string
+          format: email
+          nullable: true
+        roles:
+          type: array
+          items:
+            type: string
+
+    AssignRolesResponse:
+      type: object
+      required: [status, assigned, note]
+      properties:
+        status:
+          type: string
+          example: ok
+        assigned:
+          $ref: "#/components/schemas/AssignedUser"
+        assignedBy:
+          type: string
+          nullable: true
+        note:
+          type: string
+
+    ErrorResponse:
+      type: object
+      properties:
+        error:
+          type: string
+        message:
+          type: string

@@ -1,0 +1,19 @@
+{
+  "name": "apollo-cloud-e2e-tests",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "e2e:test": "bddgen && playwright test",
+    "e2e:test:gateway": "bddgen && playwright test --project=gateway",
+    "e2e:test:admin-api": "bddgen && playwright test --project=admin-api",
+    "e2e:test:admin-ui": "bddgen && playwright test --project=admin-console",
+    "e2e:test:headed": "bddgen && playwright test --headed",
+    "e2e:test:debug": "bddgen && playwright test --debug",
+    "e2e:test:report": "playwright show-report"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.49.0",
+    "dotenv": "^16.4.4",
+    "playwright-bdd": "^8.2.1"
+  }
+}

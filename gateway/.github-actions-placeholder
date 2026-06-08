@@ -1,0 +1,2 @@
+Docs and CI are now split; actual workflows live in .github/workflows at the repo root.
+

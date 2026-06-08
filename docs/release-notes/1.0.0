@@ -1,0 +1,15 @@
+## What's Changed
+- Implemented the Apollo Cloud Gateway foundation with Firebase authentication, RBAC enforcement, and Cloud Run service discovery.
+- Strengthened credential handling by loading Firebase service account keys via file reads instead of dynamic `require`.
+- Added Docker-based federation discovery with `dockerode`, including graph label filtering support (`GRAPH_NAME` / `GRAPH_LABEL_KEY`).
+- Added Cloud Run IAM authentication support for secure subgraph-to-subgraph and gateway communication.
+- Refined gateway lifecycle behavior by removing runtime schema-update logic and simplifying startup and initialization flow.
+- Improved discovery reliability and observability with better Cloud Run discovery logging, label extraction fixes, and startup error handling.
+- Added health endpoints and subgraph health validation to improve operational visibility.
+- Introduced the admin backend (auth guard and API controller) and shipped an admin console SPA for gateway operations.
+- Added role-management capabilities, including Firebase custom-claim role assignment APIs and admin console role management UI.
+- Formalized auth abstraction by introducing `IAuthManager` and refactoring `FirebaseAuthManager`.
+- Moved RBAC enforcement responsibility to the gateway with `@requiresRole` policy loading from subgraph SDL.
+- Added GraphQL Playground integration and improved token handling for authenticated gateway access.
+- Added the pets shop UI client with Firebase sign-in, role-aware dashboard behavior, and order update support.
+- Implemented CSRF-protected session auth flow with server-side cookie and session synchronization, and updated frontend auth handling accordingly.
