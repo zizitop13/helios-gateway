@@ -23,9 +23,16 @@
     </header>
 
     <main class="content-shell">
+      <form class="search-panel" data-docs-search data-search-index="{{ '/search.json' | relative_url }}" role="search">
+        <label class="search-label" for="docs-search">Search documentation</label>
+        <input class="search-input" id="docs-search" type="search" placeholder="Search setup, Docker, Cloud Run, variables..." autocomplete="off" data-search-input>
+        <div class="search-results" hidden data-search-results></div>
+      </form>
+
       <article class="markdown-body">
         {{ content }}
       </article>
     </main>
+    <script src="{{ '/assets/search.js' | relative_url }}"></script>
   </body>
 </html>

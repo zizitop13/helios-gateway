@@ -22,6 +22,12 @@
         </div>
       </section>
 
+      <form class="search-panel home-search" data-docs-search data-search-index="./search.json" role="search">
+        <label class="search-label" for="docs-search">Search documentation</label>
+        <input class="search-input" id="docs-search" type="search" placeholder="Search setup, Docker, Cloud Run, variables..." autocomplete="off" data-search-input>
+        <div class="search-results" hidden data-search-results></div>
+      </form>
+
       <section class="docs-grid feature-grid" aria-label="Primary documentation paths">
         <article class="docs-card">
           <h2>Get Started</h2>
@@ -71,5 +77,6 @@
         </article>
       </section>
     </main>
+    <script src="./assets/search.js"></script>
   </body>
 </html>
