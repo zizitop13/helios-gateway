@@ -1,3 +1,7 @@
+---
+title: Admin Console
+---
+
 # Admin Console
 
 React UI for gateway administration, built from `admin-console` and served by the gateway at `/admin/console`.

@@ -1,3 +1,9 @@
+---
+title: Release Notes 1.0.0
+---
+
+# Release Notes 1.0.0
+
 ## What's Changed
 - Implemented the Apollo Cloud Gateway foundation with Firebase authentication, RBAC enforcement, and Cloud Run service discovery.
 - Strengthened credential handling by loading Firebase service account keys via file reads instead of dynamic `require`.

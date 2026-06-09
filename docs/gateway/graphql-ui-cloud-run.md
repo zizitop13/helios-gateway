@@ -1,3 +1,7 @@
+---
+title: GraphQL UI in Cloud Run
+---
+
 # GraphQL UI in Cloud Run
 
 When running locally, `/graphql` may show Apollo Sandbox. In Cloud Run, this project runs with `NODE_ENV=production` (see `Dockerfile`), so Apollo shows the production landing page instead (the page with `curl` example) unless Sandbox is enabled explicitly.

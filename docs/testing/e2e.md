@@ -1,3 +1,7 @@
+---
+title: E2E Test Organization
+---
+
 # E2E Test Organization
 
 The Playwright e2e suite lives in `testing/e2e`. It covers three product surfaces:

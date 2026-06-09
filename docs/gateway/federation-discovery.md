@@ -1,51 +1,76 @@
-# Federation Discovery Setup
+---
+title: Federation Discovery
+---
 
-The gateway discovers subgraphs once at startup (no runtime refresh). If you add or change subgraphs, redeploy or restart the gateway.
+# Federation Discovery
+
+Helios Gateway discovers subgraphs, composes the federated schema, and exposes one GraphQL endpoint at `/graphql`.
+
+Discovery can run from Google Cloud Run, local Docker containers, or a YAML file. If schema refresh is enabled, the gateway periodically rediscoveres and recomposes subgraphs without a full process restart.
 
 ## Cloud Run Services
 
-Gateway in `DISCOVERY_MODE=cloudrun` discovers only Cloud Run services with:
+Use `DISCOVERY_MODE=cloudrun` when subgraphs are deployed as Cloud Run services.
 
-- label `subgraph=true` (required)
-- label `subgraph_name=<name>` or `subgraph-name=<name>` (optional; if missing, Cloud Run service name is used)
+Required service label:
 
-Gateway env vars for Cloud Run discovery:
+- `subgraph=true`
 
-- `DISCOVERY_MODE=cloudrun`
-- `GCP_PROJECT_ID=<project-id>` (or `FIREBASE_PROJECT_ID` as fallback)
-- `GCP_REGION=<region>` (defaults to `us-central1`)
-- `ENABLE_CLOUD_RUN_IAM_AUTH=true|false` (optional)
-- `GRAPH_NAME=<graph-scope>` (optional)
-- `GRAPH_LABEL_KEY=graph` (optional, default `graph`)
+Optional labels:
 
-Cloud Run note: there is no `subgraph.port` label for Cloud Run discovery. The gateway uses the Cloud Run service URL and appends `/graphql`.
+- `subgraph_name=<name>` or `subgraph-name=<name>`: subgraph name. If missing, the Cloud Run service name is used.
+- `<GRAPH_LABEL_KEY>=<GRAPH_NAME>`: graph scoping label, commonly `graph=pet-shop`.
 
-Example:
+Gateway variables:
+
+```bash
+DISCOVERY_MODE=cloudrun
+GCP_PROJECT_ID=<project-id>
+GCP_REGION=<region>
+```
+
+Optional:
+
+```bash
+ENABLE_CLOUD_RUN_IAM_AUTH=true
+GRAPH_NAME=pet-shop
+GRAPH_LABEL_KEY=graph
+```
+
+Cloud Run discovery uses each service URL and appends `/graphql`.
+
+Label a service:
 
 ```bash
 gcloud run services update users-service \
   --region=europe-west3 \
-  --update-labels=subgraph=true,graph=pet-shop
+  --update-labels=subgraph=true,subgraph_name=users,graph=pet-shop
 ```
 
-If gateway has `GRAPH_NAME=pet-shop`, it will only discover subgraphs where `graph=pet-shop`.
+If the gateway has `GRAPH_NAME=pet-shop`, it discovers only services where `graph=pet-shop`.
 
 ## Docker Containers
 
-Gateway in `DISCOVERY_MODE=docker` discovers only running containers with:
+Use `DISCOVERY_MODE=docker` when subgraphs are running as local Docker containers.
 
-- label `subgraph=true` (required)
-- label `subgraph.name=<name>` or `subgraph_name=<name>` (required)
-- label `subgraph.port=<port>` or `subgraph_port=<port>` (optional; fallback is first exposed port, then `4000`)
+Required labels:
 
-Gateway env vars for Docker discovery:
+- `subgraph=true`
+- `subgraph.name=<name>` or `subgraph_name=<name>`
 
-- `DISCOVERY_MODE=docker`
-- `DOCKER_SOCKET_PATH=/var/run/docker.sock` (default)
-- `GRAPH_NAME=<graph-scope>` (optional)
-- `GRAPH_LABEL_KEY=graph` (optional, default `graph`)
+Optional labels:
 
-`docker-compose` example labels:
+- `subgraph.port=<port>` or `subgraph_port=<port>`. If missing, the gateway uses the first exposed port, then falls back to `4000`.
+- `<GRAPH_LABEL_KEY>=<GRAPH_NAME>` for graph scoping.
+
+Gateway variables:
+
+```bash
+DISCOVERY_MODE=docker
+DOCKER_SOCKET_PATH=/var/run/docker.sock
+```
+
+`docker-compose` example:
 
 ```yaml
 labels:
@@ -57,16 +82,16 @@ labels:
 
 ## YAML File
 
-Gateway in `DISCOVERY_MODE=file` loads subgraphs from a YAML file once at startup.
+Use `DISCOVERY_MODE=file` for local development, demos, and deterministic test environments.
 
-Gateway env vars for file discovery:
+Gateway variables:
 
-- `DISCOVERY_MODE=file`
-- `DISCOVERY_FILE_PATH=<absolute-or-relative-path-to-yaml>`
-- `GRAPH_NAME=<graph-scope>` (optional)
-- `GRAPH_LABEL_KEY=graph` (optional, default `graph`)
+```bash
+DISCOVERY_MODE=file
+DISCOVERY_FILE_PATH=<absolute-or-relative-path-to-yaml>
+```
 
-YAML uses the same terms as other discovery modes (`services`, `subgraph`, and optional `graph`):
+Example:
 
 ```yaml
 services:
@@ -79,19 +104,21 @@ services:
     graph: pet-shop
 ```
 
-The gateway converts each item to `http://<name>:<port>/graphql`.
+The gateway converts each item to:
 
-Optional top-level `graph` section is also supported:
-
-```yaml
-services:
-  - subgraph:
-      name: users
-      port: 4001
-graph:
-  - subgraph:
-      name: reviews
-      port: 4004
-    graph: pet-shop
+```text
+http://<name>:<port>/graphql
 ```
 
+The sample repository file is `testing/services/subgraphs.local.yaml`.
+
+## Graph Scoping
+
+Graph scoping lets one environment host multiple federated graphs.
+
+```bash
+GRAPH_NAME=pet-shop
+GRAPH_LABEL_KEY=graph
+```
+
+With those values, Cloud Run services, Docker containers, or YAML entries must include `graph=pet-shop` to be discovered.

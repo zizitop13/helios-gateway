@@ -22,36 +22,49 @@
         </div>
       </section>
 
-      <section class="docs-grid" aria-label="Documentation sections">
+      <section class="docs-grid feature-grid" aria-label="Primary documentation paths">
         <article class="docs-card">
-          <h2>Gateway</h2>
+          <h2>Get Started</h2>
+          <p>Set up Google Cloud basics, run the sample Pet Shop subgraphs, and point the gateway at them.</p>
           <ul>
-            <li><a href="./gateway/openapi.yaml">Gateway OpenAPI Spec</a></li>
-            <li><a href="./gateway/environment-variables.html">Environment Variables</a></li>
-            <li><a href="./gateway/local-development.html">Local Development</a></li>
-            <li><a href="./gateway/federation-discovery.html">Federation Discovery</a></li>
+            <li><a href="./test-services/">Run testing/services</a></li>
+            <li><a href="./gateway/local-development.html#get-started-with-test-services">Local gateway tutorial</a></li>
+            <li><a href="./gateway/local-development.html#common-google-cloud-setup">Common Google Cloud setup</a></li>
+            <li><a href="./gateway/federation-discovery.html#cloud-run-services">Cloud Run discovery labels</a></li>
+          </ul>
+        </article>
+
+        <article class="docs-card">
+          <h2>Using the Gateway</h2>
+          <p>Install and operate Helios Gateway as the single GraphQL endpoint for federated subgraphs.</p>
+          <ul>
+            <li><a href="./gateway/local-development.html#using-the-gateway-as-a-client">Client usage model</a></li>
+            <li><a href="./gateway/local-development.html#install-on-a-local-machine">Install on a local machine</a></li>
+            <li><a href="./gateway/local-development.html#deploy-on-google-cloud-run">Deploy on Google Cloud Run</a></li>
+            <li><a href="./gateway/environment-variables.html">Configuration variables</a></li>
             <li><a href="./gateway/graphql-ui-cloud-run.html">GraphQL UI in Cloud Run</a></li>
           </ul>
         </article>
 
         <article class="docs-card">
-          <h2>Admin Console</h2>
+          <h2>Contributors</h2>
+          <p>Run the codebase locally, understand the main modules, and use the right test surface for each change.</p>
           <ul>
-            <li><a href="./admin-console/">Admin Console Overview</a></li>
+            <li><a href="./gateway/local-development.html#contributor-workflow">Contributor workflow</a></li>
+            <li><a href="./gateway/local-development.html#main-code-areas">Main code areas</a></li>
+            <li><a href="./testing/e2e.html">E2E test organization</a></li>
+            <li><a href="./admin-console/">Admin console development</a></li>
           </ul>
         </article>
 
         <article class="docs-card">
-          <h2>Testing</h2>
+          <h2>Reference</h2>
+          <p>Detailed discovery behavior, environment groups, and API metadata for operators and maintainers.</p>
           <ul>
-            <li><a href="./testing/e2e.html">E2E Test Organization</a></li>
-          </ul>
-        </article>
-
-        <article class="docs-card">
-          <h2>Test Services</h2>
-          <ul>
-            <li><a href="./test-services/">Test Services Overview</a></li>
+            <li><a href="./gateway/federation-discovery.html">Federation discovery</a></li>
+            <li><a href="./gateway/openapi.yaml">Gateway OpenAPI spec</a></li>
+            <li><a href="./gateway/environment-variables.html#google-cloud-run-discovery">Cloud Run variables</a></li>
+            <li><a href="./gateway/environment-variables.html#file-discovery">File discovery variables</a></li>
           </ul>
         </article>
       </section>
