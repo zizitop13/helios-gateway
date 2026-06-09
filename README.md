@@ -18,6 +18,26 @@ Cloud-native GraphQL federation gateway built on top of Apollo Federation Gatewa
 
 Helios Gateway provides dynamic service discovery, Firebase authentication, RBAC, and an admin console for managing distributed GraphQL services across cloud and local environments.
 
+## Documentation
+
+- [Documentation site](https://zizitop13.github.io/helios-gateway/)
+- [Common Google Cloud Setup](https://zizitop13.github.io/helios-gateway/gateway/local-development.html#common-google-cloud-setup)
+- [GitHub repository](https://github.com/zizitop13/helios-gateway)
+
+## Docker
+
+Docker Hub:
+
+```bash
+docker pull zizitop13/helios-gateway:latest
+```
+
+GitHub Container Registry:
+
+```bash
+docker pull ghcr.io/zizitop13/helios-gateway:latest
+```
+
 ## Features
 
 - Apollo Federation Gateway–based runtime

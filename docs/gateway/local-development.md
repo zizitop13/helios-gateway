@@ -112,6 +112,48 @@ docker build -t helios-gateway .
 docker run --rm -p 4000:4000 --env-file gateway/.env.local helios-gateway
 ```
 
+## Install from Docker
+
+Use Docker Hub:
+
+```bash
+docker pull zizitop13/helios-gateway:latest
+```
+
+```bash
+docker run --rm \
+  --name helios-gateway \
+  -p 4000:4000 \
+  -e DISCOVERY_MODE=file \
+  -e DISCOVERY_FILE_PATH=/app/subgraphs.local.yaml \
+  zizitop13/helios-gateway:latest
+```
+
+Use GitHub Container Registry:
+
+```bash
+docker pull ghcr.io/zizitop13/helios-gateway:latest
+```
+
+```bash
+docker run --rm \
+  --name helios-gateway \
+  -p 4000:4000 \
+  -e DISCOVERY_MODE=file \
+  -e DISCOVERY_FILE_PATH=/app/subgraphs.local.yaml \
+  ghcr.io/zizitop13/helios-gateway:latest
+```
+
+To pass a full local environment file:
+
+```bash
+docker run --rm \
+  --name helios-gateway \
+  -p 4000:4000 \
+  --env-file gateway/.env.local \
+  ghcr.io/zizitop13/helios-gateway:latest
+```
+
 Use [Environment Variables](./environment-variables.html) to choose the discovery mode and authentication settings.
 
 ## Common Google Cloud Setup
