@@ -1,4 +1,6 @@
-# Documentation
+# Helios Gateway Documentation
+
+Cloud-native GraphQL federation gateway built on top of Apollo Federation Gateway.
 
 ## Gateway
 
@@ -10,7 +12,7 @@
 
 ## Admin Console
 
-- [Admin Console Overview](./admin-console/README.md)
+- [Admin Console Overview](./admin-console/)
 
 ## Testing
 
@@ -18,4 +20,4 @@
 
 ## Test Services
 
-- [Test Services Overview](./test-services/README.md)
+- [Test Services Overview](./test-services/)
