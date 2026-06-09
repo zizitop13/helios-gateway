@@ -70,6 +70,8 @@ export function StatusPage() {
     return null;
   }
 
+  const showLastSchemaReload = false;
+
   return (
     <Container size="xl">
       <Stack gap="lg">
@@ -120,21 +122,23 @@ export function StatusPage() {
                   </Badge>
                 </Table.Td>
               </Table.Tr>
-              <Table.Tr>
-                <Table.Td>
-                  <Group gap="sm">
-                    <IconRefresh size={20} />
-                    <Text fw={500}>Last Schema Reload</Text>
-                  </Group>
-                </Table.Td>
-                <Table.Td>
-                  <Text size="sm">
-                    {status.lastSchemaReloadTime 
-                      ? new Date(status.lastSchemaReloadTime).toLocaleString()
-                      : 'Never'}
-                  </Text>
-                </Table.Td>
-              </Table.Tr>
+              {showLastSchemaReload && (
+                <Table.Tr>
+                  <Table.Td>
+                    <Group gap="sm">
+                      <IconRefresh size={20} />
+                      <Text fw={500}>Last Schema Reload</Text>
+                    </Group>
+                  </Table.Td>
+                  <Table.Td>
+                    <Text size="sm">
+                      {status.lastSchemaReloadTime
+                        ? new Date(status.lastSchemaReloadTime).toLocaleString()
+                        : 'Never'}
+                    </Text>
+                  </Table.Td>
+                </Table.Tr>
+              )}
             </Table.Tbody>
           </Table>
         </Card>

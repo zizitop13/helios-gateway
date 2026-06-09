@@ -1,0 +1,13 @@
+.git
+.github
+node_modules
+dist
+coverage
+.env
+.env.*
+*.log
+*.pem
+*.key
+service-account*.json
+firebase*.json
+README.local.md
