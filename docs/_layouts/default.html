@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% if page.title %}{{ page.title }} | {% endif %}{{ site.title }}</title>
+    <link rel="stylesheet" href="{{ '/assets/site.css' | relative_url }}">
+  </head>
+  <body>
+    <header class="site-header">
+      <nav class="site-nav" aria-label="Documentation">
+        <a class="brand-link" href="{{ '/' | relative_url }}">
+          <img src="{{ '/assets/logo.png' | relative_url }}" alt="">
+          <span>Helios Gateway</span>
+        </a>
+        <div class="nav-links">
+          <a href="{{ '/gateway/' | relative_url }}">Gateway</a>
+          <a href="{{ '/gateway/environment-variables.html' | relative_url }}">Variables</a>
+          <a href="{{ '/testing/' | relative_url }}">Testing</a>
+          <a href="{{ '/admin-console/' | relative_url }}">Admin Console</a>
+        </div>
+      </nav>
+    </header>
+
+    <main class="content-shell">
+      <article class="markdown-body">
+        {{ content }}
+      </article>
+    </main>
+  </body>
+</html>

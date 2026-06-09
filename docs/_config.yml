@@ -1,0 +1,7 @@
+title: Helios Gateway Documentation
+
+defaults:
+  - scope:
+      path: ""
+    values:
+      layout: default

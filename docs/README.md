@@ -29,4 +29,4 @@ title: Documentation
 ## Reference
 
 - [Federation Discovery](./gateway/federation-discovery.html)
-- [Gateway OpenAPI Spec](./gateway/openapi.yaml)
+- [Gateway API Reference](./gateway/openapi.html)
