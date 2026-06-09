@@ -24,7 +24,7 @@ directive @allowAnonymous on FIELD_DEFINITION | OBJECT
 
 ## Run locally
 
-Open 3 terminals (or IntelliJ run configs), one per service:
+Open 3 terminals one per service:
 
 ```bash
 cd testing/services/pets-service

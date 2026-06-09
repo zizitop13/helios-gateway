@@ -33,22 +33,6 @@ npm run dev-gateway
 
 This script uses `gateway/.env.local`.
 
-## IntelliJ-Friendly Run Blocks
-
-Run these in IntelliJ Terminal from repo root:
-
-```bash
-cd admin-console && npm run build
-cd ../gateway && npm run dev-gateway
-```
-
-Windows PowerShell alternative:
-
-```powershell
-Set-Location admin-console; npm run build
-Set-Location ..\gateway; npm run dev-gateway
-```
-
 ## Gateway Scripts
 
 - `npm run dev-gateway`: start gateway with `.env.local`
