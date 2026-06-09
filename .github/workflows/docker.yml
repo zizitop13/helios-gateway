@@ -3,6 +3,10 @@ name: Docker
 on:
   workflow_dispatch:
 
+permissions:
+  contents: read
+  packages: write
+
 jobs:
   docker:
     runs-on: ubuntu-latest
@@ -32,6 +36,9 @@ jobs:
           images: |
             ghcr.io/${{ github.repository }}
             docker.io/${{ secrets.DOCKERHUB_USERNAME }}/helios-gateway
+          tags: |
+            type=sha
+            type=raw,value=latest
 
       - uses: docker/build-push-action@v6
         with:
