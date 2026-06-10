@@ -55,6 +55,6 @@ docker pull ghcr.io/zizitop13/helios-gateway:latest
 
 Helios Gateway depends on `@apollo/gateway`, which is licensed under Elastic License 2.0 (ELv2).
 
-This project itself is independently licensed under Apache License 2.0 and is not affiliated with or endorsed by Apollo GraphQL.
+This project itself is independently licensed under the [Apache License 2.0](LICENSE) and is not affiliated with or endorsed by Apollo GraphQL.
 
 Users of this project are responsible for complying with the licenses of all included dependencies.

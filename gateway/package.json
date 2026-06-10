@@ -2,6 +2,7 @@
   "name": "apollo-cloud-gateway",
   "version": "1.0.3",
   "description": "Apollo Federation Gateway with Firebase auth, RBAC, and Cloud Run auto-discovery",
+  "license": "Apache-2.0",
   "main": "dist/main.js",
   "bin": {
     "apollo-gateway": "dist/cli.js",
