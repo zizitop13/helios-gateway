@@ -1,5 +1,6 @@
 ---
 title: E2E Test Organization
+nav_section: contributing
 ---
 
 # E2E Test Organization

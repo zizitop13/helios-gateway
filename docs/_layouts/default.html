@@ -4,34 +4,54 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>{% if page.title %}{{ page.title }} | {% endif %}{{ site.title }}</title>
+    <link rel="icon" href="{{ '/assets/favicon.svg' | relative_url }}" type="image/svg+xml">
     <link rel="stylesheet" href="{{ '/assets/site.css' | relative_url }}">
   </head>
   <body>
     <header class="site-header">
       <nav class="site-nav" aria-label="Documentation">
         <a class="brand-link" href="{{ '/' | relative_url }}">
-          <img src="{{ '/assets/logo.png' | relative_url }}" alt="">
+          <img src="{{ '/assets/logo-small.svg' | relative_url }}" alt="">
           <span>Helios Gateway</span>
         </a>
         <div class="nav-links">
-          <a href="{{ '/gateway/' | relative_url }}">Gateway</a>
-          <a href="{{ '/gateway/environment-variables.html' | relative_url }}">Variables</a>
-          <a href="{{ '/testing/' | relative_url }}">Testing</a>
-          <a href="{{ '/admin-console/' | relative_url }}">Admin Console</a>
+          <a {% if page.nav_section == 'home' or page.url == '/' %}aria-current="page"{% endif %} href="{{ '/' | relative_url }}">Home</a>
+          <a {% if page.nav_section == 'contributing' %}aria-current="page"{% endif %} href="{{ '/contributing.html' | relative_url }}">Contributing</a>
+          <a href="https://github.com/zizitop13/helios-gateway">GitHub</a>
         </div>
       </nav>
     </header>
 
-    <main class="content-shell">
-      <form class="search-panel" data-docs-search data-search-index="{{ '/search.json' | relative_url }}" role="search">
-        <label class="search-label" for="docs-search">Search documentation</label>
-        <input class="search-input" id="docs-search" type="search" placeholder="Search setup, Docker, Cloud Run, variables..." autocomplete="off" data-search-input>
-        <div class="search-results" hidden data-search-results></div>
-      </form>
+    <main class="docs-shell">
+      <aside class="sidebar" aria-label="Page navigation">
+        {% if page.nav_section == 'contributing' %}
+          <p class="sidebar-title">Contributing</p>
+          <a href="{{ '/gateway/local-development.html#contributor-workflow' | relative_url }}">Contributor workflow</a>
+          <a href="{{ '/gateway/local-development.html#main-code-areas' | relative_url }}">Main code areas</a>
+          <a href="{{ '/testing/e2e.html' | relative_url }}">E2E test organization</a>
+          <a href="{{ '/admin-console/' | relative_url }}">Admin console development</a>
+        {% else %}
+          <p class="sidebar-title">Home</p>
+          <a {% if page.url == '/' %}aria-current="page"{% endif %} href="{{ '/' | relative_url }}">Overview</a>
+          <a {% if page.url == '/service-discovery.html' %}aria-current="page"{% endif %} href="{{ '/service-discovery.html' | relative_url }}">Service Discovery</a>
+          <a {% if page.url == '/authorization-and-authentication.html' %}aria-current="page"{% endif %} href="{{ '/authorization-and-authentication.html' | relative_url }}">Authorization and Authentication</a>
+          <a {% if page.url == '/admin-console.html' %}aria-current="page"{% endif %} href="{{ '/admin-console.html' | relative_url }}">Admin Console</a>
+          <a {% if page.url == '/docker-demo.html' %}aria-current="page"{% endif %} href="{{ '/docker-demo.html' | relative_url }}">Docker Demo</a>
+          <a {% if page.url == '/cloud-run-demo.html' %}aria-current="page"{% endif %} href="{{ '/cloud-run-demo.html' | relative_url }}">Cloud Run Demo</a>
+        {% endif %}
+      </aside>
 
-      <article class="markdown-body">
-        {{ content }}
-      </article>
+      <section class="content-shell">
+        <form class="search-panel" data-docs-search data-search-index="{{ '/search.json' | relative_url }}" role="search">
+          <label class="search-label" for="docs-search">Search documentation</label>
+          <input class="search-input" id="docs-search" type="search" placeholder="Search setup, Docker, Cloud Run, variables..." autocomplete="off" data-search-input>
+          <div class="search-results" hidden data-search-results></div>
+        </form>
+
+        <article class="markdown-body">
+          {{ content }}
+        </article>
+      </section>
     </main>
     <script src="{{ '/assets/search.js' | relative_url }}"></script>
   </body>

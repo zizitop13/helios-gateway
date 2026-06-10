@@ -257,18 +257,66 @@ h1 {
 }
 
 .nav-links a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 34px;
+  padding: 0 2px;
   text-decoration: none;
 }
 
 .nav-links a:hover,
-.nav-links a:focus-visible {
+.nav-links a:focus-visible,
+.nav-links a[aria-current="page"] {
   color: var(--accent);
 }
 
-.content-shell {
-  width: min(920px, calc(100% - 32px));
+.docs-shell {
+  width: min(1180px, calc(100% - 32px));
   margin: 0 auto;
-  padding: 44px 0 64px;
+  padding: 36px 0 64px;
+  display: grid;
+  grid-template-columns: 240px minmax(0, 1fr);
+  gap: 32px;
+  align-items: start;
+}
+
+.sidebar {
+  position: sticky;
+  top: 24px;
+  display: grid;
+  gap: 4px;
+  padding: 18px;
+  background: color-mix(in srgb, var(--panel) 88%, transparent);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+}
+
+.sidebar-title {
+  margin: 0 0 10px;
+  color: var(--accent-strong);
+  font-size: 0.82rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.sidebar a {
+  display: block;
+  padding: 8px 10px;
+  color: var(--muted);
+  border-radius: 6px;
+  text-decoration: none;
+}
+
+.sidebar a:hover,
+.sidebar a:focus-visible,
+.sidebar a[aria-current="page"] {
+  color: var(--text);
+  background: color-mix(in srgb, var(--panel-strong) 82%, transparent);
+}
+
+.content-shell {
+  min-width: 0;
 }
 
 .markdown-body {
@@ -362,6 +410,63 @@ h1 {
   margin: 32px 0;
 }
 
+.markdown-body img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  margin: 18px auto;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+}
+
+.gateway-diagram {
+  display: grid;
+  gap: 18px;
+  margin: 28px 0;
+  padding: 22px;
+  background: var(--code);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+}
+
+.diagram-row {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+  align-items: stretch;
+}
+
+.diagram-node {
+  min-height: 92px;
+  padding: 16px;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+}
+
+.diagram-node strong {
+  display: block;
+  margin-bottom: 6px;
+  color: var(--text);
+}
+
+.diagram-node span {
+  display: block;
+  color: var(--muted);
+  font-size: 0.92rem;
+}
+
+.diagram-node.gateway {
+  background: color-mix(in srgb, var(--panel-strong) 86%, var(--accent) 14%);
+  border-color: color-mix(in srgb, var(--accent) 48%, var(--line));
+}
+
+.diagram-arrow {
+  color: var(--accent-strong);
+  font-weight: 800;
+  text-align: center;
+}
+
 @media (max-width: 640px) {
   .page-shell {
     width: min(100% - 24px, 1080px);
@@ -390,9 +495,19 @@ h1 {
     padding: 14px 0;
   }
 
-  .content-shell {
-    width: min(100% - 24px, 920px);
-    padding: 28px 0 44px;
+  .docs-shell {
+    width: min(100% - 24px, 1180px);
+    grid-template-columns: 1fr;
+    gap: 18px;
+    padding: 24px 0 44px;
+  }
+
+  .sidebar {
+    position: static;
+  }
+
+  .diagram-row {
+    grid-template-columns: 1fr;
   }
 
   .markdown-body {

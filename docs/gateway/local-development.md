@@ -1,5 +1,6 @@
 ---
 title: Gateway Setup and Contributor Workflow
+nav_section: contributing
 ---
 
 # Gateway Setup and Contributor Workflow

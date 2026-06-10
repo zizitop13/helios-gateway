@@ -1,5 +1,6 @@
 ---
 title: Admin Console
+nav_section: contributing
 ---
 
 # Admin Console

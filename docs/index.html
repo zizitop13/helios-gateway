@@ -1,82 +1,75 @@
-<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Helios Gateway Documentation</title>
-    <link rel="stylesheet" href="./assets/site.css">
-  </head>
-  <body>
-    <main class="page-shell">
-      <section class="hero" aria-labelledby="site-title">
-        <div>
-          <img class="logo" src="./assets/logo.png" alt="Helios Gateway">
-        </div>
-        <div>
-          <p class="eyebrow">Documentation</p>
-          <h1 id="site-title">Helios Gateway</h1>
-          <p class="lede">
-            Cloud-native GraphQL federation gateway built on top of Apollo Federation Gateway,
-            with dynamic service discovery, Firebase authentication, RBAC, and an admin console.
-          </p>
-        </div>
-      </section>
+---
+title: Overview
+nav_section: home
+---
 
-      <form class="search-panel home-search" data-docs-search data-search-index="./search.json" role="search">
-        <label class="search-label" for="docs-search">Search documentation</label>
-        <input class="search-input" id="docs-search" type="search" placeholder="Search setup, Docker, Cloud Run, variables..." autocomplete="off" data-search-input>
-        <div class="search-results" hidden data-search-results></div>
-      </form>
+<h1>Overview</h1>
 
-      <section class="docs-grid feature-grid" aria-label="Primary documentation paths">
-        <article class="docs-card">
-          <h2>Get Started</h2>
-          <p>Set up Google Cloud basics, run the sample Pet Shop subgraphs, and point the gateway at them.</p>
-          <ul>
-            <li><a href="./test-services/">Run testing/services</a></li>
-            <li><a href="./gateway/local-development.html#get-started-with-test-services">Local gateway tutorial</a></li>
-            <li><a href="./gateway/local-development.html#common-google-cloud-setup">Common Google Cloud setup</a></li>
-            <li><a href="./gateway/federation-discovery.html#cloud-run-services">Cloud Run discovery labels</a></li>
-          </ul>
-        </article>
+<p>
+  Helios Gateway is a cloud-native GraphQL federation gateway. It gives clients
+  one GraphQL endpoint while the platform can keep domain logic split across
+  independently deployed subgraph services.
+</p>
 
-        <article class="docs-card">
-          <h2>Using the Gateway</h2>
-          <p>Install and operate Helios Gateway as the single GraphQL endpoint for federated subgraphs.</p>
-          <ul>
-            <li><a href="./gateway/local-development.html#using-the-gateway-as-a-client">Client usage model</a></li>
-            <li><a href="./gateway/local-development.html#install-on-a-local-machine">Install on a local machine</a></li>
-            <li><a href="./gateway/local-development.html#install-from-docker">Install from Docker</a></li>
-            <li><a href="./gateway/local-development.html#deploy-on-google-cloud-run">Deploy on Google Cloud Run</a></li>
-            <li><a href="./gateway/environment-variables.html">Configuration variables</a></li>
-            <li><a href="./gateway/graphql-ui-cloud-run.html">GraphQL UI in Cloud Run</a></li>
-          </ul>
-        </article>
+<p>
+  The gateway discovers subgraphs, composes the federated schema, verifies
+  Firebase identity tokens, applies role-based access control from the composed
+  schema, and exposes an admin console for day-to-day operations.
+</p>
 
-        <article class="docs-card">
-          <h2>Contributors</h2>
-          <p>Run the codebase locally, understand the main modules, and use the right test surface for each change.</p>
-          <ul>
-            <li><a href="./gateway/local-development.html#contributor-workflow">Contributor workflow</a></li>
-            <li><a href="./gateway/local-development.html#main-code-areas">Main code areas</a></li>
-            <li><a href="./testing/e2e.html">E2E test organization</a></li>
-            <li><a href="./admin-console/">Admin console development</a></li>
-          </ul>
-        </article>
+<div class="gateway-diagram" role="img" aria-label="Clients call Helios Gateway, which verifies Firebase authentication and routes GraphQL operations to subgraph services.">
+  <div class="diagram-row">
+    <div class="diagram-node">
+      <strong>Clients</strong>
+      <span>Applications call a single GraphQL endpoint.</span>
+    </div>
+    <div class="diagram-node gateway">
+      <strong>Helios Gateway</strong>
+      <span>Composes schema, verifies auth, enforces RBAC, and routes operations.</span>
+    </div>
+    <div class="diagram-node">
+      <strong>Auth Provider</strong>
+      <span>Firebase Authentication issues and verifies identity tokens.</span>
+    </div>
+  </div>
+  <div class="diagram-arrow">GraphQL requests flow through the gateway to discovered subgraphs</div>
+  <div class="diagram-row">
+    <div class="diagram-node">
+      <strong>Orders Subgraph</strong>
+      <span>Owns order types, fields, and resolvers.</span>
+    </div>
+    <div class="diagram-node">
+      <strong>Customers Subgraph</strong>
+      <span>Owns customer data and account relationships.</span>
+    </div>
+    <div class="diagram-node">
+      <strong>Pets Subgraph</strong>
+      <span>Owns catalog and pet-shop domain fields.</span>
+    </div>
+  </div>
+</div>
 
-        <article class="docs-card">
-          <h2>Reference</h2>
-          <p>Detailed discovery behavior, environment groups, and API metadata for operators and maintainers.</p>
-          <ul>
-            <li><a href="./gateway/federation-discovery.html">Federation discovery</a></li>
-            <li><a href="./gateway/openapi.html">Gateway API reference</a></li>
-            <li><a href="./gateway/environment-variables.html#google-cloud-run-discovery">Cloud Run variables</a></li>
-            <li><a href="./gateway/environment-variables.html#file-discovery">File discovery variables</a></li>
-            <li><a href="https://github.com/zizitop13/helios-gateway">GitHub repository</a></li>
-          </ul>
-        </article>
-      </section>
-    </main>
-    <script src="./assets/search.js"></script>
-  </body>
-</html>
+<h2>Main Idea</h2>
+
+<p>
+  Helios Gateway is meant to be the operational front door for a federated
+  GraphQL platform. Subgraphs can move between local Docker, static file
+  configuration, and Google Cloud Run without changing how clients talk to the
+  graph.
+</p>
+
+<p>
+  Discovery is intentionally environment-driven. In local demos, Docker labels
+  or a YAML file describe subgraphs. In Cloud Run, service labels identify
+  subgraphs and optional graph scope. The gateway uses that discovered service
+  list to build and refresh the composed schema.
+</p>
+
+<h2>Where to Go Next</h2>
+
+<ul>
+  <li><a href="{{ '/service-discovery.html' | relative_url }}">Service Discovery</a> describes Cloud Run, Docker, and file-based configuration.</li>
+  <li><a href="{{ '/authorization-and-authentication.html' | relative_url }}">Authorization and Authentication</a> covers Firebase variables and RBAC behavior.</li>
+  <li><a href="{{ '/admin-console.html' | relative_url }}">Admin Console</a> shows the browser UI served by the gateway.</li>
+  <li><a href="{{ '/docker-demo.html' | relative_url }}">Docker Demo</a> provides a copy-ready compose file for the demo subgraphs.</li>
+</ul>

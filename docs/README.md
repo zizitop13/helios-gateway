@@ -1,32 +1,22 @@
 ---
 title: Documentation
+nav_section: home
 ---
 
 # Documentation
 
-## Get Started
+## Home
 
-- [Run testing/services](./test-services/)
-- [Local gateway tutorial](./gateway/local-development.html#get-started-with-test-services)
-- [Common Google Cloud setup](./gateway/local-development.html#common-google-cloud-setup)
-- [Cloud Run discovery labels](./gateway/federation-discovery.html#cloud-run-services)
+- [Overview](./)
+- [Service Discovery](./service-discovery.html)
+- [Authorization and Authentication](./authorization-and-authentication.html)
+- [Admin Console](./admin-console.html)
+- [Docker Demo](./docker-demo.html)
+- [Cloud Run Demo](./cloud-run-demo.html)
 
-## Using the Gateway
-
-- [Client usage model](./gateway/local-development.html#using-the-gateway-as-a-client)
-- [Install on a local machine](./gateway/local-development.html#install-on-a-local-machine)
-- [Deploy on Google Cloud Run](./gateway/local-development.html#deploy-on-google-cloud-run)
-- [Environment Variables](./gateway/environment-variables.html)
-- [GraphQL UI in Cloud Run](./gateway/graphql-ui-cloud-run.html)
-
-## Contributors
+## Contributing
 
 - [Contributor workflow](./gateway/local-development.html#contributor-workflow)
 - [Main code areas](./gateway/local-development.html#main-code-areas)
-- [E2E Test Organization](./testing/e2e.html)
-- [Admin Console Overview](./admin-console/)
-
-## Reference
-
-- [Federation Discovery](./gateway/federation-discovery.html)
-- [Gateway API Reference](./gateway/openapi.html)
+- [E2E test organization](./testing/e2e.html)
+- [Admin console development](./admin-console/)
