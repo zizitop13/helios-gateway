@@ -1,9 +1,9 @@
 ---
-title: Authorization and Authentication
+title: Authentication
 nav_section: home
 ---
 
-# Authorization and Authentication
+# Authentication
 
 Helios Gateway uses Firebase Authentication for identity and role claims, then
 enforces role-based access control while executing operations through the

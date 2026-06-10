@@ -9,7 +9,7 @@ nav_section: home
 
 - [Overview](./)
 - [Service Discovery](./service-discovery.html)
-- [Authorization and Authentication](./authorization-and-authentication.html)
+- [Authentication](./authorization-and-authentication.html)
 - [Admin Console](./admin-console.html)
 - [Docker Demo](./docker-demo.html)
 - [Cloud Run Demo](./cloud-run-demo.html)
