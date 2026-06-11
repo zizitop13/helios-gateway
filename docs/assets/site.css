@@ -270,6 +270,16 @@ h1 {
   color: var(--accent);
 }
 
+.github-link {
+  gap: 7px;
+}
+
+.github-link img {
+  width: 18px;
+  height: 18px;
+  object-fit: contain;
+}
+
 .docs-shell {
   width: min(1180px, calc(100% - 32px));
   margin: 0 auto;
