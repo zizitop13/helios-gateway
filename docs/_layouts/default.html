@@ -16,9 +16,9 @@
         </a>
         <div class="nav-links">
           <a {% if page.nav_section == 'home' or page.url == '/' %}aria-current="page"{% endif %} href="{{ '/' | relative_url }}">Home</a>
-          <a {% if page.nav_section == 'contributing' %}aria-current="page"{% endif %} href="{{ '/gateway/local-development.html#contributor-workflow' | relative_url }}">Contributing</a>
+          <a {% if page.nav_section == 'contributing' %}aria-current="page"{% endif %} href="{{ '/contributing.html' | relative_url }}">Contributing</a>
           <a class="github-link" href="https://github.com/zizitop13/helios-gateway">
-            <img src="{{ '/assets/github-logo.png' | relative_url }}" alt="">
+            <img src="{{ '/assets/GitHub_Invertocat_White.svg' | relative_url }}" alt="">
             <span>GitHub</span>
           </a>
         </div>
@@ -29,8 +29,8 @@
       <aside class="sidebar" aria-label="Page navigation">
         {% if page.nav_section == 'contributing' %}
           <p class="sidebar-title">Contributing</p>
-          <a href="{{ '/gateway/local-development.html#contributor-workflow' | relative_url }}">Contributor workflow</a>
-          <a href="{{ '/gateway/local-development.html#main-code-areas' | relative_url }}">Main code areas</a>
+          <a href="{{ '/contributing.html#contributor-workflow' | relative_url }}">Contributor workflow</a>
+          <a href="{{ '/contributing.html#main-code-areas' | relative_url }}">Main code areas</a>
           <a href="{{ '/testing/e2e.html' | relative_url }}">E2E test organization</a>
           <a href="{{ '/admin-console/' | relative_url }}">Admin console development</a>
         {% else %}

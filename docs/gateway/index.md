@@ -8,7 +8,7 @@ Use these pages when installing, running, configuring, or operating Helios Gatew
 
 ## Start Here
 
-- [Gateway Setup and Contributor Workflow](./local-development.html)
+- [Gateway Setup](./local-development.html)
 - [Install from Docker](./local-development.html#install-from-docker)
 - [Environment Variables](./environment-variables.html)
 - [Federation Discovery](./federation-discovery.html)

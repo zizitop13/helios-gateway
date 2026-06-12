@@ -16,7 +16,7 @@ nav_section: home
 
 ## Contributing
 
-- [Contributor workflow](./gateway/local-development.html#contributor-workflow)
-- [Main code areas](./gateway/local-development.html#main-code-areas)
+- [Contributor workflow](./contributing.html#contributor-workflow)
+- [Main code areas](./contributing.html#main-code-areas)
 - [E2E test organization](./testing/e2e.html)
 - [Admin console development](./admin-console/)

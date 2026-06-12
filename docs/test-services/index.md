@@ -49,7 +49,7 @@ DISCOVERY_MODE=file
 DISCOVERY_FILE_PATH=../testing/services/subgraphs.local.yaml
 ```
 
-See [Gateway Setup and Contributor Workflow](../gateway/local-development.html#get-started-with-test-services) for the full local tutorial.
+See [Gateway Setup](../gateway/local-development.html#get-started-with-test-services) for the full local tutorial.
 
 ## RBAC Directives
 
