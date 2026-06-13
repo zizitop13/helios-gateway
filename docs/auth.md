@@ -24,6 +24,10 @@ Authorization: Bearer <firebase-id-token>
 | `FIREBASE_AUTH_EMULATOR_HOST` | Local emulator | - | Firebase Auth emulator host, for example `firebase-auth-emulator:9099` in Docker Compose. |
 | `SUPER_ADMIN_ID` | No | - | UID or email that bypasses `admin` role checks for admin API access. |
 
+In the Docker demo, `SUPER_ADMIN_ID=admin@example.com` is set on the gateway and
+the Firebase Auth emulator service so both containers share the same demo admin
+identity.
+
 ## Admin Console Firebase Variables
 
 When the Admin Console is served by the gateway, the browser needs Firebase web

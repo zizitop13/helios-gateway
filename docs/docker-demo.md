@@ -14,6 +14,8 @@ services:
   firebase-auth-emulator:
     image: node:20-bookworm
     working_dir: /workspace
+    environment:
+      SUPER_ADMIN_ID: admin@example.com
     command: >
       sh -lc "apt-get update &&
       apt-get install -y --no-install-recommends openjdk-17-jre-headless &&
@@ -35,6 +37,7 @@ services:
       GRAPH_LABEL_KEY: graph
       FIREBASE_PROJECT_ID: helios-demo
       FIREBASE_AUTH_EMULATOR_HOST: firebase-auth-emulator:9099
+      SUPER_ADMIN_ID: admin@example.com
       ADMIN_CONSOLE_ENABLED: "true"
       ADMIN_CONSOLE_FIREBASE_API_KEY: demo-api-key
       ADMIN_CONSOLE_FIREBASE_AUTH_DOMAIN: localhost
@@ -108,6 +111,7 @@ After the stack starts, open:
 | `GRAPH_NAME` | `pet-shop` | Includes only subgraphs labeled `graph=pet-shop`. |
 | `FIREBASE_PROJECT_ID` | `helios-demo` | Initializes Firebase Admin SDK for the demo project. |
 | `FIREBASE_AUTH_EMULATOR_HOST` | `firebase-auth-emulator:9099` | Points Firebase Admin SDK to the Auth emulator from inside the compose network. |
+| `SUPER_ADMIN_ID` | `admin@example.com` | Allows the demo admin user to access admin API routes without an `admin` custom claim. |
 | `ADMIN_CONSOLE_ENABLED` | `true` | Serves the Admin Console from the gateway. |
 | `ENABLE_APOLLO_SANDBOX` | `true` | Serves Apollo Sandbox at `/graphql`. |
 

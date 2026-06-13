@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="logo.png" alt="logo" width="450">
+  <img src="docs/assets/logo.png" alt="logo" width="450">
 </div>
 
 
@@ -20,11 +20,9 @@ Helios Gateway provides dynamic service discovery, Firebase authentication, RBAC
 
 ## Documentation
 
-- [Documentation site](https://zizitop13.github.io/helios-gateway/)
-- [Common Google Cloud Setup](https://zizitop13.github.io/helios-gateway/gateway/local-development.html#common-google-cloud-setup)
-- [GitHub repository](https://github.com/zizitop13/helios-gateway)
+- [Documentation](https://zizitop13.github.io/helios-gateway/)
 
-## Docker
+## Docker Images
 
 Docker Hub:
 
