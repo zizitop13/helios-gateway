@@ -20,6 +20,7 @@ export function validateRequiredEnv(keys = requiredEnv) {
 }
 
 export const firebaseWebApiKey = process.env.FIREBASE_WEB_API_KEY;
+export const firebaseAuthEmulatorUrl = process.env.FIREBASE_AUTH_EMULATOR_URL?.replace(/\/$/u, '');
 
 export const gatewayBaseUrl = (
   process.env.ADMIN_CONSOLE_URL ||
@@ -32,4 +33,4 @@ export const graphqlEndpoint =
   (process.env.ADMIN_CONSOLE_URL ? `${gatewayBaseUrl}/graphql` : process.env.GRAPHQL_ENDPOINT);
 
 export const adminApiBaseUrl = `${gatewayBaseUrl}/admin/api`;
-export const brokenSubgraphName = process.env.E2E_BROKEN_SUBGRAPH_NAME;
+export const brokenSubgraphName = process.env.E2E_BROKEN_SUBGRAPH_NAME || 'broken-service';

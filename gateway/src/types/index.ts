@@ -40,6 +40,7 @@ export interface GatewayConfig {
   adminConsoleFirebaseMessagingSenderId?: string;
   adminConsoleFirebaseAppId?: string;
   adminConsoleFirebaseMeasurementId?: string;
+  adminConsoleFirebaseAuthEmulatorUrl?: string;
   adminConsoleEnabled: boolean;
   enableApolloSandbox: boolean;
   enableSchemaRefresh: boolean;

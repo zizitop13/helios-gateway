@@ -33,6 +33,7 @@ export function loadConfig(): GatewayConfig {
     adminConsoleFirebaseMessagingSenderId: process.env.ADMIN_CONSOLE_FIREBASE_MESSAGING_SENDER_ID?.trim() || undefined,
     adminConsoleFirebaseAppId: process.env.ADMIN_CONSOLE_FIREBASE_APP_ID?.trim() || undefined,
     adminConsoleFirebaseMeasurementId: process.env.ADMIN_CONSOLE_FIREBASE_MEASUREMENT_ID?.trim() || undefined,
+    adminConsoleFirebaseAuthEmulatorUrl: process.env.ADMIN_CONSOLE_FIREBASE_AUTH_EMULATOR_URL?.trim() || undefined,
     adminConsoleEnabled: process.env.ADMIN_CONSOLE_ENABLED === 'true',
     enableApolloSandbox: process.env.ENABLE_APOLLO_SANDBOX === 'true',
     enableSchemaRefresh: process.env.ENABLE_SCHEMA_REFRESH !== 'false',

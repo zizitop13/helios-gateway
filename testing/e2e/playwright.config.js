@@ -43,6 +43,7 @@ const bddTestDir = defineBddConfig({
 export default defineConfig({
   testDir: '.',
   fullyParallel: false,
+  workers: Number.parseInt(process.env.E2E_WORKERS || '1', 10),
   timeout: 30_000,
   expect: { timeout: 10_000 },
   reporter: [
@@ -80,6 +81,5 @@ export default defineConfig({
     },
   ],
 });
-
 
 

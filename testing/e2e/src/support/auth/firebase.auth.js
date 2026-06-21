@@ -1,11 +1,14 @@
-import { firebaseWebApiKey } from '../env.js';
+import { firebaseAuthEmulatorUrl, firebaseWebApiKey } from '../env.js';
 import { credentials } from '../roles.js';
 
 const tokens = new Map();
 
 async function signInWithPassword(request, email, password) {
+  const signInUrl = firebaseAuthEmulatorUrl
+    ? `${firebaseAuthEmulatorUrl}/identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=${firebaseWebApiKey}`
+    : `https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=${firebaseWebApiKey}`;
   const response = await request.post(
-    `https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=${firebaseWebApiKey}`,
+    signInUrl,
     {
       data: {
         email,

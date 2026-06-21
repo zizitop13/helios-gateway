@@ -70,4 +70,5 @@ export interface FirebaseWebConfig {
   messagingSenderId?: string;
   appId?: string;
   measurementId?: string;
+  authEmulatorUrl?: string;
 }

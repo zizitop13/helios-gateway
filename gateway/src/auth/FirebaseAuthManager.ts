@@ -215,10 +215,17 @@ export class FirebaseAuthManager implements IAuthManager {
       return null;
     }
 
-    if (authHeader.startsWith('Bearer ')) {
-      return authHeader.substring(7);
+    const trimmedHeader = authHeader.trim();
+    if (!trimmedHeader) {
+      return null;
     }
 
-    return authHeader;
+    const bearerMatch = /^Bearer\s+(.+)$/i.exec(trimmedHeader);
+    const token = (bearerMatch ? bearerMatch[1] : trimmedHeader).trim();
+    if (!token || token === 'null' || token === 'undefined') {
+      return null;
+    }
+
+    return token.split('.').length === 3 ? token : null;
   }
 }

@@ -146,6 +146,39 @@ describe('Admin Module', () => {
       expect(res.status).not.toHaveBeenCalled();
     });
 
+    it('should fall back to a valid session cookie when bearer token verification fails', async () => {
+      const adminUser: UserContext = {
+        uid: 'admin123',
+        email: 'admin@example.com',
+        roles: ['admin'],
+        claims: {}
+      };
+
+      authManager.extractTokenFromHeader = jest.fn().mockReturnValue('invalid-token');
+      authManager.verifyToken = jest.fn().mockResolvedValue(null);
+      authManager.verifySessionCookie = jest.fn().mockResolvedValue(adminUser);
+
+      const req = {
+        headers: {
+          authorization: 'Bearer invalid-token',
+          cookie: 'apollo_playground_token=firebase-session-cookie'
+        }
+      } as any;
+      const res = {
+        status: jest.fn().mockReturnThis(),
+        json: jest.fn()
+      } as unknown as Response;
+      const next = jest.fn();
+
+      await adminGuard.middleware()(req, res, next);
+
+      expect(authManager.verifyToken).toHaveBeenCalledWith('invalid-token');
+      expect(authManager.verifySessionCookie).toHaveBeenCalledWith('firebase-session-cookie');
+      expect(next).toHaveBeenCalled();
+      expect(req.user).toEqual(adminUser);
+      expect(res.status).not.toHaveBeenCalled();
+    });
+
     it('should reject invalid session cookies', async () => {
       authManager.verifySessionCookie = jest.fn().mockResolvedValue(null);
 

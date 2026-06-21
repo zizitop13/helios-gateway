@@ -264,6 +264,35 @@ describe('Firebase session login flow', () => {
     }
   });
 
+  it('protected GraphQL falls back to a valid session cookie when bearer verification fails', async () => {
+    const authManager = createMockAuthManager({
+      verifyToken: jest.fn().mockResolvedValue(null),
+    });
+    const server = await startTestServer({ authManager, withGraphql: true });
+
+    try {
+      const { csrfToken, csrfCookie } = await getCsrf(server.baseUrl);
+      const response = await fetch(`${server.baseUrl}/graphql`, {
+        method: 'POST',
+        headers: {
+          Authorization: 'Bearer malformed-token',
+          'Content-Type': 'application/json',
+          'X-CSRF-Token': csrfToken,
+          Cookie: `${csrfCookie}; apollo_playground_token=firebase-session-cookie`,
+        },
+        body: JSON.stringify({ query: 'query { protectedUser }' }),
+      });
+      const payload = await response.json() as { data?: { protectedUser?: string } };
+
+      expect(response.status).toBe(200);
+      expect(authManager.verifyToken).toHaveBeenCalledWith('malformed-token');
+      expect(authManager.verifySessionCookie).toHaveBeenCalledWith('firebase-session-cookie');
+      expect(payload.data?.protectedUser).toBe('admin-1');
+    } finally {
+      await server.close();
+    }
+  });
+
   it('protected GraphQL rejects missing or invalid session cookies', async () => {
     const authManager = createMockAuthManager({
       verifySessionCookie: jest.fn().mockResolvedValue(null),

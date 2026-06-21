@@ -528,7 +528,9 @@ export class ApolloCloudGateway {
             if (headerToken) {
               const verifiedUser = await this.authManager.verifyToken(headerToken);
               user = verifiedUser || undefined;
-            } else if (cookieToken) {
+            }
+
+            if (!user && cookieToken) {
               const verifiedUser = await this.authManager.verifySessionCookie(cookieToken);
               user = verifiedUser || undefined;
             }
@@ -703,6 +705,9 @@ export class ApolloCloudGateway {
     }
     if (this.config.adminConsoleFirebaseMeasurementId) {
       config.measurementId = this.config.adminConsoleFirebaseMeasurementId;
+    }
+    if (this.config.adminConsoleFirebaseAuthEmulatorUrl) {
+      config.authEmulatorUrl = this.config.adminConsoleFirebaseAuthEmulatorUrl;
     }
 
     return config;

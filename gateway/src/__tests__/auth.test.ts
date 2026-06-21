@@ -18,6 +18,7 @@ jest.mock('firebase-admin', () => ({
 
 describe('FirebaseAuthManager', () => {
   let authManager: FirebaseAuthManager;
+  const jwtToken = 'header.payload.signature';
 
   beforeEach(() => {
     authManager = new FirebaseAuthManager();
@@ -29,15 +30,15 @@ describe('FirebaseAuthManager', () => {
 
   describe('extractTokenFromHeader', () => {
     it('should extract token from Bearer format', () => {
-      const header = 'Bearer abc123def456';
+      const header = `Bearer ${jwtToken}`;
       const token = authManager.extractTokenFromHeader(header);
-      expect(token).toBe('abc123def456');
+      expect(token).toBe(jwtToken);
     });
 
     it('should return raw token if not in Bearer format', () => {
-      const header = 'abc123def456';
+      const header = jwtToken;
       const token = authManager.extractTokenFromHeader(header);
-      expect(token).toBe('abc123def456');
+      expect(token).toBe(jwtToken);
     });
 
     it('should return null for undefined header', () => {
@@ -51,9 +52,15 @@ describe('FirebaseAuthManager', () => {
     });
 
     it('should handle Bearer with multiple spaces', () => {
-      const header = 'Bearer  abc123';
+      const header = `Bearer  ${jwtToken}`;
       const token = authManager.extractTokenFromHeader(header);
-      expect(token).toBe(' abc123');
+      expect(token).toBe(jwtToken);
+    });
+
+    it('should ignore malformed bearer placeholders', () => {
+      expect(authManager.extractTokenFromHeader('Bearer null')).toBe(null);
+      expect(authManager.extractTokenFromHeader('Bearer undefined')).toBe(null);
+      expect(authManager.extractTokenFromHeader('Bearer not-a-jwt')).toBe(null);
     });
   });
 

@@ -1,6 +1,6 @@
 import { Then, When, expect } from '../../fixtures.js';
+import { brokenSubgraphName } from '../../support/env.js';
 
-const brokenSubgraphName = process.env.E2E_BROKEN_SUBGRAPH_NAME || 'broken-service-e2e';
 const brokenHealthErrorPattern = /HTTP 500|timed out/i;
 
 export async function waitForBrokenHealthCheckResult(layoutPage) {
@@ -60,4 +60,3 @@ Then('I should see the broken subgraph shown as failed in the subgraphs table', 
 When('I open the GraphQL Sandbox health check modal', async ({ layoutPage }) => {
   await openSandboxHealthCheck(layoutPage);
 });
-

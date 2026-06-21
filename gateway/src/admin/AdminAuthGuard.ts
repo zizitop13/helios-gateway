@@ -28,11 +28,11 @@ export class AdminAuthGuard {
         }
 
         const token = this.authManager.extractTokenFromHeader(authHeader);
-        const user = token
-          ? await this.authManager.verifyToken(token)
-          : sessionCookie
-            ? await this.authManager.verifySessionCookie(sessionCookie)
-            : null;
+        let user = token ? await this.authManager.verifyToken(token) : null;
+        if (!user && sessionCookie) {
+          user = await this.authManager.verifySessionCookie(sessionCookie);
+        }
+
         if (!user) {
           res.status(401).json({ error: 'Unauthorized', message: 'Invalid or expired token' });
           return;

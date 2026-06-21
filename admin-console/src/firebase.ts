@@ -1,9 +1,11 @@
 import { initializeApp, type FirebaseOptions } from 'firebase/app';
-import { getAuth, type Auth } from 'firebase/auth';
+import { connectAuthEmulator, getAuth, type Auth } from 'firebase/auth';
 import { api } from './api';
 import type { FirebaseWebConfig } from './types';
 
 export let firebaseAuth: Auth | null = null;
+
+type FirebaseRuntimeConfig = FirebaseOptions & Pick<FirebaseWebConfig, 'authEmulatorUrl'>;
 
 function isValidFirebaseConfig(config: FirebaseWebConfig): config is Required<Pick<FirebaseWebConfig, 'apiKey' | 'authDomain' | 'projectId' | 'appId'>> & FirebaseWebConfig {
   return Boolean(config.apiKey && config.authDomain && config.projectId && config.appId);
@@ -18,10 +20,11 @@ function getFirebaseConfigFromEnv(): FirebaseWebConfig {
     messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
     appId: import.meta.env.VITE_FIREBASE_APP_ID,
     measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID,
+    authEmulatorUrl: import.meta.env.VITE_FIREBASE_AUTH_EMULATOR_URL,
   };
 }
 
-async function resolveFirebaseConfig(): Promise<FirebaseOptions> {
+async function resolveFirebaseConfig(): Promise<FirebaseRuntimeConfig> {
   const envConfig = getFirebaseConfigFromEnv();
   if (isValidFirebaseConfig(envConfig)) {
     return envConfig;
@@ -50,5 +53,8 @@ export async function initializeFirebaseAuth(): Promise<Auth> {
   const firebaseConfig = await resolveFirebaseConfig();
   const firebaseApp = initializeApp(firebaseConfig);
   firebaseAuth = getAuth(firebaseApp);
+  if (firebaseConfig.authEmulatorUrl) {
+    connectAuthEmulator(firebaseAuth, firebaseConfig.authEmulatorUrl, { disableWarnings: true });
+  }
   return firebaseAuth;
 }
