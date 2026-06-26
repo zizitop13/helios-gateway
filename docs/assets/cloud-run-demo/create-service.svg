@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1120" height="630" viewBox="0 0 1120 630" role="img" aria-labelledby="title desc">
+  <title id="title">Cloud Run create service screenshot placeholder</title>
+  <desc id="desc">Annotated placeholder for the Cloud Run create service form.</desc>
+  <rect width="1120" height="630" fill="#f8fafc"/>
+  <rect x="0" y="0" width="1120" height="64" fill="#1a73e8"/>
+  <text x="32" y="40" font-family="Arial, sans-serif" font-size="24" fill="#fff">Create Cloud Run service</text>
+  <rect x="48" y="96" width="1024" height="464" rx="8" fill="#fff" stroke="#d0d7de"/>
+  <text x="80" y="138" font-family="Arial, sans-serif" font-size="20" font-weight="700" fill="#24292f">Container image URL</text>
+  <rect x="80" y="158" width="720" height="42" rx="4" fill="#f6f8fa" stroke="#d0d7de"/>
+  <text x="96" y="185" font-family="Arial, sans-serif" font-size="15" fill="#57606a">docker.io/zizitop13/helios-gateway-pets-service:latest</text>
+  <text x="80" y="246" font-family="Arial, sans-serif" font-size="20" font-weight="700" fill="#24292f">Service name and region</text>
+  <rect x="80" y="266" width="320" height="42" rx="4" fill="#f6f8fa" stroke="#d0d7de"/>
+  <text x="96" y="293" font-family="Arial, sans-serif" font-size="15" fill="#57606a">pets-service</text>
+  <rect x="430" y="266" width="240" height="42" rx="4" fill="#f6f8fa" stroke="#d0d7de"/>
+  <text x="446" y="293" font-family="Arial, sans-serif" font-size="15" fill="#57606a">europe-west3</text>
+  <text x="80" y="354" font-family="Arial, sans-serif" font-size="20" font-weight="700" fill="#24292f">Authentication</text>
+  <circle cx="94" cy="386" r="9" fill="#1a73e8"/>
+  <text x="116" y="392" font-family="Arial, sans-serif" font-size="16" fill="#24292f">Allow public access for the demo</text>
+  <text x="80" y="450" font-family="Arial, sans-serif" font-size="20" font-weight="700" fill="#24292f">Container port</text>
+  <rect x="80" y="470" width="180" height="42" rx="4" fill="#f6f8fa" stroke="#d0d7de"/>
+  <text x="96" y="497" font-family="Arial, sans-serif" font-size="15" fill="#57606a">5001</text>
+  <text x="48" y="600" font-family="Arial, sans-serif" font-size="14" fill="#57606a">Use this as a capture guide when replacing with a real screenshot.</text>
+</svg>

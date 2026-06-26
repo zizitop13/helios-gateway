@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1120" height="630" viewBox="0 0 1120 630" role="img" aria-labelledby="title desc">
+  <title id="title">Cloud Run services list screenshot placeholder</title>
+  <desc id="desc">Annotated placeholder showing the Cloud Run services page for the Helios demo.</desc>
+  <rect width="1120" height="630" fill="#f8fafc"/>
+  <rect x="0" y="0" width="1120" height="64" fill="#1a73e8"/>
+  <text x="32" y="40" font-family="Arial, sans-serif" font-size="24" fill="#fff">Google Cloud Console - Cloud Run</text>
+  <rect x="32" y="96" width="1056" height="88" rx="8" fill="#fff" stroke="#d0d7de"/>
+  <text x="56" y="130" font-family="Arial, sans-serif" font-size="22" font-weight="700" fill="#24292f">Services</text>
+  <text x="56" y="160" font-family="Arial, sans-serif" font-size="15" fill="#57606a">Project: me-and-my-ai-480410-k6</text>
+  <rect x="32" y="216" width="1056" height="340" rx="8" fill="#fff" stroke="#d0d7de"/>
+  <rect x="32" y="216" width="1056" height="48" rx="8" fill="#eef4ff"/>
+  <text x="56" y="247" font-family="Arial, sans-serif" font-size="14" font-weight="700" fill="#24292f">Name</text>
+  <text x="350" y="247" font-family="Arial, sans-serif" font-size="14" font-weight="700" fill="#24292f">Region</text>
+  <text x="520" y="247" font-family="Arial, sans-serif" font-size="14" font-weight="700" fill="#24292f">Authentication</text>
+  <text x="760" y="247" font-family="Arial, sans-serif" font-size="14" font-weight="700" fill="#24292f">URL</text>
+  <g font-family="Arial, sans-serif" font-size="15" fill="#24292f">
+    <text x="56" y="302">pets-service</text><text x="350" y="302">europe-west3</text><text x="520" y="302">Public demo</text><text x="760" y="302">https://pets-service-...</text>
+    <text x="56" y="356">orders-service</text><text x="350" y="356">europe-west3</text><text x="520" y="356">Public demo</text><text x="760" y="356">https://orders-service-...</text>
+    <text x="56" y="410">customers-service</text><text x="350" y="410">europe-west3</text><text x="520" y="410">Public demo</text><text x="760" y="410">https://customers-service-...</text>
+    <text x="56" y="464">helios-gateway</text><text x="350" y="464">europe-west3</text><text x="520" y="464">Public</text><text x="760" y="464">https://helios-gateway-...</text>
+    <text x="56" y="518">pets-shop-ui</text><text x="350" y="518">europe-west3</text><text x="520" y="518">Public</text><text x="760" y="518">https://pets-shop-ui-...</text>
+  </g>
+  <text x="32" y="600" font-family="Arial, sans-serif" font-size="14" fill="#57606a">Replace this placeholder with a real Cloud Console screenshot after deployment.</text>
+</svg>
