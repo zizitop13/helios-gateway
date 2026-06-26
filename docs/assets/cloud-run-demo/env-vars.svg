@@ -8,7 +8,7 @@
   <text x="96" y="146" font-family="Arial, sans-serif" font-size="20" font-weight="700" fill="#24292f">Gateway service variables</text>
   <g font-family="Arial, sans-serif" font-size="15">
     <text x="96" y="198" fill="#24292f">DISCOVERY_MODE</text><text x="420" y="198" fill="#57606a">cloudrun</text>
-    <text x="96" y="236" fill="#24292f">GCP_PROJECT_ID</text><text x="420" y="236" fill="#57606a">me-and-my-ai-480410-k6</text>
+    <text x="96" y="236" fill="#24292f">GCP_PROJECT_ID</text><text x="420" y="236" fill="#57606a">project-id</text>
     <text x="96" y="274" fill="#24292f">GCP_REGION</text><text x="420" y="274" fill="#57606a">europe-west3</text>
     <text x="96" y="312" fill="#24292f">GRAPH_NAME</text><text x="420" y="312" fill="#57606a">pet-shop</text>
     <text x="96" y="350" fill="#24292f">ADMIN_CONSOLE_ENABLED</text><text x="420" y="350" fill="#57606a">true</text>

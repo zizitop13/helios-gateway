@@ -9,9 +9,6 @@
     "apollo-cloud-gateway": "dist/cli.js"
   },
   "private": false,
-  "publishConfig": {
-    "registry": "https://europe-west3-npm.pkg.dev/me-and-my-ai-480410-k6/node-packages/"
-  },
   "scripts": {
     "build": "tsc",
     "start": "node dist/main.js",

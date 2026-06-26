@@ -6,7 +6,7 @@
   <text x="32" y="40" font-family="Arial, sans-serif" font-size="24" fill="#fff">Google Cloud Console - Cloud Run</text>
   <rect x="32" y="96" width="1056" height="88" rx="8" fill="#fff" stroke="#d0d7de"/>
   <text x="56" y="130" font-family="Arial, sans-serif" font-size="22" font-weight="700" fill="#24292f">Services</text>
-  <text x="56" y="160" font-family="Arial, sans-serif" font-size="15" fill="#57606a">Project: me-and-my-ai-480410-k6</text>
+  <text x="56" y="160" font-family="Arial, sans-serif" font-size="15" fill="#57606a">Project: project-id</text>
   <rect x="32" y="216" width="1056" height="340" rx="8" fill="#fff" stroke="#d0d7de"/>
   <rect x="32" y="216" width="1056" height="48" rx="8" fill="#eef4ff"/>
   <text x="56" y="247" font-family="Arial, sans-serif" font-size="14" font-weight="700" fill="#24292f">Name</text>

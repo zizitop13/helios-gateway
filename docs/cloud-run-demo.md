@@ -16,7 +16,7 @@ Gateway and the pet-shop demo. It deploys:
 
 Project used in examples:
 
-[me-and-my-ai-480410-k6 Cloud Run services](https://console.cloud.google.com/run/services?project=me-and-my-ai-480410-k6)
+[project-id Cloud Run services](https://console.cloud.google.com/run/services?project=project-id)
 
 Primary references:
 
@@ -99,7 +99,7 @@ jobs:
   install:
     uses: zizitop13/helios-gateway/.github/workflows/install-helios-cloudrun.yml@main
     with:
-      project_id: me-and-my-ai-480410-k6
+      project_id: project-id
       region: europe-west3
       graph_name: pet-shop
       super_admin_id: admin@example.com
@@ -219,9 +219,9 @@ Add these environment variables:
 | Variable | Value |
 | --- | --- |
 | `DISCOVERY_MODE` | `cloudrun` |
-| `GCP_PROJECT_ID` | `me-and-my-ai-480410-k6` |
+| `GCP_PROJECT_ID` | `project-id` |
 | `GCP_REGION` | `europe-west3` |
-| `FIREBASE_PROJECT_ID` | `me-and-my-ai-480410-k6` |
+| `FIREBASE_PROJECT_ID` | `project-id` |
 | `GRAPH_NAME` | `pet-shop` |
 | `GRAPH_LABEL_KEY` | `graph` |
 | `SUPER_ADMIN_ID` | `admin@example.com` |
