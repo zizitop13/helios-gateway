@@ -1,0 +1,239 @@
+name: Install Helios Gateway on Cloud Run
+
+on:
+  workflow_call:
+    inputs:
+      project_id:
+        description: Google Cloud project ID.
+        required: true
+        type: string
+      region:
+        description: Google Cloud Run region.
+        required: false
+        type: string
+        default: europe-west3
+      graph_name:
+        description: Graph scope label value.
+        required: false
+        type: string
+        default: pet-shop
+      graph_label_key:
+        description: Graph scope label key.
+        required: false
+        type: string
+        default: graph
+      super_admin_id:
+        description: Firebase UID or email for first Admin Console access.
+        required: true
+        type: string
+      firebase_project_id:
+        description: Firebase project ID. Defaults to project_id when empty.
+        required: false
+        type: string
+        default: ""
+      firebase_api_key:
+        description: Firebase Web App apiKey.
+        required: true
+        type: string
+      firebase_auth_domain:
+        description: Firebase Web App authDomain.
+        required: true
+        type: string
+      firebase_storage_bucket:
+        description: Firebase Web App storageBucket.
+        required: false
+        type: string
+        default: ""
+      firebase_messaging_sender_id:
+        description: Firebase Web App messagingSenderId.
+        required: false
+        type: string
+        default: ""
+      firebase_app_id:
+        description: Firebase Web App appId.
+        required: true
+        type: string
+      firebase_measurement_id:
+        description: Firebase Web App measurementId.
+        required: false
+        type: string
+        default: ""
+      allow_unauthenticated:
+        description: Expose deployed Cloud Run services publicly.
+        required: false
+        type: boolean
+        default: true
+      deploy_ui:
+        description: Deploy the pets-shop-ui service.
+        required: false
+        type: boolean
+        default: true
+      create_runtime_service_account:
+        description: Create/use a gateway runtime service account and grant Cloud Run/Firebase roles.
+        required: false
+        type: boolean
+        default: true
+      runtime_service_account:
+        description: Runtime service account email. Empty creates/uses helios-gateway-runtime.
+        required: false
+        type: string
+        default: ""
+      enable_required_apis:
+        description: Enable required Google APIs before deployment.
+        required: false
+        type: boolean
+        default: true
+      enable_apollo_sandbox:
+        description: Enable Apollo Sandbox.
+        required: false
+        type: boolean
+        default: true
+      enable_schema_refresh:
+        description: Enable gateway schema refresh.
+        required: false
+        type: boolean
+        default: true
+      schema_refresh_interval_seconds:
+        description: Gateway schema refresh interval.
+        required: false
+        type: string
+        default: "30"
+      gateway_service_name:
+        description: Cloud Run service name for Helios Gateway.
+        required: false
+        type: string
+        default: helios-gateway
+      pets_service_name:
+        description: Cloud Run service name for pets subgraph.
+        required: false
+        type: string
+        default: pets-service
+      orders_service_name:
+        description: Cloud Run service name for orders subgraph.
+        required: false
+        type: string
+        default: orders-service
+      customers_service_name:
+        description: Cloud Run service name for customers subgraph.
+        required: false
+        type: string
+        default: customers-service
+      ui_service_name:
+        description: Cloud Run service name for the demo UI.
+        required: false
+        type: string
+        default: pets-shop-ui
+      gateway_image:
+        description: Container image for Helios Gateway.
+        required: false
+        type: string
+        default: docker.io/zizitop13/helios-gateway:latest
+      pets_image:
+        description: Container image for pets-service.
+        required: false
+        type: string
+        default: docker.io/zizitop13/helios-gateway-pets-service:latest
+      orders_image:
+        description: Container image for orders-service.
+        required: false
+        type: string
+        default: docker.io/zizitop13/helios-gateway-orders-service:latest
+      customers_image:
+        description: Container image for customers-service.
+        required: false
+        type: string
+        default: docker.io/zizitop13/helios-gateway-customers-service:latest
+      ui_image:
+        description: Container image for pets-shop-ui.
+        required: false
+        type: string
+        default: docker.io/zizitop13/helios-gateway-pets-shop-ui:latest
+    secrets:
+      GCP_SA_KEY:
+        description: Google service account JSON with permission to deploy Cloud Run and manage IAM.
+        required: true
+    outputs:
+      gateway_url:
+        description: Deployed gateway URL.
+        value: ${{ jobs.install.outputs.gateway_url }}
+      pets_service_url:
+        description: Deployed pets-service URL.
+        value: ${{ jobs.install.outputs.pets_service_url }}
+      orders_service_url:
+        description: Deployed orders-service URL.
+        value: ${{ jobs.install.outputs.orders_service_url }}
+      customers_service_url:
+        description: Deployed customers-service URL.
+        value: ${{ jobs.install.outputs.customers_service_url }}
+      ui_url:
+        description: Deployed pets-shop-ui URL.
+        value: ${{ jobs.install.outputs.ui_url }}
+
+permissions:
+  contents: read
+  id-token: write
+
+jobs:
+  install:
+    runs-on: ubuntu-latest
+    outputs:
+      gateway_url: ${{ steps.install.outputs.gateway_url }}
+      pets_service_url: ${{ steps.install.outputs.pets_service_url }}
+      orders_service_url: ${{ steps.install.outputs.orders_service_url }}
+      customers_service_url: ${{ steps.install.outputs.customers_service_url }}
+      ui_url: ${{ steps.install.outputs.ui_url }}
+    steps:
+      - name: Resolve installer source
+        id: installer-source
+        shell: bash
+        env:
+          WORKFLOW_REF: ${{ github.workflow_ref }}
+        run: |
+          set -euo pipefail
+          repository="${WORKFLOW_REF%%/.github/workflows/*}"
+          ref="${WORKFLOW_REF##*@}"
+          echo "repository=$repository" >> "$GITHUB_OUTPUT"
+          echo "ref=$ref" >> "$GITHUB_OUTPUT"
+
+      - name: Checkout Helios installer
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ steps.installer-source.outputs.repository }}
+          ref: ${{ steps.installer-source.outputs.ref }}
+          path: helios-installer
+
+      - name: Install Helios Gateway on Cloud Run
+        id: install
+        uses: ./helios-installer/.github/actions/install-helios-cloudrun
+        with:
+          credentials_json: ${{ secrets.GCP_SA_KEY }}
+          project_id: ${{ inputs.project_id }}
+          region: ${{ inputs.region }}
+          graph_name: ${{ inputs.graph_name }}
+          graph_label_key: ${{ inputs.graph_label_key }}
+          super_admin_id: ${{ inputs.super_admin_id }}
+          firebase_project_id: ${{ inputs.firebase_project_id }}
+          firebase_api_key: ${{ inputs.firebase_api_key }}
+          firebase_auth_domain: ${{ inputs.firebase_auth_domain }}
+          firebase_storage_bucket: ${{ inputs.firebase_storage_bucket }}
+          firebase_messaging_sender_id: ${{ inputs.firebase_messaging_sender_id }}
+          firebase_app_id: ${{ inputs.firebase_app_id }}
+          firebase_measurement_id: ${{ inputs.firebase_measurement_id }}
+          allow_unauthenticated: ${{ inputs.allow_unauthenticated && 'true' || 'false' }}
+          deploy_ui: ${{ inputs.deploy_ui && 'true' || 'false' }}
+          create_runtime_service_account: ${{ inputs.create_runtime_service_account && 'true' || 'false' }}
+          runtime_service_account: ${{ inputs.runtime_service_account }}
+          enable_required_apis: ${{ inputs.enable_required_apis && 'true' || 'false' }}
+          enable_apollo_sandbox: ${{ inputs.enable_apollo_sandbox && 'true' || 'false' }}
+          enable_schema_refresh: ${{ inputs.enable_schema_refresh && 'true' || 'false' }}
+          schema_refresh_interval_seconds: ${{ inputs.schema_refresh_interval_seconds }}
+          gateway_service_name: ${{ inputs.gateway_service_name }}
+          pets_service_name: ${{ inputs.pets_service_name }}
+          orders_service_name: ${{ inputs.orders_service_name }}
+          customers_service_name: ${{ inputs.customers_service_name }}
+          ui_service_name: ${{ inputs.ui_service_name }}
+          gateway_image: ${{ inputs.gateway_image }}
+          pets_image: ${{ inputs.pets_image }}
+          orders_image: ${{ inputs.orders_image }}
+          customers_image: ${{ inputs.customers_image }}
+          ui_image: ${{ inputs.ui_image }}
