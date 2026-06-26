@@ -216,49 +216,6 @@ jobs:
             ALLOW_FLAG="--allow-unauthenticated"
           fi
 
-          if [ "$ENABLE_REQUIRED_APIS" = "true" ]; then
-            gcloud services enable \
-              run.googleapis.com \
-              cloudresourcemanager.googleapis.com \
-              iam.googleapis.com \
-              firebase.googleapis.com \
-              identitytoolkit.googleapis.com \
-              --project "$PROJECT_ID"
-          fi
-
-          RUNTIME_SA_EMAIL="$RUNTIME_SERVICE_ACCOUNT_INPUT"
-          if [ "$CREATE_RUNTIME_SERVICE_ACCOUNT" = "true" ]; then
-            if [ -z "$RUNTIME_SA_EMAIL" ]; then
-              RUNTIME_SA_EMAIL="helios-gateway-runtime@$PROJECT_ID.iam.gserviceaccount.com"
-            fi
-
-            SA_NAME="${RUNTIME_SA_EMAIL%@*}"
-            if ! gcloud iam service-accounts describe "$RUNTIME_SA_EMAIL" --project "$PROJECT_ID" >/dev/null 2>&1; then
-              gcloud iam service-accounts create "$SA_NAME" \
-                --project "$PROJECT_ID" \
-                --display-name "Helios Gateway Runtime"
-            fi
-
-            for role in roles/run.viewer roles/firebaseauth.admin; do
-              gcloud projects add-iam-policy-binding "$PROJECT_ID" \
-                --member "serviceAccount:$RUNTIME_SA_EMAIL" \
-                --role "$role" \
-                --quiet >/dev/null
-            done
-          fi
-
-          service_account_args=()
-          if [ -n "$RUNTIME_SA_EMAIL" ]; then
-            service_account_args=(--service-account "$RUNTIME_SA_EMAIL")
-          fi
-
-          service_url() {
-            gcloud run services describe "$1" \
-              --project "$PROJECT_ID" \
-              --region "$REGION" \
-              --format 'value(status.url)'
-          }
-
           gateway_labels="app=$GATEWAY_SERVICE_NAME"
           if [ -n "$GRAPH_NAME" ]; then
             gateway_labels="$gateway_labels,$GRAPH_LABEL_KEY=$GRAPH_NAME"
@@ -298,14 +255,6 @@ jobs:
               echo "- subgraph=true"
               if [ -n "$GRAPH_NAME" ]; then
                 echo "- $GRAPH_LABEL_KEY=$GRAPH_NAME"
-              fi
-            fi
-            if [ "$ENABLE_CLOUD_RUN_IAM_AUTH" = "true" ]; then
-              echo ""
-              if [ -n "$RUNTIME_SA_EMAIL" ]; then
-                echo "IAM auth is enabled. Grant serviceAccount:$RUNTIME_SA_EMAIL permission to invoke protected subgraph services."
-              else
-                echo "IAM auth is enabled. Grant the gateway runtime service account permission to invoke protected subgraph services."
               fi
             fi
             echo ""
