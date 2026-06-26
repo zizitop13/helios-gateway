@@ -112,10 +112,6 @@ on:
       GCP_SA_KEY:
         description: Google service account JSON with permission to deploy Cloud Run and manage IAM.
         required: true
-    outputs:
-      gateway_url:
-        description: Deployed gateway URL.
-        value: ${{ jobs.install.outputs.gateway_url }}
 
 permissions:
   contents: read
@@ -124,8 +120,6 @@ permissions:
 jobs:
   install:
     runs-on: ubuntu-latest
-    outputs:
-      gateway_url: ${{ steps.deploy.outputs.gateway_url }}
     steps:
       - name: Authenticate to Google Cloud
         uses: google-github-actions/auth@v3
@@ -223,17 +217,3 @@ jobs:
             "${service_account_args[@]}" \
             --labels "$gateway_labels" \
             --set-env-vars "$gateway_env"
-
-          gateway_url="$(service_url "$GATEWAY_SERVICE_NAME")"
-          echo "gateway_url=$gateway_url" >> "$GITHUB_OUTPUT"
-
-          {
-            echo "## Helios Cloud Run installation"
-            echo ""
-            echo "- Gateway: $gateway_url"
-            echo "- Admin Console: $gateway_url/admin/console/"
-            echo "- GraphQL: $gateway_url/graphql"
-            echo ""
-            echo "Add this hostname to Firebase Authentication authorized domains:"
-            echo "- ${gateway_url#https://}"
-          } >> "$GITHUB_STEP_SUMMARY"
