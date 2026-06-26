@@ -25,7 +25,6 @@ Primary references:
 - [Configure environment variables for Cloud Run services](https://docs.cloud.google.com/run/docs/configuring/services/environment-variables)
 - [Add Firebase to your JavaScript project](https://firebase.google.com/docs/web/setup)
 - [GitHub Actions reusable workflows](https://docs.github.com/en/actions/how-tos/reuse-automations/reuse-workflows)
-- [GitHub Actions composite actions](https://docs.github.com/en/actions/tutorials/create-actions/create-a-composite-action)
 
 The screenshots below are capture guides. Replace them with real screenshots
 from the project after the services are deployed.
@@ -60,16 +59,17 @@ Run service instead of rebuilding the image for each project.
 
 ## Automated GitHub Actions Install
 
-The repository also provides a reusable workflow for a first demo deployment.
-It deploys the gateway, the three pet-shop subgraphs, and the UI service to a
-target Google Cloud project.
+The repository also provides a reusable workflow for installing the gateway in
+a target Google Cloud project. It deploys only `helios-gateway`; the gateway
+then discovers any labeled Cloud Run subgraphs in the configured project and
+region.
 
 Create a service account JSON key in the target project and save it as a GitHub
 secret named `GCP_SA_KEY` in the caller repository. For the default installer
 settings, that service account needs enough permission to:
 
 - enable required project APIs
-- create and deploy Cloud Run services
+- create and deploy the gateway Cloud Run service
 - create or use the gateway runtime service account
 - grant the runtime service account Cloud Run discovery and Firebase Auth roles
 
@@ -121,13 +121,20 @@ After the workflow finishes, open the job summary. It prints:
 - gateway URL
 - Admin Console URL
 - GraphQL URL
-- subgraph service URLs
-- UI URL
 - Firebase authorized domains to add
+- the labels Cloud Run subgraphs must have for gateway discovery
 
-The default image and service-name inputs match the pet-shop demo. Override
-`gateway_image`, `pets_image`, `orders_image`, `customers_image`, `ui_image`,
-or the matching `*_service_name` inputs when installing a custom build.
+The default gateway image is `docker.io/zizitop13/helios-gateway:latest`.
+Override `gateway_image` or `gateway_service_name` when installing a custom
+build.
+
+If downstream subgraphs require Cloud Run IAM authentication, enable identity
+token calls from the gateway:
+
+```yaml
+with:
+  enable_cloud_run_iam_auth: true
+```
 
 If your project has already been prepared by an administrator, you can lower
 the installer permissions:
@@ -236,6 +243,7 @@ Add these environment variables:
 | `ENABLE_APOLLO_SANDBOX` | `true` |
 | `ENABLE_SCHEMA_REFRESH` | `true` |
 | `SCHEMA_REFRESH_INTERVAL_SECONDS` | `30` |
+| `ENABLE_CLOUD_RUN_IAM_AUTH` | `true` only when subgraphs require Cloud Run IAM authentication |
 
 ![Gateway environment variables](./assets/cloud-run-demo/env-vars.svg)
 

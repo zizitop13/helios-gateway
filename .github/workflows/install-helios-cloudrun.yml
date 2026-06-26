@@ -13,12 +13,12 @@ on:
         type: string
         default: europe-west3
       graph_name:
-        description: Graph scope label value.
+        description: Graph scope label value used by the gateway discovery filter.
         required: false
         type: string
         default: pet-shop
       graph_label_key:
-        description: Graph scope label key.
+        description: Graph scope label key used by the gateway discovery filter.
         required: false
         type: string
         default: graph
@@ -59,12 +59,7 @@ on:
         type: string
         default: ""
       allow_unauthenticated:
-        description: Expose deployed Cloud Run services publicly.
-        required: false
-        type: boolean
-        default: true
-      deploy_ui:
-        description: Deploy the pets-shop-ui service.
+        description: Expose the gateway Cloud Run service publicly.
         required: false
         type: boolean
         default: true
@@ -83,6 +78,11 @@ on:
         required: false
         type: boolean
         default: true
+      enable_cloud_run_iam_auth:
+        description: Attach identity tokens when the gateway calls IAM-protected Cloud Run subgraphs.
+        required: false
+        type: boolean
+        default: false
       enable_apollo_sandbox:
         description: Enable Apollo Sandbox.
         required: false
@@ -103,51 +103,11 @@ on:
         required: false
         type: string
         default: helios-gateway
-      pets_service_name:
-        description: Cloud Run service name for pets subgraph.
-        required: false
-        type: string
-        default: pets-service
-      orders_service_name:
-        description: Cloud Run service name for orders subgraph.
-        required: false
-        type: string
-        default: orders-service
-      customers_service_name:
-        description: Cloud Run service name for customers subgraph.
-        required: false
-        type: string
-        default: customers-service
-      ui_service_name:
-        description: Cloud Run service name for the demo UI.
-        required: false
-        type: string
-        default: pets-shop-ui
       gateway_image:
         description: Container image for Helios Gateway.
         required: false
         type: string
         default: docker.io/zizitop13/helios-gateway:latest
-      pets_image:
-        description: Container image for pets-service.
-        required: false
-        type: string
-        default: docker.io/zizitop13/helios-gateway-pets-service:latest
-      orders_image:
-        description: Container image for orders-service.
-        required: false
-        type: string
-        default: docker.io/zizitop13/helios-gateway-orders-service:latest
-      customers_image:
-        description: Container image for customers-service.
-        required: false
-        type: string
-        default: docker.io/zizitop13/helios-gateway-customers-service:latest
-      ui_image:
-        description: Container image for pets-shop-ui.
-        required: false
-        type: string
-        default: docker.io/zizitop13/helios-gateway-pets-shop-ui:latest
     secrets:
       GCP_SA_KEY:
         description: Google service account JSON with permission to deploy Cloud Run and manage IAM.
@@ -156,18 +116,6 @@ on:
       gateway_url:
         description: Deployed gateway URL.
         value: ${{ jobs.install.outputs.gateway_url }}
-      pets_service_url:
-        description: Deployed pets-service URL.
-        value: ${{ jobs.install.outputs.pets_service_url }}
-      orders_service_url:
-        description: Deployed orders-service URL.
-        value: ${{ jobs.install.outputs.orders_service_url }}
-      customers_service_url:
-        description: Deployed customers-service URL.
-        value: ${{ jobs.install.outputs.customers_service_url }}
-      ui_url:
-        description: Deployed pets-shop-ui URL.
-        value: ${{ jobs.install.outputs.ui_url }}
 
 permissions:
   contents: read
@@ -177,63 +125,171 @@ jobs:
   install:
     runs-on: ubuntu-latest
     outputs:
-      gateway_url: ${{ steps.install.outputs.gateway_url }}
-      pets_service_url: ${{ steps.install.outputs.pets_service_url }}
-      orders_service_url: ${{ steps.install.outputs.orders_service_url }}
-      customers_service_url: ${{ steps.install.outputs.customers_service_url }}
-      ui_url: ${{ steps.install.outputs.ui_url }}
+      gateway_url: ${{ steps.deploy.outputs.gateway_url }}
     steps:
-      - name: Resolve installer source
-        id: installer-source
-        shell: bash
-        env:
-          WORKFLOW_REF: ${{ github.workflow_ref }}
-        run: |
-          set -euo pipefail
-          repository="${WORKFLOW_REF%%/.github/workflows/*}"
-          ref="${WORKFLOW_REF##*@}"
-          echo "repository=$repository" >> "$GITHUB_OUTPUT"
-          echo "ref=$ref" >> "$GITHUB_OUTPUT"
-
-      - name: Checkout Helios installer
-        uses: actions/checkout@v4
-        with:
-          repository: ${{ steps.installer-source.outputs.repository }}
-          ref: ${{ steps.installer-source.outputs.ref }}
-          path: helios-installer
-
-      - name: Install Helios Gateway on Cloud Run
-        id: install
-        uses: ./helios-installer/.github/actions/install-helios-cloudrun
+      - name: Authenticate to Google Cloud
+        uses: google-github-actions/auth@v3
         with:
           credentials_json: ${{ secrets.GCP_SA_KEY }}
+
+      - name: Set up Google Cloud SDK
+        uses: google-github-actions/setup-gcloud@v3
+        with:
           project_id: ${{ inputs.project_id }}
-          region: ${{ inputs.region }}
-          graph_name: ${{ inputs.graph_name }}
-          graph_label_key: ${{ inputs.graph_label_key }}
-          super_admin_id: ${{ inputs.super_admin_id }}
-          firebase_project_id: ${{ inputs.firebase_project_id }}
-          firebase_api_key: ${{ inputs.firebase_api_key }}
-          firebase_auth_domain: ${{ inputs.firebase_auth_domain }}
-          firebase_storage_bucket: ${{ inputs.firebase_storage_bucket }}
-          firebase_messaging_sender_id: ${{ inputs.firebase_messaging_sender_id }}
-          firebase_app_id: ${{ inputs.firebase_app_id }}
-          firebase_measurement_id: ${{ inputs.firebase_measurement_id }}
-          allow_unauthenticated: ${{ inputs.allow_unauthenticated && 'true' || 'false' }}
-          deploy_ui: ${{ inputs.deploy_ui && 'true' || 'false' }}
-          create_runtime_service_account: ${{ inputs.create_runtime_service_account && 'true' || 'false' }}
-          runtime_service_account: ${{ inputs.runtime_service_account }}
-          enable_required_apis: ${{ inputs.enable_required_apis && 'true' || 'false' }}
-          enable_apollo_sandbox: ${{ inputs.enable_apollo_sandbox && 'true' || 'false' }}
-          enable_schema_refresh: ${{ inputs.enable_schema_refresh && 'true' || 'false' }}
-          schema_refresh_interval_seconds: ${{ inputs.schema_refresh_interval_seconds }}
-          gateway_service_name: ${{ inputs.gateway_service_name }}
-          pets_service_name: ${{ inputs.pets_service_name }}
-          orders_service_name: ${{ inputs.orders_service_name }}
-          customers_service_name: ${{ inputs.customers_service_name }}
-          ui_service_name: ${{ inputs.ui_service_name }}
-          gateway_image: ${{ inputs.gateway_image }}
-          pets_image: ${{ inputs.pets_image }}
-          orders_image: ${{ inputs.orders_image }}
-          customers_image: ${{ inputs.customers_image }}
-          ui_image: ${{ inputs.ui_image }}
+
+      - name: Deploy Helios Gateway
+        id: deploy
+        shell: bash
+        env:
+          PROJECT_ID: ${{ inputs.project_id }}
+          REGION: ${{ inputs.region }}
+          GRAPH_NAME: ${{ inputs.graph_name }}
+          GRAPH_LABEL_KEY: ${{ inputs.graph_label_key }}
+          SUPER_ADMIN_ID: ${{ inputs.super_admin_id }}
+          FIREBASE_PROJECT_ID_INPUT: ${{ inputs.firebase_project_id }}
+          FIREBASE_API_KEY: ${{ inputs.firebase_api_key }}
+          FIREBASE_AUTH_DOMAIN: ${{ inputs.firebase_auth_domain }}
+          FIREBASE_STORAGE_BUCKET: ${{ inputs.firebase_storage_bucket }}
+          FIREBASE_MESSAGING_SENDER_ID: ${{ inputs.firebase_messaging_sender_id }}
+          FIREBASE_APP_ID: ${{ inputs.firebase_app_id }}
+          FIREBASE_MEASUREMENT_ID: ${{ inputs.firebase_measurement_id }}
+          ALLOW_UNAUTHENTICATED: ${{ inputs.allow_unauthenticated }}
+          CREATE_RUNTIME_SERVICE_ACCOUNT: ${{ inputs.create_runtime_service_account }}
+          RUNTIME_SERVICE_ACCOUNT_INPUT: ${{ inputs.runtime_service_account }}
+          ENABLE_REQUIRED_APIS: ${{ inputs.enable_required_apis }}
+          ENABLE_CLOUD_RUN_IAM_AUTH: ${{ inputs.enable_cloud_run_iam_auth }}
+          ENABLE_APOLLO_SANDBOX: ${{ inputs.enable_apollo_sandbox }}
+          ENABLE_SCHEMA_REFRESH: ${{ inputs.enable_schema_refresh }}
+          SCHEMA_REFRESH_INTERVAL_SECONDS: ${{ inputs.schema_refresh_interval_seconds }}
+          GATEWAY_SERVICE_NAME: ${{ inputs.gateway_service_name }}
+          GATEWAY_IMAGE: ${{ inputs.gateway_image }}
+        run: |
+          set -euo pipefail
+
+          require_input() {
+            local name="$1"
+            local value="$2"
+            if [ -z "$value" ]; then
+              echo "::error::$name is required"
+              exit 1
+            fi
+          }
+
+          bool_flag() {
+            case "$1" in
+              true|false) ;;
+              *) echo "::error::Boolean input must be 'true' or 'false', got '$1'"; exit 1 ;;
+            esac
+          }
+
+          require_input project_id "$PROJECT_ID"
+          require_input region "$REGION"
+          require_input super_admin_id "$SUPER_ADMIN_ID"
+          require_input firebase_api_key "$FIREBASE_API_KEY"
+          require_input firebase_auth_domain "$FIREBASE_AUTH_DOMAIN"
+          require_input firebase_app_id "$FIREBASE_APP_ID"
+          bool_flag "$ALLOW_UNAUTHENTICATED"
+          bool_flag "$CREATE_RUNTIME_SERVICE_ACCOUNT"
+          bool_flag "$ENABLE_REQUIRED_APIS"
+          bool_flag "$ENABLE_CLOUD_RUN_IAM_AUTH"
+          bool_flag "$ENABLE_APOLLO_SANDBOX"
+          bool_flag "$ENABLE_SCHEMA_REFRESH"
+
+          FIREBASE_PROJECT_ID="${FIREBASE_PROJECT_ID_INPUT:-$PROJECT_ID}"
+          ALLOW_FLAG="--no-allow-unauthenticated"
+          if [ "$ALLOW_UNAUTHENTICATED" = "true" ]; then
+            ALLOW_FLAG="--allow-unauthenticated"
+          fi
+
+          if [ "$ENABLE_REQUIRED_APIS" = "true" ]; then
+            gcloud services enable \
+              run.googleapis.com \
+              cloudresourcemanager.googleapis.com \
+              iam.googleapis.com \
+              firebase.googleapis.com \
+              identitytoolkit.googleapis.com \
+              --project "$PROJECT_ID"
+          fi
+
+          RUNTIME_SA_EMAIL="$RUNTIME_SERVICE_ACCOUNT_INPUT"
+          if [ "$CREATE_RUNTIME_SERVICE_ACCOUNT" = "true" ]; then
+            if [ -z "$RUNTIME_SA_EMAIL" ]; then
+              RUNTIME_SA_EMAIL="helios-gateway-runtime@$PROJECT_ID.iam.gserviceaccount.com"
+            fi
+
+            SA_NAME="${RUNTIME_SA_EMAIL%@*}"
+            if ! gcloud iam service-accounts describe "$RUNTIME_SA_EMAIL" --project "$PROJECT_ID" >/dev/null 2>&1; then
+              gcloud iam service-accounts create "$SA_NAME" \
+                --project "$PROJECT_ID" \
+                --display-name "Helios Gateway Runtime"
+            fi
+
+            for role in roles/run.viewer roles/firebaseauth.admin; do
+              gcloud projects add-iam-policy-binding "$PROJECT_ID" \
+                --member "serviceAccount:$RUNTIME_SA_EMAIL" \
+                --role "$role" \
+                --quiet >/dev/null
+            done
+          fi
+
+          service_account_args=()
+          if [ -n "$RUNTIME_SA_EMAIL" ]; then
+            service_account_args=(--service-account "$RUNTIME_SA_EMAIL")
+          fi
+
+          service_url() {
+            gcloud run services describe "$1" \
+              --project "$PROJECT_ID" \
+              --region "$REGION" \
+              --format 'value(status.url)'
+          }
+
+          gateway_labels="app=$GATEWAY_SERVICE_NAME"
+          if [ -n "$GRAPH_NAME" ]; then
+            gateway_labels="$gateway_labels,$GRAPH_LABEL_KEY=$GRAPH_NAME"
+          fi
+
+          gateway_env="^|^DISCOVERY_MODE=cloudrun|GCP_PROJECT_ID=$PROJECT_ID|GCP_REGION=$REGION|FIREBASE_PROJECT_ID=$FIREBASE_PROJECT_ID|GRAPH_NAME=$GRAPH_NAME|GRAPH_LABEL_KEY=$GRAPH_LABEL_KEY|SUPER_ADMIN_ID=$SUPER_ADMIN_ID|ADMIN_CONSOLE_ENABLED=true|ADMIN_CONSOLE_FIREBASE_API_KEY=$FIREBASE_API_KEY|ADMIN_CONSOLE_FIREBASE_AUTH_DOMAIN=$FIREBASE_AUTH_DOMAIN|ADMIN_CONSOLE_FIREBASE_PROJECT_ID=$FIREBASE_PROJECT_ID|ADMIN_CONSOLE_FIREBASE_STORAGE_BUCKET=$FIREBASE_STORAGE_BUCKET|ADMIN_CONSOLE_FIREBASE_MESSAGING_SENDER_ID=$FIREBASE_MESSAGING_SENDER_ID|ADMIN_CONSOLE_FIREBASE_APP_ID=$FIREBASE_APP_ID|ADMIN_CONSOLE_FIREBASE_MEASUREMENT_ID=$FIREBASE_MEASUREMENT_ID|ENABLE_CLOUD_RUN_IAM_AUTH=$ENABLE_CLOUD_RUN_IAM_AUTH|ENABLE_APOLLO_SANDBOX=$ENABLE_APOLLO_SANDBOX|ENABLE_SCHEMA_REFRESH=$ENABLE_SCHEMA_REFRESH|SCHEMA_REFRESH_INTERVAL_SECONDS=$SCHEMA_REFRESH_INTERVAL_SECONDS"
+
+          gcloud run deploy "$GATEWAY_SERVICE_NAME" \
+            --project "$PROJECT_ID" \
+            --region "$REGION" \
+            --platform managed \
+            --image "$GATEWAY_IMAGE" \
+            --port 4000 \
+            $ALLOW_FLAG \
+            --memory 512Mi \
+            --cpu 1 \
+            --min-instances 0 \
+            --max-instances 10 \
+            "${service_account_args[@]}" \
+            --labels "$gateway_labels" \
+            --set-env-vars "$gateway_env"
+
+          gateway_url="$(service_url "$GATEWAY_SERVICE_NAME")"
+          echo "gateway_url=$gateway_url" >> "$GITHUB_OUTPUT"
+
+          {
+            echo "## Helios Cloud Run installation"
+            echo ""
+            echo "- Gateway: $gateway_url"
+            echo "- Admin Console: $gateway_url/admin/console/"
+            echo "- GraphQL: $gateway_url/graphql"
+            echo ""
+            echo "The gateway discovers Cloud Run subgraphs in project '$PROJECT_ID' and region '$REGION' with labels:"
+            echo "- subgraph=true"
+            if [ -n "$GRAPH_NAME" ]; then
+              echo "- $GRAPH_LABEL_KEY=$GRAPH_NAME"
+            fi
+            if [ "$ENABLE_CLOUD_RUN_IAM_AUTH" = "true" ]; then
+              echo ""
+              if [ -n "$RUNTIME_SA_EMAIL" ]; then
+                echo "IAM auth is enabled. Grant serviceAccount:$RUNTIME_SA_EMAIL permission to invoke protected subgraph services."
+              else
+                echo "IAM auth is enabled. Grant the gateway runtime service account permission to invoke protected subgraph services."
+              fi
+            fi
+            echo ""
+            echo "Add this hostname to Firebase Authentication authorized domains:"
+            echo "- ${gateway_url#https://}"
+          } >> "$GITHUB_STEP_SUMMARY"
