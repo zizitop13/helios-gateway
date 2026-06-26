@@ -12,11 +12,6 @@ on:
         required: false
         type: string
         default: europe-west3
-      discovery_mode:
-        description: Gateway subgraph discovery mode (cloudrun, docker, or file). cloudrun is the default and uses Cloud Run service discovery. docker uses Docker image discovery. file uses a local schema file.
-        required: false
-        type: string
-        default: cloudrun
       graph_name:
         description: Graph scope label value used by the gateway discovery filter.
         required: false
@@ -148,7 +143,6 @@ jobs:
         env:
           PROJECT_ID: ${{ inputs.project_id }}
           REGION: ${{ inputs.region }}
-          DISCOVERY_MODE: ${{ inputs.discovery_mode }}
           GRAPH_NAME: ${{ inputs.graph_name }}
           GRAPH_LABEL_KEY: ${{ inputs.graph_label_key }}
           SUPER_ADMIN_ID: ${{ inputs.super_admin_id }}
@@ -188,21 +182,13 @@ jobs:
             esac
           }
 
-          discovery_mode() {
-            case "$1" in
-              cloudrun|docker|file) ;;
-              *) echo "::error::discovery_mode must be 'cloudrun', 'docker', or 'file', got '$1'"; exit 1 ;;
-            esac
-          }
 
           require_input project_id "$PROJECT_ID"
           require_input region "$REGION"
-          require_input discovery_mode "$DISCOVERY_MODE"
           require_input super_admin_id "$SUPER_ADMIN_ID"
           require_input firebase_api_key "$FIREBASE_API_KEY"
           require_input firebase_auth_domain "$FIREBASE_AUTH_DOMAIN"
           require_input firebase_app_id "$FIREBASE_APP_ID"
-          discovery_mode "$DISCOVERY_MODE"
           bool_flag "$ALLOW_UNAUTHENTICATED"
           bool_flag "$CREATE_RUNTIME_SERVICE_ACCOUNT"
           bool_flag "$ENABLE_REQUIRED_APIS"
@@ -221,7 +207,7 @@ jobs:
             gateway_labels="$gateway_labels,$GRAPH_LABEL_KEY=$GRAPH_NAME"
           fi
 
-          gateway_env="^|^DISCOVERY_MODE=$DISCOVERY_MODE|GCP_PROJECT_ID=$PROJECT_ID|GCP_REGION=$REGION|FIREBASE_PROJECT_ID=$FIREBASE_PROJECT_ID|GRAPH_NAME=$GRAPH_NAME|GRAPH_LABEL_KEY=$GRAPH_LABEL_KEY|SUPER_ADMIN_ID=$SUPER_ADMIN_ID|ADMIN_CONSOLE_ENABLED=true|ADMIN_CONSOLE_FIREBASE_API_KEY=$FIREBASE_API_KEY|ADMIN_CONSOLE_FIREBASE_AUTH_DOMAIN=$FIREBASE_AUTH_DOMAIN|ADMIN_CONSOLE_FIREBASE_PROJECT_ID=$FIREBASE_PROJECT_ID|ADMIN_CONSOLE_FIREBASE_STORAGE_BUCKET=$FIREBASE_STORAGE_BUCKET|ADMIN_CONSOLE_FIREBASE_MESSAGING_SENDER_ID=$FIREBASE_MESSAGING_SENDER_ID|ADMIN_CONSOLE_FIREBASE_APP_ID=$FIREBASE_APP_ID|ADMIN_CONSOLE_FIREBASE_MEASUREMENT_ID=$FIREBASE_MEASUREMENT_ID|ENABLE_CLOUD_RUN_IAM_AUTH=$ENABLE_CLOUD_RUN_IAM_AUTH|ENABLE_APOLLO_SANDBOX=$ENABLE_APOLLO_SANDBOX|ENABLE_SCHEMA_REFRESH=$ENABLE_SCHEMA_REFRESH|SCHEMA_REFRESH_INTERVAL_SECONDS=$SCHEMA_REFRESH_INTERVAL_SECONDS"
+          gateway_env="^|^DISCOVERY_MODE=cloudrun|GCP_PROJECT_ID=$PROJECT_ID|GCP_REGION=$REGION|FIREBASE_PROJECT_ID=$FIREBASE_PROJECT_ID|GRAPH_NAME=$GRAPH_NAME|GRAPH_LABEL_KEY=$GRAPH_LABEL_KEY|SUPER_ADMIN_ID=$SUPER_ADMIN_ID|ADMIN_CONSOLE_ENABLED=true|ADMIN_CONSOLE_FIREBASE_API_KEY=$FIREBASE_API_KEY|ADMIN_CONSOLE_FIREBASE_AUTH_DOMAIN=$FIREBASE_AUTH_DOMAIN|ADMIN_CONSOLE_FIREBASE_PROJECT_ID=$FIREBASE_PROJECT_ID|ADMIN_CONSOLE_FIREBASE_STORAGE_BUCKET=$FIREBASE_STORAGE_BUCKET|ADMIN_CONSOLE_FIREBASE_MESSAGING_SENDER_ID=$FIREBASE_MESSAGING_SENDER_ID|ADMIN_CONSOLE_FIREBASE_APP_ID=$FIREBASE_APP_ID|ADMIN_CONSOLE_FIREBASE_MEASUREMENT_ID=$FIREBASE_MEASUREMENT_ID|ENABLE_CLOUD_RUN_IAM_AUTH=$ENABLE_CLOUD_RUN_IAM_AUTH|ENABLE_APOLLO_SANDBOX=$ENABLE_APOLLO_SANDBOX|ENABLE_SCHEMA_REFRESH=$ENABLE_SCHEMA_REFRESH|SCHEMA_REFRESH_INTERVAL_SECONDS=$SCHEMA_REFRESH_INTERVAL_SECONDS"
 
           gcloud run deploy "$GATEWAY_SERVICE_NAME" \
             --project "$PROJECT_ID" \
@@ -247,16 +233,6 @@ jobs:
             echo "- Gateway: $gateway_url"
             echo "- Admin Console: $gateway_url/admin/console/"
             echo "- GraphQL: $gateway_url/graphql"
-            echo ""
-            echo "Discovery mode: $DISCOVERY_MODE"
-            if [ "$DISCOVERY_MODE" = "cloudrun" ]; then
-              echo ""
-              echo "The gateway discovers Cloud Run subgraphs in project '$PROJECT_ID' and region '$REGION' with labels:"
-              echo "- subgraph=true"
-              if [ -n "$GRAPH_NAME" ]; then
-                echo "- $GRAPH_LABEL_KEY=$GRAPH_NAME"
-              fi
-            fi
             echo ""
             echo "Add this hostname to Firebase Authentication authorized domains:"
             echo "- ${gateway_url#https://}"
