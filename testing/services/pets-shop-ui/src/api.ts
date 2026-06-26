@@ -1,6 +1,7 @@
 import type { DashboardData, Order, UpdateOrderInput } from './types';
+import { runtimeEnv } from './runtimeConfig';
 
-const GATEWAY_URL = import.meta.env.VITE_GATEWAY_URL ?? 'http://localhost:4000';
+export const GATEWAY_URL = runtimeEnv('VITE_GATEWAY_URL') ?? 'http://localhost:4000';
 const GRAPHQL_ENDPOINT = `${GATEWAY_URL}/graphql`;
 const CSRF_ENDPOINT = `${GATEWAY_URL}/csrfToken`;
 const SESSION_LOGIN_ENDPOINT = `${GATEWAY_URL}/sessionLogin`;

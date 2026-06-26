@@ -18,7 +18,7 @@ import {
 import { IconRefresh, IconShoppingCart, IconUser } from '@tabler/icons-react';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { AuthProvider, useAuth } from './AuthContext';
-import { fetchDashboardData, type DashboardPermissions, updateOrder } from './api';
+import { fetchDashboardData, GATEWAY_URL, type DashboardPermissions, updateOrder } from './api';
 import type { DashboardData, UpdateOrderInput } from './types';
 
 const emptyDashboard: DashboardData = {
@@ -215,7 +215,7 @@ function DashboardView() {
           <Stack gap={2}>
             <Title order={2}>Test Pets Shop</Title>
             <Text c="dimmed" size="sm">
-              Connected to gateway endpoint `{import.meta.env.VITE_GATEWAY_URL ?? 'http://localhost:4000'}/graphql`
+              Connected to gateway endpoint `{GATEWAY_URL}/graphql`
             </Text>
             <Group gap="xs">{roleBadges}</Group>
           </Stack>

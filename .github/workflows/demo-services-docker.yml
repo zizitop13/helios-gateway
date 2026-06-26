@@ -18,6 +18,7 @@ jobs:
           - pets-service
           - orders-service
           - customers-service
+          - pets-shop-ui
           - broken-service
 
     steps:

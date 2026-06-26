@@ -13,7 +13,7 @@ Simple React + Mantine test UI for the federated pets shop.
 
 ```bash
 npm install
-npm run dev-pet-shop
+npm run dev-pet-shop-ui
 ```
 
 Default URL: `http://localhost:5173`
@@ -24,3 +24,9 @@ Copy `.env.example` to `.env.local` and set values as needed.
 
 - `VITE_GATEWAY_URL` (default: `http://localhost:4000`)
 - `VITE_FIREBASE_*` values for the Firebase web app used by local authentication
+
+## Docker
+
+The Docker image serves the built app with nginx. Runtime configuration is
+written to `/runtime-config.js` from container environment variables, so the
+same image can be deployed to different Cloud Run projects without rebuilding.
