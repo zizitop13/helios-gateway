@@ -15,6 +15,11 @@ Clients send Firebase ID tokens in the `Authorization` header:
 Authorization: Bearer <firebase-id-token>
 ```
 
+Browser clients can also exchange a Firebase ID token for an HTTP-only gateway
+session cookie. This is useful for the Admin Console, embedded GraphQL Sandbox,
+and browser apps that prefer cookie-based requests over storing bearer tokens in
+application code.
+
 ## Firebase Variables
 
 | Variable | Required | Default | Description |
@@ -23,6 +28,7 @@ Authorization: Bearer <firebase-id-token>
 | `FIREBASE_SERVICE_ACCOUNT_KEY` | No | - | Path to a Firebase service account JSON file. If omitted, Firebase Admin uses default credentials. |
 | `FIREBASE_AUTH_EMULATOR_HOST` | Local emulator | - | Firebase Auth emulator host, for example `firebase-auth-emulator:9099` in Docker Compose. |
 | `SUPER_ADMIN_ID` | No | - | UID or email that bypasses `admin` role checks for admin API access. |
+| `TOKEN_EXPIRES_IN_DAYS` | No | `5` | Lifetime, in days, for gateway session cookies created from Firebase ID tokens. |
 
 In the Docker demo, `SUPER_ADMIN_ID=admin@example.com` is set on the gateway and
 the Firebase Auth emulator service so both containers share the same demo admin
@@ -43,6 +49,76 @@ app configuration from `/admin/config/firebase`.
 | `ADMIN_CONSOLE_FIREBASE_STORAGE_BUCKET` | No | - | Optional Firebase storage bucket. |
 | `ADMIN_CONSOLE_FIREBASE_MESSAGING_SENDER_ID` | No | - | Optional Firebase messaging sender id. |
 | `ADMIN_CONSOLE_FIREBASE_MEASUREMENT_ID` | No | - | Optional Firebase Analytics measurement id. |
+
+## Cookie-Based Browser Sessions
+
+The gateway supports a browser session flow that starts with Firebase sign-in
+and ends with a provider-backed Firebase session cookie. The browser still signs
+in with Firebase first, but the gateway stores the long-lived credential as an
+HTTP-only cookie named `apollo_playground_token`.
+
+The session flow is:
+
+1. Request a CSRF token:
+
+   ```http
+   GET /csrfToken
+   ```
+
+   The response returns JSON like `{"csrfToken":"..."}` and sets a readable
+   `apollo_csrf_token` cookie. The browser must send both the cookie and the
+   token value back on state-changing session requests.
+
+2. Exchange a Firebase ID token for a gateway session:
+
+   ```http
+   POST /sessionLogin
+   Content-Type: application/json
+   X-CSRF-Token: <csrf-token>
+
+   {
+     "idToken": "<firebase-id-token>"
+   }
+   ```
+
+   The gateway verifies the Firebase ID token, creates a Firebase session cookie
+   through the Firebase Admin SDK, and stores that session cookie in
+   `apollo_playground_token`. The raw ID token is not stored in the cookie.
+
+3. Call GraphQL with cookies:
+
+   ```http
+   POST /graphql
+   Content-Type: application/json
+   X-CSRF-Token: <csrf-token>
+   ```
+
+   Requests that authenticate with `apollo_playground_token` must also include a
+   matching CSRF token, either in the `X-CSRF-Token` header or the `csrfToken`
+   query parameter. The query parameter is used by browser tools such as the
+   embedded GraphQL Sandbox.
+
+4. Clear the gateway session:
+
+   ```http
+   POST /sessionLogout
+   X-CSRF-Token: <csrf-token>
+   ```
+
+   Logout clears the `apollo_playground_token` cookie after validating the CSRF
+   token.
+
+Cookie options are selected by environment. In local development, cookies use
+`SameSite=Lax` and are not marked `Secure`. In production, cookies use
+`SameSite=None` and `Secure`. The session cookie is HTTP-only; the CSRF cookie is
+readable by browser JavaScript so clients can echo it in the CSRF header.
+
+The gateway accepts both authentication styles on protected routes. If an
+`Authorization: Bearer <firebase-id-token>` header is present and verifies
+successfully, that user is used. If the bearer token is absent or invalid and an
+`apollo_playground_token` cookie is present, the gateway verifies the Firebase
+session cookie and uses that user context instead. Admin API routes apply the
+same fallback and still require the `admin` role or `SUPER_ADMIN_ID`.
 
 ## Downstream Cloud Run IAM
 
