@@ -263,34 +263,6 @@ Expected `/health` response:
 }
 ```
 
-## Deploy Pets Shop UI
-
-Create the UI service after the gateway URL is known.
-
-| Setting | Value |
-| --- | --- |
-| Service name | `pets-shop-ui` |
-| Image | `docker.io/zizitop13/helios-gateway-pets-shop-ui:latest` |
-| Region | Same as gateway |
-| Container port | `8080` |
-| Authentication | Allow public access |
-
-Add these environment variables:
-
-| Variable | Value |
-| --- | --- |
-| `VITE_GATEWAY_URL` | `https://<helios-gateway-url>` |
-| `VITE_FIREBASE_API_KEY` | Firebase web config `apiKey` |
-| `VITE_FIREBASE_AUTH_DOMAIN` | Firebase web config `authDomain` |
-| `VITE_FIREBASE_PROJECT_ID` | Firebase web config `projectId` |
-| `VITE_FIREBASE_STORAGE_BUCKET` | Firebase web config `storageBucket` |
-| `VITE_FIREBASE_MESSAGING_SENDER_ID` | Firebase web config `messagingSenderId` |
-| `VITE_FIREBASE_APP_ID` | Firebase web config `appId` |
-| `VITE_FIREBASE_MEASUREMENT_ID` | Firebase web config `measurementId`, optional |
-
-Open the UI URL and sign in with a Firebase user. The UI stores the gateway
-session in HTTP-only cookies and calls the gateway `/graphql` endpoint.
-
 ## First Verification
 
 1. Open the Admin Console:
