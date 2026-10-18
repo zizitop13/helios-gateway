@@ -1,0 +1,24 @@
+Starting Apollo Cloud Gateway...
+Firebase Admin SDK initialized successfully
+Using file discovery mode
+Discovered 4 subgraph services from file /home/runner/work/helios-gateway/helios-gateway/reports/local/e2e/subgraphs.yaml
+Discovered 4 services at startup
+Building gateway from 4 discovered subgraphs...
+Discovered subgraphs (4): pets-service, orders-service, customers-service, broken-service
+Initial composition produced a supergraph with 4 subgraphs.
+Preloading RBAC policies from composed subgraphs...
+RBAC policy preload completed.
+Creating Apollo Gateway instance...
+Creating Apollo Server instance...
+Starting Apollo Server...
+Initial supergraph composition succeeded with 4 subgraphs.
+Apollo Server started successfully
+Admin console enabled, setting up routes...
+Admin console routes configured at /admin/console and /admin/api
+GraphQL endpoint registered at /graphql
+Schema refresh enabled; interval is 5 seconds.
+Gateway has started
+🚀 Apollo Cloud Gateway ready at http://localhost:4400/graphql
+Discovered 4 subgraph services from file /home/runner/work/helios-gateway/helios-gateway/reports/local/e2e/subgraphs.yaml
+Discovered subgraphs (4): pets-service, orders-service, customers-service, broken-service
+Schema refresh succeeded with 4 subgraphs.

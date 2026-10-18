@@ -1,0 +1,116 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>stress: PASS · Helios Gateway</title><style>
+  :root{color-scheme:light dark;font-family:system-ui,sans-serif;line-height:1.6;background:#101827;color:#e5eaf2}body{max-width:1100px;margin:40px auto;padding:0 24px}a{color:#93c5fd}h1{line-height:1.2}h2{margin-top:32px}p{color:#c5cfdd}table{border-collapse:collapse;width:100%;background:#192538}th,td{text-align:left;padding:10px 14px;border-bottom:1px solid #344155;vertical-align:top}th{color:#93c5fd}.table-scroll{overflow:auto}.pass{color:#86efac}.fail{color:#fda4af}pre{background:#192538;padding:18px;overflow:auto;white-space:pre-wrap;overflow-wrap:anywhere}code{overflow-wrap:anywhere}li{margin:8px 0}small{color:#a6b4c8}details{margin-top:24px}</style></head><body><p><a href="https://zizitop13.github.io/helios-gateway/">Helios Gateway documentation</a></p><h1>stress: PASS</h1><p>UTC: 2026-10-18T12:21:49.078Z · build 4 · attempt 1<br>Commit: <code>a52e51bae628f7f14a9880d5d2df8319d295e6c5</code></p><p><a href="summary-2026-10-18T12-21-49-078Z-build-4-attempt-1.html">All checks</a> · Duration: 45.22s · Exit code: 0</p><p>Local CI smoke stress test with closed-loop concurrency; this is not a production capacity measurement.</p><p>Thresholds: p95 ≤ 2000 ms, zero failures, ≥ 20 requests per stage.</p><div class="table-scroll"><table><thead><tr><th>Stage</th><th>Concurrency</th><th>Requests</th><th>Failures</th><th>Req/s</th><th>p50 ms</th><th>p95 ms</th><th>p99 ms</th><th>Result</th></tr></thead><tbody><tr><td>health-under-concurrency</td><td>10</td><td>85696</td><td>0</td><td>17084</td><td>0.34</td><td>1.1</td><td>7.26</td><td>PASS</td></tr><tr><td>federation-ramp-4</td><td>4</td><td>4134</td><td>0</td><td>826.28</td><td>3.99</td><td>9.14</td><td>14.8</td><td>PASS</td></tr><tr><td>federation-ramp-20</td><td>20</td><td>5428</td><td>0</td><td>1083.19</td><td>17.87</td><td>25.35</td><td>37.06</td><td>PASS</td></tr><tr><td>federation-burst-40</td><td>40</td><td>5656</td><td>0</td><td>1126.46</td><td>33.41</td><td>51.43</td><td>80.78</td><td>PASS</td></tr><tr><td>mutation-burst</td><td>20</td><td>9377</td><td>0</td><td>1872.01</td><td>10.03</td><td>16.28</td><td>23.41</td><td>PASS</td></tr><tr><td>anonymous-access-denied</td><td>20</td><td>37072</td><td>0</td><td>7396.43</td><td>1.85</td><td>7.51</td><td>13.81</td><td>PASS</td></tr><tr><td>insufficient-role-denied</td><td>20</td><td>16784</td><td>0</td><td>3352.94</td><td>5.02</td><td>13.16</td><td>17.71</td><td>PASS</td></tr></tbody></table></div><pre>{
+  &quot;passed&quot;: true,
+  &quot;thresholds&quot;: {
+    &quot;maxP95Ms&quot;: 2000,
+    &quot;maxFailures&quot;: 0,
+    &quot;minRequestsPerStage&quot;: 20
+  },
+  &quot;durationPerStageSeconds&quot;: 5,
+  &quot;stages&quot;: [
+    {
+      &quot;name&quot;: &quot;health-under-concurrency&quot;,
+      &quot;concurrency&quot;: 10,
+      &quot;requests&quot;: 85696,
+      &quot;failures&quot;: 0,
+      &quot;requestsPerSecond&quot;: 17084,
+      &quot;durationSeconds&quot;: 5.02,
+      &quot;p50Ms&quot;: 0.34,
+      &quot;p95Ms&quot;: 1.1,
+      &quot;p99Ms&quot;: 7.26,
+      &quot;errors&quot;: [],
+      &quot;passed&quot;: true
+    },
+    {
+      &quot;name&quot;: &quot;federation-ramp-4&quot;,
+      &quot;concurrency&quot;: 4,
+      &quot;requests&quot;: 4134,
+      &quot;failures&quot;: 0,
+      &quot;requestsPerSecond&quot;: 826.28,
+      &quot;durationSeconds&quot;: 5,
+      &quot;p50Ms&quot;: 3.99,
+      &quot;p95Ms&quot;: 9.14,
+      &quot;p99Ms&quot;: 14.8,
+      &quot;errors&quot;: [],
+      &quot;passed&quot;: true
+    },
+    {
+      &quot;name&quot;: &quot;federation-ramp-20&quot;,
+      &quot;concurrency&quot;: 20,
+      &quot;requests&quot;: 5428,
+      &quot;failures&quot;: 0,
+      &quot;requestsPerSecond&quot;: 1083.19,
+      &quot;durationSeconds&quot;: 5.01,
+      &quot;p50Ms&quot;: 17.87,
+      &quot;p95Ms&quot;: 25.35,
+      &quot;p99Ms&quot;: 37.06,
+      &quot;errors&quot;: [],
+      &quot;passed&quot;: true
+    },
+    {
+      &quot;name&quot;: &quot;federation-burst-40&quot;,
+      &quot;concurrency&quot;: 40,
+      &quot;requests&quot;: 5656,
+      &quot;failures&quot;: 0,
+      &quot;requestsPerSecond&quot;: 1126.46,
+      &quot;durationSeconds&quot;: 5.02,
+      &quot;p50Ms&quot;: 33.41,
+      &quot;p95Ms&quot;: 51.43,
+      &quot;p99Ms&quot;: 80.78,
+      &quot;errors&quot;: [],
+      &quot;passed&quot;: true
+    },
+    {
+      &quot;name&quot;: &quot;mutation-burst&quot;,
+      &quot;concurrency&quot;: 20,
+      &quot;requests&quot;: 9377,
+      &quot;failures&quot;: 0,
+      &quot;requestsPerSecond&quot;: 1872.01,
+      &quot;durationSeconds&quot;: 5.01,
+      &quot;p50Ms&quot;: 10.03,
+      &quot;p95Ms&quot;: 16.28,
+      &quot;p99Ms&quot;: 23.41,
+      &quot;errors&quot;: [],
+      &quot;passed&quot;: true
+    },
+    {
+      &quot;name&quot;: &quot;anonymous-access-denied&quot;,
+      &quot;concurrency&quot;: 20,
+      &quot;requests&quot;: 37072,
+      &quot;failures&quot;: 0,
+      &quot;requestsPerSecond&quot;: 7396.43,
+      &quot;durationSeconds&quot;: 5.01,
+      &quot;p50Ms&quot;: 1.85,
+      &quot;p95Ms&quot;: 7.51,
+      &quot;p99Ms&quot;: 13.81,
+      &quot;errors&quot;: [],
+      &quot;passed&quot;: true
+    },
+    {
+      &quot;name&quot;: &quot;insufficient-role-denied&quot;,
+      &quot;concurrency&quot;: 20,
+      &quot;requests&quot;: 16784,
+      &quot;failures&quot;: 0,
+      &quot;requestsPerSecond&quot;: 3352.94,
+      &quot;durationSeconds&quot;: 5.01,
+      &quot;p50Ms&quot;: 5.02,
+      &quot;p95Ms&quot;: 13.16,
+      &quot;p99Ms&quot;: 17.71,
+      &quot;errors&quot;: [],
+      &quot;passed&quot;: true
+    }
+  ],
+  &quot;note&quot;: &quot;Local CI smoke stress test with closed-loop concurrency; this is not a production capacity measurement.&quot;
+}</pre><details><summary>Full check log</summary><pre>
+&gt; test:stress
+&gt; node testing/local/run.mjs stress
+
+Local stack ready for stress. Logs: /home/runner/work/helios-gateway/helios-gateway/reports/local/stress
+{&quot;name&quot;:&quot;health-under-concurrency&quot;,&quot;concurrency&quot;:10,&quot;requests&quot;:85696,&quot;failures&quot;:0,&quot;requestsPerSecond&quot;:17084,&quot;durationSeconds&quot;:5.02,&quot;p50Ms&quot;:0.34,&quot;p95Ms&quot;:1.1,&quot;p99Ms&quot;:7.26,&quot;errors&quot;:[],&quot;passed&quot;:true}
+{&quot;name&quot;:&quot;federation-ramp-4&quot;,&quot;concurrency&quot;:4,&quot;requests&quot;:4134,&quot;failures&quot;:0,&quot;requestsPerSecond&quot;:826.28,&quot;durationSeconds&quot;:5,&quot;p50Ms&quot;:3.99,&quot;p95Ms&quot;:9.14,&quot;p99Ms&quot;:14.8,&quot;errors&quot;:[],&quot;passed&quot;:true}
+{&quot;name&quot;:&quot;federation-ramp-20&quot;,&quot;concurrency&quot;:20,&quot;requests&quot;:5428,&quot;failures&quot;:0,&quot;requestsPerSecond&quot;:1083.19,&quot;durationSeconds&quot;:5.01,&quot;p50Ms&quot;:17.87,&quot;p95Ms&quot;:25.35,&quot;p99Ms&quot;:37.06,&quot;errors&quot;:[],&quot;passed&quot;:true}
+{&quot;name&quot;:&quot;federation-burst-40&quot;,&quot;concurrency&quot;:40,&quot;requests&quot;:5656,&quot;failures&quot;:0,&quot;requestsPerSecond&quot;:1126.46,&quot;durationSeconds&quot;:5.02,&quot;p50Ms&quot;:33.41,&quot;p95Ms&quot;:51.43,&quot;p99Ms&quot;:80.78,&quot;errors&quot;:[],&quot;passed&quot;:true}
+{&quot;name&quot;:&quot;mutation-burst&quot;,&quot;concurrency&quot;:20,&quot;requests&quot;:9377,&quot;failures&quot;:0,&quot;requestsPerSecond&quot;:1872.01,&quot;durationSeconds&quot;:5.01,&quot;p50Ms&quot;:10.03,&quot;p95Ms&quot;:16.28,&quot;p99Ms&quot;:23.41,&quot;errors&quot;:[],&quot;passed&quot;:true}
+{&quot;name&quot;:&quot;anonymous-access-denied&quot;,&quot;concurrency&quot;:20,&quot;requests&quot;:37072,&quot;failures&quot;:0,&quot;requestsPerSecond&quot;:7396.43,&quot;durationSeconds&quot;:5.01,&quot;p50Ms&quot;:1.85,&quot;p95Ms&quot;:7.51,&quot;p99Ms&quot;:13.81,&quot;errors&quot;:[],&quot;passed&quot;:true}
+{&quot;name&quot;:&quot;insufficient-role-denied&quot;,&quot;concurrency&quot;:20,&quot;requests&quot;:16784,&quot;failures&quot;:0,&quot;requestsPerSecond&quot;:3352.94,&quot;durationSeconds&quot;:5.01,&quot;p50Ms&quot;:5.02,&quot;p95Ms&quot;:13.16,&quot;p99Ms&quot;:17.71,&quot;errors&quot;:[],&quot;passed&quot;:true}
+</pre></details></body></html>

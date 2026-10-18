@@ -1,0 +1,25 @@
+[36m[1mi  emulators:[22m[39m Starting emulators: auth
+[36m[1mi  emulators:[22m[39m Detected demo project ID "demo-helios", emulated services will use a demo configuration and attempts to access non-emulated services for this project will fail.
+[33m[1m⚠  emulators:[22m[39m The Emulator UI is not starting because none of the running emulators have a UI component.
+
+┌─────────────────────────────────────────────────────────────┐
+│ [32m✔[39m  [1mAll emulators ready! It is now safe to connect your app.[22m │
+└─────────────────────────────────────────────────────────────┘
+
+┌────────────────┬────────────────┐
+│ Emulator       │ Host:Port      │
+├────────────────┼────────────────┤
+│ Authentication │ 127.0.0.1:9099 │
+└────────────────┴────────────────┘
+[90m  Emulator Hub host: 127.0.0.1 port: 4401[39m
+[90m  Other reserved ports:[39m 4402
+
+Issues? Report them at [4m[1mhttps://github.com/firebase/firebase-tools/issues[22m[24m and attach the *-debug.log files.
+ 
+ 
+[36m[1mi  emulators:[22m[39m Received SIGTERM for the first time. Starting a clean shutdown.
+[36m[1mi  emulators:[22m[39m Please wait for a clean shutdown or send the SIGTERM signal again to stop right now.
+[36m[1mi  emulators:[22m[39m Shutting down emulators.
+[36m[1mi  auth:[22m[39m Stopping Authentication Emulator
+[36m[1mi  hub:[22m[39m Stopping emulator hub
+[36m[1mi  logging:[22m[39m Stopping Logging Emulator

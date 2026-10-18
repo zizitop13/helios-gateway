@@ -1,0 +1,44 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>build: PASS · Helios Gateway</title><style>
+  :root{color-scheme:light dark;font-family:system-ui,sans-serif;line-height:1.6;background:#101827;color:#e5eaf2}body{max-width:1100px;margin:40px auto;padding:0 24px}a{color:#93c5fd}h1{line-height:1.2}h2{margin-top:32px}p{color:#c5cfdd}table{border-collapse:collapse;width:100%;background:#192538}th,td{text-align:left;padding:10px 14px;border-bottom:1px solid #344155;vertical-align:top}th{color:#93c5fd}.table-scroll{overflow:auto}.pass{color:#86efac}.fail{color:#fda4af}pre{background:#192538;padding:18px;overflow:auto;white-space:pre-wrap;overflow-wrap:anywhere}code{overflow-wrap:anywhere}li{margin:8px 0}small{color:#a6b4c8}details{margin-top:24px}</style></head><body><p><a href="https://zizitop13.github.io/helios-gateway/">Helios Gateway documentation</a></p><h1>build: PASS</h1><p>UTC: 2026-10-18T12:21:49.078Z · build 4 · attempt 1<br>Commit: <code>a52e51bae628f7f14a9880d5d2df8319d295e6c5</code></p><p><a href="summary-2026-10-18T12-21-49-078Z-build-4-attempt-1.html">All checks</a> · Duration: 11.94s · Exit code: 0</p><details><summary>Full check log</summary><pre>
+&gt; build
+&gt; npm --prefix gateway run build &amp;&amp; npm --prefix admin-console run build &amp;&amp; npm --prefix testing/services/pets-shop-ui run build
+
+
+&gt; apollo-cloud-gateway@1.0.3 build
+&gt; tsc
+
+
+&gt; admin-console@0.0.0 build
+&gt; tsc -b &amp;&amp; vite build
+
+vite v7.2.6 building client environment for production...
+transforming...
+✓ 6748 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/index.html                        0.51 kB │ gzip:   0.30 kB
+dist/assets/logo_light-B-u5cDy-.svg    7.53 kB │ gzip:   3.37 kB
+dist/assets/logo_dark-BbkINbnh.svg     7.95 kB │ gzip:   3.30 kB
+dist/assets/index-DrnEmrQh.css       200.88 kB │ gzip:  29.36 kB
+dist/assets/index-KRhPn6Ow.js        567.31 kB │ gzip: 174.49 kB
+
+(!) Some chunks are larger than 500 kB after minification. Consider:
+- Using dynamic import() to code-split the application
+- Use build.rollupOptions.output.manualChunks to improve chunking: https://rollupjs.org/configuration-options/#output-manualchunks
+- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+✓ built in 3.17s
+
+&gt; pets-shop-ui@0.1.0 build
+&gt; tsc -b &amp;&amp; vite build
+
+vite v7.3.2 building client environment for production...
+&lt;script src=&quot;/runtime-config.js&quot;&gt; in &quot;/index.html&quot; can&#39;t be bundled without type=&quot;module&quot; attribute
+transforming...
+✓ 6855 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/index.html                   0.44 kB │ gzip:   0.28 kB
+dist/assets/index-7-ZoICRb.css  201.00 kB │ gzip:  29.46 kB
+dist/assets/index-D9nTupgQ.js   497.54 kB │ gzip: 154.55 kB
+✓ built in 3.12s
+</pre></details></body></html>
