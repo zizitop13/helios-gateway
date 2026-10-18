@@ -84,3 +84,12 @@ archive, preserving report history. Reports are retained in that branch beyond
 the 30-day Actions artifact lifetime. Publication uses the existing GitHub Pages
 environment and repository `GITHUB_TOKEN`; Pages must use GitHub Actions as its
 publishing source.
+
+Manual and documentation-only Pages deployments also recover the most recent
+available completed main-branch Quality report. This allows a publication failure
+to be repaired without rerunning all quality checks. Only reports from this
+repository's main-branch push/manual runs are eligible. The archive uses the exact
+`refs/heads/quality-reports` ref, so similarly named branches such as
+`ci/quality-reports` do not interfere with its first publication. Each deployment
+runs regression checks for initial creation, history preservation, and remote
+connection failures before restoring the archive.

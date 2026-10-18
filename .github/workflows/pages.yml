@@ -7,6 +7,7 @@ on:
     paths:
       - docs/**
       - .github/workflows/pages.yml
+      - scripts/restore-report-history*
   workflow_dispatch:
   workflow_run:
     workflows: [Quality]
@@ -44,16 +45,36 @@ jobs:
 
       - name: Find completed quality report
         id: report
-        if: github.event_name == 'workflow_run'
         uses: actions/github-script@v7
         with:
           script: |
-            const { data } = await github.rest.actions.listWorkflowRunArtifacts({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              run_id: context.payload.workflow_run.id,
-            });
-            core.setOutput('available', data.artifacts.some(artifact => artifact.name === 'quality-report' && !artifact.expired));
+            let runs = [context.payload.workflow_run];
+            if (!runs[0]) {
+              const { data } = await github.rest.actions.listWorkflowRuns({
+                ...context.repo,
+                workflow_id: 'quality.yml',
+                branch: 'main',
+                status: 'completed',
+                per_page: 20,
+              });
+              runs = data.workflow_runs;
+            }
+            for (const run of runs) {
+              if (run.head_repository?.full_name !== `${context.repo.owner}/${context.repo.repo}` ||
+                  run.head_branch !== 'main' || !['push', 'workflow_dispatch'].includes(run.event)) continue;
+              const { data } = await github.rest.actions.listWorkflowRunArtifacts({
+                ...context.repo,
+                run_id: run.id,
+              });
+              if (data.artifacts.some(artifact => artifact.name === 'quality-report' && !artifact.expired)) {
+                core.setOutput('available', 'true');
+                core.setOutput('run_id', run.id);
+                core.setOutput('build_number', run.run_number);
+                return;
+              }
+            }
+            core.setOutput('available', 'false');
+            core.notice('No available Quality report; publishing the existing report archive.');
 
       - name: Download quality report from the completed run
         if: steps.report.outputs.available == 'true'
@@ -61,18 +82,14 @@ jobs:
         with:
           name: quality-report
           path: incoming-reports
-          run-id: ${{ github.event.workflow_run.id }}
+          run-id: ${{ steps.report.outputs.run_id }}
           github-token: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Check report history restoration
+        run: node --test scripts/restore-report-history.test.mjs
+
       - name: Restore persistent report history
-        run: |
-          if git ls-remote --exit-code --heads origin quality-reports; then
-            git fetch --depth=1 origin quality-reports
-            git worktree add --detach .report-history FETCH_HEAD
-          else
-            git worktree add --detach .report-history HEAD
-            git -C .report-history switch --orphan quality-reports
-          fi
+        run: bash scripts/restore-report-history.sh
 
       - name: Archive new reports without replacing previous builds
         if: steps.report.outputs.available == 'true'
@@ -82,8 +99,8 @@ jobs:
           git -C .report-history config user.email 41898282+github-actions[bot]@users.noreply.github.com
           git -C .report-history add reports
           if ! git -C .report-history diff --cached --quiet; then
-            git -C .report-history commit -m "Archive quality reports for build ${{ github.event.workflow_run.run_number }}"
-            git -C .report-history push origin HEAD:quality-reports
+            git -C .report-history commit -m "Archive quality reports for build ${{ steps.report.outputs.build_number }}"
+            git -C .report-history push origin HEAD:refs/heads/quality-reports
           fi
 
       - uses: actions/configure-pages@v5
