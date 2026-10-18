@@ -25,7 +25,7 @@ describe('Discovery Providers', () => {
       dockerDiscovery = new DockerDiscovery('/var/run/docker.sock');
       
       // Get the mock instance
-      // eslint-disable-next-line @typescript-eslint/no-var-requires
+      // eslint-disable-next-line @typescript-eslint/no-require-imports
       const DockerConstructor = require('dockerode');
       mockDocker = DockerConstructor.mock.instances[0];
     });

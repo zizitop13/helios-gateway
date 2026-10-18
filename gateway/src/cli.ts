@@ -58,146 +58,60 @@ function readOptionalBooleanValue(
   };
 }
 
+type BooleanOption = 'adminConsoleEnabled' | 'enableApolloSandbox' | 'enableCloudRunIamAuth';
+type StringOption = Exclude<keyof CliOptions, BooleanOption>;
+
+const valueOptions: Array<[StringOption, string, ...string[]]> = [
+  ['discoveryMode', '--discovery', '-d'],
+  ['discoveryFilePath', '--file', '-f', '--discovery-file-path'],
+  ['discoveryFileDefaultHost', '--host', '--file-default-host', '--discovery-file-default-host'],
+  ['port', '--port', '-p'],
+  ['firebaseProjectId', '--firebase-project-id'],
+  ['firebaseServiceAccountKey', '--firebase-service-account-key'],
+  ['gcpProjectId', '--gcp-project-id'],
+  ['gcpRegion', '--region', '-r', '--gcp-region'],
+  ['dockerSocketPath', '--socket', '-s', '--docker-socket-path'],
+  ['graphName', '--graph', '-g', '--graph-name'],
+  ['graphLabelKey', '--graph-label-key'],
+  ['superAdminId', '--super-admin-id'],
+  ['googleApplicationCredentials', '--credentials', '--google-application-credentials'],
+  ['tokenExpiresInDays', '--token-expires-in-days'],
+];
+const valueFlags = new Map(valueOptions.flatMap(([key, canonical, ...aliases]) =>
+  [canonical, ...aliases].map(flag => [flag, { key, canonical }] as const)
+));
+const booleanFlags = new Map<string, BooleanOption>([
+  ['--admin-console', 'adminConsoleEnabled'],
+  ['--apollo-sandbox', 'enableApolloSandbox'],
+  ['--cloud-run-iam-auth', 'enableCloudRunIamAuth'],
+]);
+
 export function parseCliArgs(argv: string[]): CliOptions {
   const options: CliOptions = {};
-
   for (let i = 0; i < argv.length; i += 1) {
     const arg = argv[i];
-    const nextValue = argv[i + 1];
+    if (arg === 'run') continue;
 
-    if (arg === 'run') {
-      continue;
-    }
-
-    if (arg === '-d' || arg === '--discovery') {
-      options.discoveryMode = readRequiredValue('--discovery', nextValue);
+    const valueOption = valueFlags.get(arg);
+    if (valueOption) {
+      options[valueOption.key] = readRequiredValue(valueOption.canonical, argv[i + 1]);
       i += 1;
       continue;
     }
-
-    if (arg === '-f' || arg === '--file' || arg === '--discovery-file-path') {
-      options.discoveryFilePath = readRequiredValue('--file', nextValue);
-      i += 1;
+    const booleanKey = booleanFlags.get(arg);
+    if (booleanKey) {
+      const parsedValue = readOptionalBooleanValue(arg, argv[i + 1]);
+      options[booleanKey] = parsedValue.value;
+      if (parsedValue.consumedNextValue) i += 1;
       continue;
     }
-
-    if (arg === '--host' || arg === '--file-default-host' || arg === '--discovery-file-default-host') {
-      options.discoveryFileDefaultHost = readRequiredValue('--host', nextValue);
-      i += 1;
+    const negativeKey = arg.startsWith('--no-') ? booleanFlags.get(`--${arg.slice(5)}`) : undefined;
+    if (negativeKey) {
+      options[negativeKey] = false;
       continue;
     }
-
-    if (arg === '-p' || arg === '--port') {
-      options.port = readRequiredValue('--port', nextValue);
-      i += 1;
-      continue;
-    }
-
-    if (arg === '--firebase-project-id') {
-      options.firebaseProjectId = readRequiredValue('--firebase-project-id', nextValue);
-      i += 1;
-      continue;
-    }
-
-    if (arg === '--firebase-service-account-key') {
-      options.firebaseServiceAccountKey = readRequiredValue('--firebase-service-account-key', nextValue);
-      i += 1;
-      continue;
-    }
-
-    if (arg === '--gcp-project-id') {
-      options.gcpProjectId = readRequiredValue('--gcp-project-id', nextValue);
-      i += 1;
-      continue;
-    }
-
-    if (arg === '-r' || arg === '--region' || arg === '--gcp-region') {
-      options.gcpRegion = readRequiredValue('--region', nextValue);
-      i += 1;
-      continue;
-    }
-
-    if (arg === '-s' || arg === '--socket' || arg === '--docker-socket-path') {
-      options.dockerSocketPath = readRequiredValue('--socket', nextValue);
-      i += 1;
-      continue;
-    }
-
-    if (arg === '-g' || arg === '--graph' || arg === '--graph-name') {
-      options.graphName = readRequiredValue('--graph', nextValue);
-      i += 1;
-      continue;
-    }
-
-    if (arg === '--graph-label-key') {
-      options.graphLabelKey = readRequiredValue('--graph-label-key', nextValue);
-      i += 1;
-      continue;
-    }
-
-    if (arg === '--admin-console') {
-      const parsedValue = readOptionalBooleanValue('--admin-console', nextValue);
-      options.adminConsoleEnabled = parsedValue.value;
-      if (parsedValue.consumedNextValue) {
-        i += 1;
-      }
-      continue;
-    }
-
-    if (arg === '--no-admin-console') {
-      options.adminConsoleEnabled = false;
-      continue;
-    }
-
-    if (arg === '--apollo-sandbox') {
-      const parsedValue = readOptionalBooleanValue('--apollo-sandbox', nextValue);
-      options.enableApolloSandbox = parsedValue.value;
-      if (parsedValue.consumedNextValue) {
-        i += 1;
-      }
-      continue;
-    }
-
-    if (arg === '--no-apollo-sandbox') {
-      options.enableApolloSandbox = false;
-      continue;
-    }
-
-    if (arg === '--cloud-run-iam-auth') {
-      const parsedValue = readOptionalBooleanValue('--cloud-run-iam-auth', nextValue);
-      options.enableCloudRunIamAuth = parsedValue.value;
-      if (parsedValue.consumedNextValue) {
-        i += 1;
-      }
-      continue;
-    }
-
-    if (arg === '--no-cloud-run-iam-auth') {
-      options.enableCloudRunIamAuth = false;
-      continue;
-    }
-
-    if (arg === '--super-admin-id') {
-      options.superAdminId = readRequiredValue('--super-admin-id', nextValue);
-      i += 1;
-      continue;
-    }
-
-    if (arg === '--credentials' || arg === '--google-application-credentials') {
-      options.googleApplicationCredentials = readRequiredValue('--credentials', nextValue);
-      i += 1;
-      continue;
-    }
-
-    if (arg === '--token-expires-in-days') {
-      options.tokenExpiresInDays = readRequiredValue('--token-expires-in-days', nextValue);
-      i += 1;
-      continue;
-    }
-
     throw new Error(`Unknown argument: ${arg}`);
   }
-
   return options;
 }
 

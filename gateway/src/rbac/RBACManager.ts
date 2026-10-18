@@ -77,9 +77,40 @@ export class RBACManager {
     return [...roleSet].sort((a, b) => a.localeCompare(b));
   }
 
-  static registerPoliciesFromSDL(sdl: string): void {
-    const document = parse(sdl);
+  /** Prepare a complete policy set without changing authorization for in-flight requests. */
+  static preparePolicyUpdate(sdls: string[]): () => void {
+    const policies = {
+      fieldPolicies: new Map<string, RequiresRoleDirectiveArgs>(),
+      typePolicies: new Map<string, RequiresRoleDirectiveArgs>(),
+      anonymousFieldPolicies: new Set<string>(),
+      anonymousTypePolicies: new Set<string>(),
+    };
+    for (const sdl of sdls) {
+      RBACManager.registerDocumentPolicies(parse(sdl), policies);
+    }
+    return () => {
+      RBACManager.fieldPolicies = policies.fieldPolicies;
+      RBACManager.typePolicies = policies.typePolicies;
+      RBACManager.anonymousFieldPolicies = policies.anonymousFieldPolicies;
+      RBACManager.anonymousTypePolicies = policies.anonymousTypePolicies;
+    };
+  }
 
+  static registerPoliciesFromSDL(sdl: string): void {
+    RBACManager.registerDocumentPolicies(parse(sdl), {
+      fieldPolicies: RBACManager.fieldPolicies,
+      typePolicies: RBACManager.typePolicies,
+      anonymousFieldPolicies: RBACManager.anonymousFieldPolicies,
+      anonymousTypePolicies: RBACManager.anonymousTypePolicies,
+    });
+  }
+
+  private static registerDocumentPolicies(document: DocumentNode, policies: {
+    fieldPolicies: Map<string, RequiresRoleDirectiveArgs>;
+    typePolicies: Map<string, RequiresRoleDirectiveArgs>;
+    anonymousFieldPolicies: Set<string>;
+    anonymousTypePolicies: Set<string>;
+  }): void {
     for (const definition of document.definitions) {
       if (
         definition.kind !== Kind.OBJECT_TYPE_DEFINITION &&
@@ -94,13 +125,13 @@ export class RBACManager {
       );
       const typeDirective = RBACManager.parseRequiresRoleDirective(typeDirectiveNode);
       if (typeDirective) {
-        RBACManager.typePolicies.set(typeName, typeDirective);
+        policies.typePolicies.set(typeName, typeDirective);
       }
       const allowAnonymousOnType = definition.directives?.some(
         (directive) => directive.name.value === 'allowAnonymous'
       );
       if (allowAnonymousOnType) {
-        RBACManager.anonymousTypePolicies.add(typeName);
+        policies.anonymousTypePolicies.add(typeName);
       }
 
       const fields = definition.fields || [];
@@ -110,14 +141,14 @@ export class RBACManager {
         );
         const fieldDirective = RBACManager.parseRequiresRoleDirective(fieldDirectiveNode);
         if (fieldDirective) {
-          RBACManager.fieldPolicies.set(`${typeName}.${field.name.value}`, fieldDirective);
+          policies.fieldPolicies.set(`${typeName}.${field.name.value}`, fieldDirective);
         }
 
         const allowAnonymousOnField = field.directives?.some(
           (directive) => directive.name.value === 'allowAnonymous'
         );
         if (allowAnonymousOnField) {
-          RBACManager.anonymousFieldPolicies.add(`${typeName}.${field.name.value}`);
+          policies.anonymousFieldPolicies.add(`${typeName}.${field.name.value}`);
         }
       }
     }

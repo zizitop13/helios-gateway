@@ -41,9 +41,14 @@ async function start() {
   await server.start();
 
   app.use("/graphql", (req, res, next) => {
-      // res.status(500).json({
-      //   errors: [{ message: "Simulated broken subgraph health check" }],
-      // });
+    // Remain composable while deliberately failing normal requests/health probes.
+    if (typeof req.body?.query === 'string' && req.body.query.includes('__ApolloGetServiceDefinition__')) {
+      next();
+      return;
+    }
+    res.status(500).json({
+      errors: [{ message: "Simulated broken subgraph health check" }],
+    });
   });
 
   app.use("/graphql", expressMiddleware(server));

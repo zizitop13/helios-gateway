@@ -6,6 +6,23 @@ describe('RBACManager', () => {
     RBACManager.clearPolicies();
   });
 
+  it('prepares new policies without changing existing access, then replaces rather than accumulates policies', () => {
+    const directive = 'directive @requiresRole(roles: [String!]!) on FIELD_DEFINITION';
+    RBACManager.registerPoliciesFromSDL(`${directive} type Query { old: String @requiresRole(roles: ["old-role"]) }`);
+    const install = RBACManager.preparePolicyUpdate([`${directive} type Query { new: String @requiresRole(roles: ["new-role"]) }`]);
+    expect(RBACManager.getAvailableRoles()).toEqual(['old-role']);
+    install();
+    expect(RBACManager.getAvailableRoles()).toEqual(['new-role']);
+    RBACManager.preparePolicyUpdate([])();
+    expect(RBACManager.getAvailableRoles()).toEqual([]);
+  });
+
+  it('preserves existing policies if any new subgraph SDL is malformed', () => {
+    RBACManager.registerPoliciesFromSDL('directive @requiresRole(roles: [String!]!) on FIELD_DEFINITION type Query { secure: String @requiresRole(roles: ["admin"]) }');
+    expect(() => RBACManager.preparePolicyUpdate(['type Query { public: String }', 'type Invalid {'])).toThrow();
+    expect(RBACManager.getAvailableRoles()).toEqual(['admin']);
+  });
+
   describe('hasRequiredRoles', () => {
     it('should return true when user has all required roles (match: ALL)', () => {
       const userRoles = ['user', 'admin', 'editor'];

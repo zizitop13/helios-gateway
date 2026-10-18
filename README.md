@@ -21,6 +21,8 @@ Helios Gateway provides dynamic service discovery, Firebase authentication, RBAC
 ## Documentation
 
 - [Documentation](https://zizitop13.github.io/helios-gateway/)
+- [Quality checks](https://zizitop13.github.io/helios-gateway/testing/quality.html)
+- [Dated CI reports](https://zizitop13.github.io/helios-gateway/reports/)
 
 ## Docker Images
 

@@ -4,6 +4,9 @@ import { IAuthManager } from '../auth';
 import { ApolloCloudContext, UserContext } from '../types';
 import http from 'http';
 
+jest.mock('firebase-admin', () => ({ initializeApp: jest.fn() }));
+jest.mock('@google-cloud/run', () => ({ ServicesClient: jest.fn() }));
+
 const adminUser: UserContext = {
   uid: 'admin-1',
   email: 'admin@example.com',
