@@ -127,7 +127,7 @@ jobs:
         with:
           script: |
             for (let attempt = 0; attempt < 40; attempt++) {
-              const { data } = await github.rest.actions.listWorkflowRuns({
+              const { data } = await github.request('GET /repos/{owner}/{repo}/actions/runs', {
                 ...context.repo,
                 head_sha: context.sha,
                 per_page: 100,
