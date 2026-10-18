@@ -20,8 +20,8 @@ and GraphQL Sandbox access.
 
 The authenticated console shell includes:
 
-- Header with logo, graph scope when configured, theme toggle, and logout button.
-- Sidebar links for Home, Subgraphs, Status, User Info, Roles, and GraphQL Sandbox.
+- Header with logo, graph scope when configured, theme toggle, and a Profile menu containing My profile and Logout.
+- Sidebar links for Home, Subgraphs, Status, Users, and GraphQL Sandbox.
 - Main content area for the selected page.
 
 ## Login
@@ -67,7 +67,7 @@ known to the gateway.
 
 ## User Information
 
-Route: `/admin/console/user`
+Route: `/admin/console/profile` via **Profile → My profile** in the top-right corner.
 
 The user information page shows the current Firebase user identity and token
 details. It helps operators verify which UID, email, roles, and claims are being
@@ -75,15 +75,19 @@ used for admin-console authorization.
 
 ![Admin console user information page](./admin-console/screenshots/user-info.png)
 
-## Role Management
+## Users and Role Management
 
-Route: `/admin/console/roles`
+Route: `/admin/console/users`
 
-The role management page assigns Firebase custom-claim roles by email or UID.
-Use it to grant or update admin and application roles that the gateway can later
-read from verified Firebase tokens.
+The [Users page](./admin-console/users.html) lists and searches Firebase users.
+Select an account to view assigned roles, add or remove tags, and save the full
+role set. Users without email addresses are supported through UID selection.
 
-![Admin console role management page](./admin-console/screenshots/roles.png)
+The current frontend-only version displays labeled sample data and keeps all
+changes in memory. Its missing user-list and role-read API contracts are marked
+TODO in OpenAPI. The existing assignment API is reused by the gateway adapter
+once those reads are implemented. Old `/user` and `/roles` bookmarks redirect to
+Profile and Users respectively.
 
 ## GraphQL Sandbox Health Check
 
