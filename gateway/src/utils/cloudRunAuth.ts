@@ -53,7 +53,7 @@ export class CloudRunAuthManager {
     try {
       const parsed = new URL(url);
       return `${parsed.protocol}//${parsed.host}`;
-    } catch (error) {
+    } catch {
       return url;
     }
   }

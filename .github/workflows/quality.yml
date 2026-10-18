@@ -1,0 +1,63 @@
+name: Quality
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: quality-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  checks:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+          cache-dependency-path: |
+            package-lock.json
+            gateway/package-lock.json
+            admin-console/package-lock.json
+            testing/e2e/package-lock.json
+            testing/services/*/package-lock.json
+      - name: Install quality tools
+        run: npm ci --no-audit --no-fund
+      - name: Install applications and test fixtures
+        run: npm run setup
+      - name: Install Chromium
+        working-directory: testing/e2e
+        run: npx playwright install --with-deps chromium
+      - name: Run all quality checks
+        run: npm run check
+      - name: Finalize HTML reports, including interrupted checks
+        if: always()
+        run: node scripts/reports.mjs --ci-finalize
+      - name: Upload dated HTML reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: quality-report
+          path: reports/site
+          if-no-files-found: error
+          retention-days: 30
+      - name: Upload machine reports and fixture logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: quality-raw
+          path: |
+            reports/raw
+            reports/local
+            gateway/reports
+            gateway/coverage
+            testing/e2e/test-results
+          retention-days: 14

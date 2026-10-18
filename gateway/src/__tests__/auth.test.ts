@@ -3,6 +3,9 @@ import { FirebaseAuthManager } from '../auth';
 const mockVerifyIdToken = jest.fn();
 const mockCreateSessionCookie = jest.fn();
 const mockVerifySessionCookie = jest.fn();
+const mockGetUser = jest.fn();
+const mockGetUserByEmail = jest.fn();
+const mockSetCustomUserClaims = jest.fn();
 
 jest.mock('firebase-admin', () => ({
   initializeApp: jest.fn(),
@@ -10,6 +13,9 @@ jest.mock('firebase-admin', () => ({
     verifyIdToken: mockVerifyIdToken,
     createSessionCookie: mockCreateSessionCookie,
     verifySessionCookie: mockVerifySessionCookie,
+    getUser: mockGetUser,
+    getUserByEmail: mockGetUserByEmail,
+    setCustomUserClaims: mockSetCustomUserClaims,
   })),
   credential: {
     cert: jest.fn(),
@@ -26,6 +32,55 @@ describe('FirebaseAuthManager', () => {
     mockVerifyIdToken.mockReset();
     mockCreateSessionCookie.mockReset();
     mockVerifySessionCookie.mockReset();
+    mockGetUser.mockReset();
+    mockGetUserByEmail.mockReset();
+    mockSetCustomUserClaims.mockReset();
+  });
+
+  it.each([
+    [{ roles: ['admin', 'staff'], role: 'admin', custom_claims: { roles: ['support'] } }, ['admin', 'staff', 'support']],
+    [{ customAttributes: '{"roles":["viewer",12,"viewer"]}' }, ['viewer']],
+    [{ custom_attributes: { roles: ['staff', null] } }, ['staff']],
+    [{ customAttributes: 'malformed-json' }, []],
+    [{ roles: 'admin', role: 12, custom_claims: { roles: 'staff' } }, []],
+    [{ customAttributes: '{"roles":"admin"}' }, []],
+    [{}, []],
+  ])('extracts and deduplicates roles from claims %j', (claims, expected) => {
+    expect(authManager.extractRolesFromClaims(claims)).toEqual(expected);
+  });
+
+  it('rejects invalid ID tokens and revoked session cookies', async () => {
+    mockVerifyIdToken.mockRejectedValue(new Error('Invalid token'));
+    mockVerifySessionCookie.mockRejectedValue(new Error('Revoked cookie'));
+    expect(await authManager.verifyToken('invalid')).toBeNull();
+    expect(await authManager.verifySessionCookie('revoked')).toBeNull();
+  });
+
+  it('resolves users by UID or email and handles missing users', async () => {
+    mockGetUser.mockResolvedValue({ uid: 'id' });
+    mockGetUserByEmail.mockResolvedValue({ uid: 'email-user' });
+    expect(await authManager.getUserByIdentifier('id', 'ignored@example.test')).toEqual({ uid: 'id' });
+    expect(mockGetUserByEmail).not.toHaveBeenCalled();
+    expect(await authManager.getUserByIdentifier(undefined, 'user@example.test')).toEqual({ uid: 'email-user' });
+    expect(mockGetUserByEmail).toHaveBeenCalledWith('user@example.test');
+    expect(await authManager.getUserByIdentifier()).toBeNull();
+    mockGetUser.mockRejectedValue(new Error('User not found'));
+    expect(await authManager.getUserByIdentifier('missing')).toBeNull();
+  });
+
+  it('replaces role claims while preserving unrelated claims', async () => {
+    mockGetUser.mockResolvedValue({ uid: 'id', email: 'user@example.test', customClaims: { role: 'legacy', roles: ['old'], custom_claims: { roles: ['old'] }, tenant: 'shop' } });
+    mockSetCustomUserClaims.mockResolvedValue(undefined);
+    expect(await authManager.assignRolesToUser('id', undefined, ['viewer'])).toEqual({ uid: 'id', email: 'user@example.test', roles: ['viewer'] });
+    expect(mockSetCustomUserClaims).toHaveBeenCalledWith('id', { tenant: 'shop', roles: ['viewer'] });
+  });
+
+  it('does not assign roles to missing users and handles claim-update failure', async () => {
+    mockGetUser.mockResolvedValueOnce(null).mockResolvedValue({ uid: 'id' });
+    expect(await authManager.assignRolesToUser('missing', undefined, [])).toBeNull();
+    expect(mockSetCustomUserClaims).not.toHaveBeenCalled();
+    mockSetCustomUserClaims.mockRejectedValue(new Error('Update failed'));
+    expect(await authManager.assignRolesToUser('id', undefined, [])).toBeNull();
   });
 
   describe('extractTokenFromHeader', () => {

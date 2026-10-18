@@ -13,9 +13,11 @@
     "build": "tsc",
     "start": "node dist/main.js",
     "dev-gateway": "dotenv -e .env.local -- ts-node src/main.ts",
-    "lint": "eslint \"src/**/*.ts\"",
+    "lint": "npm --prefix .. run lint",
+    "analyze": "npm --prefix .. run analyze",
     "test": "jest",
     "test:ci": "jest --ci --coverage --reporters=default --reporters=jest-junit",
+    "test:mutation": "stryker run",
     "publish:auth": "npx google-artifactregistry-auth --repo-config=%USERPROFILE%\\.npmrc --credential-config=%USERPROFILE%\\.npmrc",
     "release": "npm run publish:auth && npm publish"
   },
@@ -58,6 +60,8 @@
     "yaml": "^2.8.3"
   },
   "devDependencies": {
+    "@stryker-mutator/core": "^10.0.0",
+    "@stryker-mutator/jest-runner": "^10.0.0",
     "@types/cors": "^2.8.17",
     "@types/dockerode": "^3.3.47",
     "@types/express": "^4.17.21",

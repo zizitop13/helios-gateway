@@ -1,5 +1,7 @@
 import { applyCliOptionsToEnv, parseCliArgs } from '../cli';
 
+jest.mock('../app/bootstrap/startGateway', () => ({ startGateway: jest.fn() }));
+
 describe('CLI', () => {
   const originalEnv = process.env;
 

@@ -1,0 +1,24 @@
+{
+  "$schema": "./node_modules/@stryker-mutator/core/schema/stryker-schema.json",
+  "mutate": ["src/**/*.ts", "!src/__tests__/**", "!src/types/**", "!src/**/index.ts"],
+  "testRunner": "jest",
+  "jest": {
+    "configFile": "jest.config.js",
+    "enableFindRelatedTests": true,
+    "config": {
+      "transform": {
+        "^.+\\.tsx?$": ["ts-jest", { "tsconfig": { "isolatedModules": true }, "diagnostics": false }]
+      }
+    }
+  },
+  "coverageAnalysis": "perTest",
+  "reporters": ["clear-text", "progress", "html", "json"],
+  "htmlReporter": { "fileName": "reports/mutation/index.html" },
+  "jsonReporter": { "fileName": "reports/mutation/mutation.json" },
+  "thresholds": { "high": 80, "low": 45, "break": 45 },
+  "incremental": true,
+  "incrementalFile": "reports/stryker-incremental.json",
+  "concurrency": 4,
+  "timeoutMS": 10000,
+  "timeoutFactor": 2
+}

@@ -5,7 +5,7 @@ import { ApolloGateway, RemoteGraphQLDataSource, LocalCompose } from '@apollo/ga
 import express from 'express';
 import cors from 'cors';
 import { Request } from 'express';
-import { parse } from 'graphql';
+import { parse, print } from 'graphql';
 import { FirebaseAuthManager, IAuthManager } from './auth';
 import {
   ServiceDiscoveryManager,
@@ -44,7 +44,6 @@ export class ApolloCloudGateway {
   private isRefreshingSchema = false;
   private activeSubgraphs: SubgraphService[] = [];
   private static readonly SUBGRAPH_INTROSPECTION_TIMEOUT_MS = 5000;
-  private static readonly RBAC_POLICY_PRELOAD_TIMEOUT_MS = 5000;
 
   constructor(config?: Partial<GatewayConfig>) {
     this.config = { ...loadConfig(), ...config };
@@ -178,7 +177,7 @@ export class ApolloCloudGateway {
       `Initial composition produced a supergraph with ${initialComposition.includedSubgraphs.length} subgraphs.`
     );
     console.log('Preloading RBAC policies from composed subgraphs...');
-    await this.loadRbacPoliciesFromSubgraphs(initialComposition.includedSubgraphs);
+    RBACManager.preparePolicyUpdate(initialComposition.subgraphSdls)();
     console.log('RBAC policy preload completed.');
 
     console.log('Creating Apollo Gateway instance...');
@@ -280,8 +279,11 @@ export class ApolloCloudGateway {
         return;
       }
 
+      // Compose policies from the same SDL snapshot as the schema. Install both
+      // synchronously so requests cannot observe empty or partially loaded policies.
+      const installPolicies = RBACManager.preparePolicyUpdate(compositionResult.subgraphSdls);
       this.supergraphUpdate(compositionResult.supergraphSdl);
-      await this.loadRbacPoliciesFromSubgraphs(compositionResult.includedSubgraphs);
+      installPolicies();
       this.activeSubgraphs = compositionResult.includedSubgraphs;
 
       console.log(
@@ -298,6 +300,7 @@ export class ApolloCloudGateway {
 
   private async composeDiscoveredServices(services: SubgraphService[]): Promise<{
     supergraphSdl?: string;
+    subgraphSdls: string[];
     includedSubgraphs: SubgraphService[];
     excludedSubgraphs: Array<{ service: SubgraphService; reason: string }>;
   }> {
@@ -350,6 +353,7 @@ export class ApolloCloudGateway {
       console.error('No subgraphs could be introspected for composition.');
       return {
         includedSubgraphs: [],
+        subgraphSdls: [],
         excludedSubgraphs,
       };
     }
@@ -368,6 +372,7 @@ export class ApolloCloudGateway {
 
       return {
         supergraphSdl: compositionResult.supergraphSdl,
+        subgraphSdls: serviceDefinitions.map(service => print(service.typeDefs)),
         includedSubgraphs,
         excludedSubgraphs,
       };
@@ -375,6 +380,7 @@ export class ApolloCloudGateway {
       console.error(`Composition failed with introspected subgraphs: ${error?.message || String(error)}`);
       return {
         includedSubgraphs: [],
+        subgraphSdls: [],
         excludedSubgraphs,
       };
     }
@@ -572,75 +578,6 @@ export class ApolloCloudGateway {
     this.app.get('/admin/console/*', consoleHandler.serveSPA());
 
     console.log('Admin console routes configured at /admin/console and /admin/api');
-  }
-
-  private async loadRbacPoliciesFromSubgraphs(services: SubgraphService[]): Promise<void> {
-    RBACManager.clearPolicies();
-
-    if (services.length === 0) {
-      return;
-    }
-
-    await Promise.all(
-      services.map(async (service) => {
-        try {
-          const headers: Record<string, string> = { 'Content-Type': 'application/json' };
-          if (this.cloudRunAuthManager) {
-            const identityToken = await this.cloudRunAuthManager.getIdentityToken(service.url);
-            headers.Authorization = `Bearer ${identityToken}`;
-          }
-
-          const abortController = new AbortController();
-          const timeout = setTimeout(
-            () => abortController.abort(),
-            ApolloCloudGateway.RBAC_POLICY_PRELOAD_TIMEOUT_MS
-          );
-
-          let response: globalThis.Response;
-          try {
-            response = await fetch(service.url, {
-              method: 'POST',
-              headers,
-              signal: abortController.signal,
-              body: JSON.stringify({
-                query: 'query __ApolloGetServiceDefinition__ { _service { sdl } }',
-              }),
-            });
-          } catch (error: any) {
-            if (abortController.signal.aborted) {
-              console.warn(
-                `RBAC policy preload failed for ${service.name}: timed out after ${ApolloCloudGateway.RBAC_POLICY_PRELOAD_TIMEOUT_MS}ms`
-              );
-              return;
-            }
-            throw error;
-          } finally {
-            clearTimeout(timeout);
-          }
-
-          if (!response.ok) {
-            console.warn(`RBAC policy preload failed for ${service.name}: HTTP ${response.status}`);
-            return;
-          }
-
-          const payload = (await response.json()) as {
-            data?: { _service?: { sdl?: string } };
-            errors?: unknown;
-          };
-
-          if (payload.errors || !payload.data?._service?.sdl) {
-            console.warn(`RBAC policy preload returned no SDL for ${service.name}`);
-            return;
-          }
-
-          RBACManager.registerPoliciesFromSDL(payload.data._service.sdl);
-        } catch (error: any) {
-          console.warn(
-            `RBAC policy preload failed for ${service.name}: ${error?.message || String(error)}`
-          );
-        }
-      })
-    );
   }
 
   private extractTokenFromCookies(cookieHeader?: string): string | null {

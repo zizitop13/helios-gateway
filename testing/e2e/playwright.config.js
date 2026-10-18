@@ -6,8 +6,6 @@ import { resolve } from 'node:path';
 
 dotenv.config({ path: '.env.local' });
 
-dotenv.config({ path: '.env.local' });
-
 const envFilePath = resolve(process.cwd(), '.env.local');
 
 if (existsSync(envFilePath) && !process.env.GRAPHQL_ENDPOINT) {
@@ -54,14 +52,19 @@ export default defineConfig({
     baseURL: process.env.ADMIN_CONSOLE_URL || 'http://localhost:4000',
     screenshot: 'only-on-failure',
     trace: 'retain-on-failure',
-    video: 'retain-on-failure',
+    video: process.env.E2E_VIDEO === 'off' ? 'off' : 'retain-on-failure',
   },
   projects: [
     {
       name: 'admin-console',
       testDir: bddTestDir,
       testMatch: '**/*.spec.js',
-      use: { ...devices['Desktop Chrome'] },
+      use: {
+        ...devices['Desktop Chrome'],
+        launchOptions: process.env.PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH
+          ? { executablePath: process.env.PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH }
+          : undefined,
+      },
     },
     {
       name: 'admin-api',

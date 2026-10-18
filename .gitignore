@@ -29,6 +29,16 @@ Thumbs.db
 # Testing
 coverage/
 .nyc_output/
+reports/
+**/.stryker-tmp/
+**/playwright-report/
+**/test-results/
+**/.features-gen/
+**/*-debug.log
+_site/
+.firebase/
+.report-history/
+incoming-reports/
 
 # Temporary files
 *.tmp

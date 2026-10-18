@@ -1,5 +1,10 @@
 import { ApolloCloudGateway } from '../gateway';
 import { SubgraphService } from '../types';
+import { RBACManager } from '../rbac';
+import { buildSchema, parse } from 'graphql';
+
+jest.mock('firebase-admin', () => ({ initializeApp: jest.fn() }));
+jest.mock('@google-cloud/run', () => ({ ServicesClient: jest.fn() }));
 
 const SSDL_A = `
   extend schema
@@ -47,9 +52,50 @@ describe('Schema refresh', () => {
   const originalFetch = global.fetch;
 
   afterEach(() => {
+    RBACManager.clearPolicies();
     global.fetch = originalFetch;
     jest.restoreAllMocks();
     jest.useRealTimers();
+  });
+
+  it('keeps role restrictions while refresh is waiting on subgraphs, then installs the complete policy set', async () => {
+    const schema = buildSchema('type Query { protectedValue: String }');
+    const operation = parse('{ protectedValue }');
+    const policySdl = (role: string) => `
+      directive @requiresRole(roles: [String!]!) on FIELD_DEFINITION
+      type Query { protectedValue: String @requiresRole(roles: ["${role}"]) }
+    `;
+    RBACManager.registerPoliciesFromSDL(policySdl('admin'));
+    const gateway = createGateway();
+    const update = jest.fn();
+    (gateway as any).supergraphUpdate = update;
+    (gateway as any).discoveryManager = { discoverServices: async () => [SUBGRAPH_A] };
+    let respond!: (response: Response) => void;
+    global.fetch = jest.fn(() => new Promise<Response>(resolve => { respond = resolve; }));
+
+    const refresh = (gateway as any).refreshSchema();
+    await Promise.resolve();
+    expect(() => RBACManager.validateOperationRoles(schema, operation, ['viewer'], true)).toThrow('Access denied');
+    expect(() => RBACManager.validateOperationRoles(schema, operation, ['admin'], true)).not.toThrow();
+
+    respond(new Response(JSON.stringify({ data: { _service: { sdl: policySdl('finance') } } }), { status: 200 }));
+    await refresh;
+    expect(update).toHaveBeenCalledTimes(1);
+    expect(global.fetch).toHaveBeenCalledTimes(1);
+    expect(() => RBACManager.validateOperationRoles(schema, operation, ['admin'], true)).toThrow('Access denied');
+    expect(() => RBACManager.validateOperationRoles(schema, operation, ['finance'], true)).not.toThrow();
+    expect(() => RBACManager.validateOperationRoles(schema, operation, ['viewer'], true)).toThrow('Access denied');
+  });
+
+  it('keeps the previous policies when installing a refreshed schema fails', async () => {
+    const gateway = createGateway();
+    const oldSdl = 'directive @requiresRole(roles: [String!]!) on FIELD_DEFINITION\ntype Query { productA: String @requiresRole(roles: ["admin"]) }';
+    RBACManager.registerPoliciesFromSDL(oldSdl);
+    (gateway as any).supergraphUpdate = () => { throw new Error('Rejected schema'); };
+    (gateway as any).discoveryManager = { discoverServices: async () => [SUBGRAPH_A] };
+    global.fetch = jest.fn(async () => new Response(JSON.stringify({ data: { _service: { sdl: SSDL_A } } })));
+    await (gateway as any).refreshSchema();
+    expect(RBACManager.getAvailableRoles()).toEqual(['admin']);
   });
 
   it('does not start periodic refresh when refresh is disabled', () => {
@@ -116,7 +162,6 @@ describe('Schema refresh', () => {
   it('refreshes schema while excluding a failing subgraph', async () => {
     const gateway = createGateway();
     const updateMock = jest.fn();
-    const loadRbacMock = jest.spyOn(gateway as any, 'loadRbacPoliciesFromSubgraphs').mockResolvedValue(undefined);
 
     (gateway as any).supergraphUpdate = updateMock;
     (gateway as any).discoveryManager = {
@@ -142,14 +187,12 @@ describe('Schema refresh', () => {
     await (gateway as any).refreshSchema();
 
     expect(updateMock).toHaveBeenCalledTimes(1);
-    expect(loadRbacMock).toHaveBeenCalledWith([SUBGRAPH_A]);
     expect((gateway as any).activeSubgraphs).toEqual([SUBGRAPH_A]);
   });
 
   it('keeps the previous schema when refresh fails completely', async () => {
     const gateway = createGateway();
     const updateMock = jest.fn();
-    const loadRbacMock = jest.spyOn(gateway as any, 'loadRbacPoliciesFromSubgraphs').mockResolvedValue(undefined);
 
     (gateway as any).supergraphUpdate = updateMock;
     (gateway as any).activeSubgraphs = [SUBGRAPH_A];
@@ -168,14 +211,12 @@ describe('Schema refresh', () => {
     await (gateway as any).refreshSchema();
 
     expect(updateMock).not.toHaveBeenCalled();
-    expect(loadRbacMock).not.toHaveBeenCalled();
     expect((gateway as any).activeSubgraphs).toEqual([SUBGRAPH_A]);
   });
 
   it('adds a recovered subgraph back on the next successful refresh', async () => {
     const gateway = createGateway();
     const updateMock = jest.fn();
-    const loadRbacMock = jest.spyOn(gateway as any, 'loadRbacPoliciesFromSubgraphs').mockResolvedValue(undefined);
 
     (gateway as any).supergraphUpdate = updateMock;
     (gateway as any).activeSubgraphs = [SUBGRAPH_A];
@@ -215,7 +256,6 @@ describe('Schema refresh', () => {
       'subgraph-b',
     ]);
     expect(updateMock).toHaveBeenCalledTimes(2);
-    expect(loadRbacMock).toHaveBeenLastCalledWith([SUBGRAPH_A, SUBGRAPH_B]);
   });
 });
 
