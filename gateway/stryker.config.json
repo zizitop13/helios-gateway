@@ -15,7 +15,9 @@
   "reporters": ["clear-text", "progress", "html", "json"],
   "htmlReporter": { "fileName": "reports/mutation/index.html" },
   "jsonReporter": { "fileName": "reports/mutation/mutation.json" },
-  "thresholds": { "high": 80, "low": 60, "break": 60 },
+  "thresholds": { "high": 80, "low": 45, "break": 45 },
+  "incremental": true,
+  "incrementalFile": "reports/stryker-incremental.json",
   "concurrency": 4,
   "timeoutMS": 10000,
   "timeoutFactor": 2

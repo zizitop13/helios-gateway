@@ -41,7 +41,9 @@ function mutationDetails(data) {
   const detected = (totals.Killed || 0) + (totals.Timeout || 0);
   const valid = detected + (totals.Survived || 0) + (totals.NoCoverage || 0);
   const score = valid ? (100 * detected / valid).toFixed(2) : 'N/A';
-  return `<p>Mutation score: <strong>${escapeHtml(score)}%</strong>. CI requires at least 60%. Timeouts count as detected; uncovered mutants count against the score. Compile/runtime errors are excluded.</p>${table(['File', 'Mutants', 'Killed', 'Timeout', 'Survived', 'No coverage'], rows)}`;
+  const minimum = data.config?.thresholds?.break ?? data.thresholds?.break;
+  const gate = typeof minimum === 'number' ? `CI requires at least ${minimum}%.` : 'No minimum score is configured.';
+  return `<p>Mutation score: <strong>${escapeHtml(score)}%</strong>. ${escapeHtml(gate)} Timeouts count as detected; uncovered mutants count against the score. Compile/runtime errors are excluded.</p>${table(['File', 'Mutants', 'Killed', 'Timeout', 'Survived', 'No coverage'], rows)}`;
 }
 
 async function detailsFor(result) {
