@@ -1,0 +1,41 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>e2e: PASS · Helios Gateway</title><style>
+  :root{color-scheme:light dark;font-family:system-ui,sans-serif;line-height:1.6;background:#101827;color:#e5eaf2}body{max-width:1100px;margin:40px auto;padding:0 24px}a{color:#93c5fd}h1{line-height:1.2}h2{margin-top:32px}p{color:#c5cfdd}table{border-collapse:collapse;width:100%;background:#192538}th,td{text-align:left;padding:10px 14px;border-bottom:1px solid #344155;vertical-align:top}th{color:#93c5fd}.table-scroll{overflow:auto}.pass{color:#86efac}.fail{color:#fda4af}pre{background:#192538;padding:18px;overflow:auto;white-space:pre-wrap;overflow-wrap:anywhere}code{overflow-wrap:anywhere}li{margin:8px 0}small{color:#a6b4c8}details{margin-top:24px}</style></head><body><p><a href="https://zizitop13.github.io/helios-gateway/">Helios Gateway documentation</a></p><h1>e2e: PASS</h1><p>UTC: 2026-10-18T12:34:07.937Z · build 7 · attempt 1<br>Commit: <code>54adbf814e1da7ba22678e5def4d69fab8b0141f</code></p><p><a href="summary-2026-10-18T12-34-07-937Z-build-7-attempt-1.html">All checks</a> · Duration: 27.2s · Exit code: 0</p><p><a href="playwright/index.html">Open detailed e2e report</a></p><details><summary>Full check log</summary><pre>
+&gt; test:e2e
+&gt; node testing/local/run.mjs e2e
+
+Local stack ready for e2e. Logs: /home/runner/work/helios-gateway/helios-gateway/reports/local/e2e
+
+&gt; e2e:test
+&gt; bddgen &amp;&amp; playwright test
+
+
+Running 25 tests using 1 worker
+
+  ✓   1 [admin-console] › src/.features-gen/src/admin-console/features/admin-login.feature.spec.js:6:3 › Admin Console Login › Successful login with valid admin credentials (626ms)
+  ✓   2 [admin-console] › src/.features-gen/src/admin-console/features/admin-login.feature.spec.js:12:3 › Admin Console Login › Failed login with invalid credentials (465ms)
+  ✓   3 [admin-console] › src/.features-gen/src/admin-console/features/admin-login.feature.spec.js:19:3 › Admin Console Login › Login button is disabled for empty fields (360ms)
+  ✓   4 [admin-console] › src/.features-gen/src/admin-console/features/admin-navigation.feature.spec.js:10:3 › Admin Console Navigation › Navigate to Subgraphs page (644ms)
+  ✓   5 [admin-console] › src/.features-gen/src/admin-console/features/admin-navigation.feature.spec.js:15:3 › Admin Console Navigation › Navigate to Status page (555ms)
+  ✓   6 [admin-console] › src/.features-gen/src/admin-console/features/admin-navigation.feature.spec.js:20:3 › Admin Console Navigation › Navigate to User Info page (567ms)
+  ✓   7 [admin-console] › src/.features-gen/src/admin-console/features/admin-navigation.feature.spec.js:25:3 › Admin Console Navigation › Navigate to Roles page (598ms)
+  ✓   8 [admin-console] › src/.features-gen/src/admin-console/features/admin-navigation.feature.spec.js:30:3 › Admin Console Navigation › Toggle theme (576ms)
+  ✓   9 [admin-console] › src/.features-gen/src/admin-console/features/admin-sandbox.feature.spec.js:10:3 › GraphQL Sandbox Health Check › Broken subgraph is shown as failed in the Sandbox health check (778ms)
+  ✓  10 [admin-console] › src/.features-gen/src/admin-console/features/admin-subgraphs.feature.spec.js:11:3 › Subgraph Management › Subgraphs page is accessible (633ms)
+  ✓  11 [admin-console] › src/.features-gen/src/admin-console/features/admin-subgraphs.feature.spec.js:16:3 › Subgraph Management › Each subgraph row has required fields (626ms)
+  ✓  12 [admin-console] › src/.features-gen/src/admin-console/features/admin-subgraphs.feature.spec.js:20:3 › Subgraph Management › Subgraphs have a status indicator (706ms)
+  ✓  13 [admin-console] › src/.features-gen/src/admin-console/features/admin-subgraphs.feature.spec.js:24:3 › Subgraph Management › Broken subgraph is shown as failed in the subgraphs table (726ms)
+  ✓  14 [admin-api] › src/admin-api/subgraphs-health.spec.js:15:3 › admin subgraph health › reports the broken service in the aggregate subgraph health endpoint (34ms)
+  ✓  15 [admin-api] › src/admin-api/subgraphs-health.spec.js:27:3 › admin subgraph health › reports the broken service in the single-subgraph health endpoint (16ms)
+  ✓  16 [gateway] › src/gateway/graphql/access-control.spec.js:11:3 › gateway access control › blocks anonymous access to protected query (38ms)
+  ✓  17 [gateway] › src/gateway/graphql/access-control.spec.js:18:3 › gateway access control › allows viewer to query pets (54ms)
+  ✓  18 [gateway] › src/gateway/graphql/access-control.spec.js:32:3 › gateway access control › blocks viewer from staff query (15ms)
+  ✓  19 [gateway] › src/gateway/graphql/access-control.spec.js:44:3 › gateway access control › allows staff to query orders (23ms)
+  ✓  20 [gateway] › src/gateway/graphql/access-control.spec.js:58:3 › gateway access control › allows support to read customer emails (23ms)
+  ✓  21 [gateway] › src/gateway/graphql/access-control.spec.js:73:3 › gateway access control › allows admin and finance role match (22ms)
+  ✓  22 [gateway] › src/gateway/graphql/mutation-operations.spec.js:21:3 › gateway mutation operations › blocks anonymous access to protected mutation (12ms)
+  ✓  23 [gateway] › src/gateway/graphql/mutation-operations.spec.js:31:3 › gateway mutation operations › blocks viewer from staff mutation (10ms)
+  ✓  24 [gateway] › src/gateway/graphql/mutation-operations.spec.js:42:3 › gateway mutation operations › allows staff to update an order (21ms)
+  ✓  25 [gateway] › src/gateway/graphql/subscription-operations.spec.js:12:3 › gateway subscription operations › exposes composed order update subscription field (18ms)
+
+  25 passed (11.4s)
+</pre></details></body></html>

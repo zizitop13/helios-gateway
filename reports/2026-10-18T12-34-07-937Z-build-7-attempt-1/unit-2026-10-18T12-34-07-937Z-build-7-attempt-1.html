@@ -1,0 +1,687 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>unit: PASS · Helios Gateway</title><style>
+  :root{color-scheme:light dark;font-family:system-ui,sans-serif;line-height:1.6;background:#101827;color:#e5eaf2}body{max-width:1100px;margin:40px auto;padding:0 24px}a{color:#93c5fd}h1{line-height:1.2}h2{margin-top:32px}p{color:#c5cfdd}table{border-collapse:collapse;width:100%;background:#192538}th,td{text-align:left;padding:10px 14px;border-bottom:1px solid #344155;vertical-align:top}th{color:#93c5fd}.table-scroll{overflow:auto}.pass{color:#86efac}.fail{color:#fda4af}pre{background:#192538;padding:18px;overflow:auto;white-space:pre-wrap;overflow-wrap:anywhere}code{overflow-wrap:anywhere}li{margin:8px 0}small{color:#a6b4c8}details{margin-top:24px}</style></head><body><p><a href="https://zizitop13.github.io/helios-gateway/">Helios Gateway documentation</a></p><h1>unit: PASS</h1><p>UTC: 2026-10-18T12:34:07.937Z · build 7 · attempt 1<br>Commit: <code>54adbf814e1da7ba22678e5def4d69fab8b0141f</code></p><p><a href="summary-2026-10-18T12-34-07-937Z-build-7-attempt-1.html">All checks</a> · Duration: 9.04s · Exit code: 0</p><p><a href="coverage/index.html">Open detailed unit report</a></p><div class="table-scroll"><table><thead><tr><th>Passed</th><th>Failed</th><th>Skipped</th><th>Suites</th></tr></thead><tbody><tr><td>113</td><td>0</td><td>0</td><td>11</td></tr></tbody></table></div><h2>Coverage</h2><div class="table-scroll"><table><thead><tr><th>Statements %</th><th>Branches %</th><th>Functions %</th><th>Lines %</th></tr></thead><tbody><tr><td>72.89</td><td>66.24</td><td>78.36</td><td>72.9</td></tr></tbody></table></div><h2>Tests</h2><div class="table-scroll"><table><thead><tr><th>Test</th><th>Status</th><th>Duration (ms)</th></tr></thead><tbody><tr><td>Admin Module AdminAuthGuard should reject requests without authorization header</td><td>passed</td><td>4</td></tr><tr><td>Admin Module AdminAuthGuard should reject requests with invalid token</td><td>passed</td><td>1</td></tr><tr><td>Admin Module AdminAuthGuard should reject users without admin role</td><td>passed</td><td>1</td></tr><tr><td>Admin Module AdminAuthGuard should allow users with admin role</td><td>passed</td><td>1</td></tr><tr><td>Admin Module AdminAuthGuard should allow admin users with a valid session cookie</td><td>passed</td><td>1</td></tr><tr><td>Admin Module AdminAuthGuard should fall back to a valid session cookie when bearer token verification fails</td><td>passed</td><td>1</td></tr><tr><td>Admin Module AdminAuthGuard should reject invalid session cookies</td><td>passed</td><td>0</td></tr><tr><td>Admin Module AdminApiController GET /subgraphs should return discovered subgraphs</td><td>passed</td><td>2</td></tr><tr><td>Admin Module AdminApiController GET /subgraphs/stream should stream each discovered subgraph after health is checked</td><td>passed</td><td>2</td></tr><tr><td>Admin Module AdminApiController GET /status should return gateway status</td><td>passed</td><td>1</td></tr><tr><td>Admin Module AdminApiController GET /me should return user information</td><td>passed</td><td>1</td></tr><tr><td>Firebase session login flow GET /csrfToken returns a token and sets a readable CSRF cookie</td><td>passed</td><td>47</td></tr><tr><td>Firebase session login flow POST /sessionLogin without CSRF header returns 403</td><td>passed</td><td>21</td></tr><tr><td>Firebase session login flow POST /sessionLogin with mismatched CSRF cookie and header returns 403</td><td>passed</td><td>8</td></tr><tr><td>Firebase session login flow POST /sessionLogin without idToken returns 400</td><td>passed</td><td>7</td></tr><tr><td>Firebase session login flow POST /sessionLogin stores a Firebase session cookie instead of the raw idToken</td><td>passed</td><td>9</td></tr><tr><td>Firebase session login flow protected GraphQL accepts a valid Firebase session cookie</td><td>passed</td><td>36</td></tr><tr><td>Firebase session login flow protected GraphQL falls back to a valid session cookie when bearer verification fails</td><td>passed</td><td>11</td></tr><tr><td>Firebase session login flow protected GraphQL rejects missing or invalid session cookies</td><td>passed</td><td>40</td></tr><tr><td>Discovery Providers DockerDiscovery should create an instance with default socket path</td><td>passed</td><td>3</td></tr><tr><td>Discovery Providers DockerDiscovery should create an instance with custom socket path</td><td>passed</td><td>2</td></tr><tr><td>Discovery Providers DockerDiscovery should discover containers with subgraph labels</td><td>passed</td><td>4</td></tr><tr><td>Discovery Providers DockerDiscovery should skip containers without subgraph.name label</td><td>passed</td><td>1</td></tr><tr><td>Discovery Providers DockerDiscovery should handle containers with docker-compose service names</td><td>passed</td><td>1</td></tr><tr><td>Discovery Providers DockerDiscovery should handle errors during discovery</td><td>passed</td><td>7</td></tr><tr><td>Discovery Providers ServiceDiscoveryManager should create an instance</td><td>passed</td><td>0</td></tr><tr><td>Discovery Providers ServiceDiscoveryManager should discover services using provider</td><td>passed</td><td>0</td></tr><tr><td>Discovery Providers ServiceDiscoveryManager should handle discovery errors and return empty array</td><td>passed</td><td>1</td></tr><tr><td>Discovery Providers ServiceDiscoveryManager should get last discovered services</td><td>passed</td><td>1</td></tr><tr><td>Discovery Providers FileDiscovery should discover subgraphs from YAML file using subgraph and graph fields</td><td>passed</td><td>10</td></tr><tr><td>Discovery Providers FileDiscovery should filter services by graph name when graph scope is configured</td><td>passed</td><td>1</td></tr><tr><td>Discovery Providers FileDiscovery should parse graph-scoped mapping structures</td><td>passed</td><td>1</td></tr><tr><td>Discovery Providers FileDiscovery should include subgraphs defined in optional top-level graph section</td><td>passed</td><td>2</td></tr><tr><td>Discovery Providers FileDiscovery should build URLs with configured default host override</td><td>passed</td><td>0</td></tr><tr><td>Schema refresh keeps role restrictions while refresh is waiting on subgraphs, then installs the complete policy set</td><td>passed</td><td>78</td></tr><tr><td>Schema refresh keeps the previous policies when installing a refreshed schema fails</td><td>passed</td><td>14</td></tr><tr><td>Schema refresh does not start periodic refresh when refresh is disabled</td><td>passed</td><td>1</td></tr><tr><td>Schema refresh excludes one subgraph on startup when introspection fails for that subgraph</td><td>passed</td><td>11</td></tr><tr><td>Schema refresh excludes a subgraph when introspection hangs</td><td>passed</td><td>3</td></tr><tr><td>Schema refresh refreshes schema while excluding a failing subgraph</td><td>passed</td><td>9</td></tr><tr><td>Schema refresh keeps the previous schema when refresh fails completely</td><td>passed</td><td>2</td></tr><tr><td>Schema refresh adds a recovered subgraph back on the next successful refresh</td><td>passed</td><td>23</td></tr><tr><td>RBACManager prepares new policies without changing existing access, then replaces rather than accumulates policies</td><td>passed</td><td>1</td></tr><tr><td>RBACManager preserves existing policies if any new subgraph SDL is malformed</td><td>passed</td><td>13</td></tr><tr><td>RBACManager hasRequiredRoles should return true when user has all required roles (match: ALL)</td><td>passed</td><td>0</td></tr><tr><td>RBACManager hasRequiredRoles should return false when user is missing a required role (match: ALL)</td><td>passed</td><td>0</td></tr><tr><td>RBACManager hasRequiredRoles should return true when user has at least one required role (match: ANY)</td><td>passed</td><td>1</td></tr><tr><td>RBACManager hasRequiredRoles should return false when user has no required roles (match: ANY)</td><td>passed</td><td>0</td></tr><tr><td>RBACManager hasRequiredRoles should return false when user has no roles</td><td>passed</td><td>0</td></tr><tr><td>RBACManager hasRequiredRoles should default to ANY match when not specified</td><td>passed</td><td>0</td></tr><tr><td>RBACManager hasRequiredRoles should return false when required roles list is empty (match: ALL)</td><td>passed</td><td>0</td></tr><tr><td>RBACManager hasRequiredRoles should normalize role values before matching</td><td>passed</td><td>1</td></tr><tr><td>RBACManager validateOperationRoles should allow anonymous queries only for allowAnonymous fields</td><td>passed</td><td>1</td></tr><tr><td>RBACManager validateOperationRoles should reject anonymous access by default when field is not allowAnonymous</td><td>passed</td><td>1</td></tr><tr><td>RBACManager validateOperationRoles should reject field-level restricted access without required role for authenticated users</td><td>passed</td><td>1</td></tr><tr><td>RBACManager validateOperationRoles should reject object-level restricted access without required role for authenticated users</td><td>passed</td><td>1</td></tr><tr><td>RBACManager validateOperationRoles should allow restricted access with required role</td><td>passed</td><td>0</td></tr><tr><td>RBACManager validateOperationRoles should enforce policies loaded from subgraph SDL even when API schema has no directives</td><td>passed</td><td>2</td></tr><tr><td>FirebaseAuthManager extracts and deduplicates roles from claims {&quot;roles&quot;:[&quot;admin&quot;,&quot;staff&quot;],&quot;role&quot;:&quot;admin&quot;,&quot;custom_claims&quot;:{&quot;roles&quot;:[&quot;support&quot;]}}</td><td>passed</td><td>2</td></tr><tr><td>FirebaseAuthManager extracts and deduplicates roles from claims {&quot;customAttributes&quot;:&quot;{\&quot;roles\&quot;:[\&quot;viewer\&quot;,12,\&quot;viewer\&quot;]}&quot;}</td><td>passed</td><td>0</td></tr><tr><td>FirebaseAuthManager extracts and deduplicates roles from claims {&quot;custom_attributes&quot;:{&quot;roles&quot;:[&quot;staff&quot;,null]}}</td><td>passed</td><td>0</td></tr><tr><td>FirebaseAuthManager extracts and deduplicates roles from claims {&quot;customAttributes&quot;:&quot;malformed-json&quot;}</td><td>passed</td><td>0</td></tr><tr><td>FirebaseAuthManager extracts and deduplicates roles from claims {&quot;roles&quot;:&quot;admin&quot;,&quot;role&quot;:12,&quot;custom_claims&quot;:{&quot;roles&quot;:&quot;staff&quot;}}</td><td>passed</td><td>0</td></tr><tr><td>FirebaseAuthManager extracts and deduplicates roles from claims {&quot;customAttributes&quot;:&quot;{\&quot;roles\&quot;:\&quot;admin\&quot;}&quot;}</td><td>passed</td><td>0</td></tr><tr><td>FirebaseAuthManager extracts and deduplicates roles from claims {}</td><td>passed</td><td>0</td></tr><tr><td>FirebaseAuthManager rejects invalid ID tokens and revoked session cookies</td><td>passed</td><td>16</td></tr><tr><td>FirebaseAuthManager resolves users by UID or email and handles missing users</td><td>passed</td><td>1</td></tr><tr><td>FirebaseAuthManager replaces role claims while preserving unrelated claims</td><td>passed</td><td>1</td></tr><tr><td>FirebaseAuthManager does not assign roles to missing users and handles claim-update failure</td><td>passed</td><td>1</td></tr><tr><td>FirebaseAuthManager extractTokenFromHeader should extract token from Bearer format</td><td>passed</td><td>0</td></tr><tr><td>FirebaseAuthManager extractTokenFromHeader should return raw token if not in Bearer format</td><td>passed</td><td>0</td></tr><tr><td>FirebaseAuthManager extractTokenFromHeader should return null for undefined header</td><td>passed</td><td>0</td></tr><tr><td>FirebaseAuthManager extractTokenFromHeader should return null for empty header</td><td>passed</td><td>1</td></tr><tr><td>FirebaseAuthManager extractTokenFromHeader should handle Bearer with multiple spaces</td><td>passed</td><td>0</td></tr><tr><td>FirebaseAuthManager extractTokenFromHeader should ignore malformed bearer placeholders</td><td>passed</td><td>0</td></tr><tr><td>FirebaseAuthManager session cookies creates a Firebase session cookie from an ID token</td><td>passed</td><td>1</td></tr><tr><td>FirebaseAuthManager session cookies verifies Firebase session cookies with revocation checking</td><td>passed</td><td>0</td></tr><tr><td>FirebaseAuthManager session cookies uses ID token verification for bearer tokens</td><td>passed</td><td>0</td></tr><tr><td>Configuration loadConfig should load default values when env vars are not set</td><td>passed</td><td>2</td></tr><tr><td>Configuration loadConfig should load values from environment variables</td><td>passed</td><td>0</td></tr><tr><td>Configuration loadConfig should use FIREBASE_PROJECT_ID as fallback for GCP_PROJECT_ID</td><td>passed</td><td>0</td></tr><tr><td>Configuration loadConfig should enable Cloud Run IAM auth when ENABLE_CLOUD_RUN_IAM_AUTH is true</td><td>passed</td><td>0</td></tr><tr><td>Configuration loadConfig should enable Apollo Sandbox when ENABLE_APOLLO_SANDBOX is true</td><td>passed</td><td>0</td></tr><tr><td>Configuration loadConfig should disable Apollo Sandbox when ENABLE_APOLLO_SANDBOX is false</td><td>passed</td><td>10</td></tr><tr><td>Configuration loadConfig should disable schema refresh when ENABLE_SCHEMA_REFRESH is false</td><td>passed</td><td>0</td></tr><tr><td>Configuration loadConfig should use custom schema refresh interval from env</td><td>passed</td><td>1</td></tr><tr><td>Configuration loadConfig should disable Cloud Run IAM auth when ENABLE_CLOUD_RUN_IAM_AUTH is false</td><td>passed</td><td>0</td></tr><tr><td>Configuration loadConfig should disable Cloud Run IAM auth by default</td><td>passed</td><td>0</td></tr><tr><td>Configuration loadConfig should load file discovery configuration from environment variables</td><td>passed</td><td>1</td></tr><tr><td>Configuration loadConfig should load admin console Firebase config from environment variables</td><td>passed</td><td>0</td></tr><tr><td>Configuration validateConfig should throw error when GCP_PROJECT_ID is missing</td><td>passed</td><td>7</td></tr><tr><td>Configuration validateConfig should not throw when GCP_PROJECT_ID is set</td><td>passed</td><td>1</td></tr><tr><td>Configuration validateConfig should throw error when DISCOVERY_FILE_PATH is missing in file mode</td><td>passed</td><td>0</td></tr><tr><td>Configuration validateConfig should not throw when DISCOVERY_FILE_PATH is set in file mode</td><td>passed</td><td>1</td></tr><tr><td>CLI parses run flags for file discovery</td><td>passed</td><td>2</td></tr><tr><td>CLI parses docker and boolean disable flags</td><td>passed</td><td>1</td></tr><tr><td>CLI throws for unknown arguments</td><td>passed</td><td>9</td></tr><tr><td>CLI throws for missing required values</td><td>passed</td><td>1</td></tr><tr><td>CLI throws for invalid boolean values</td><td>passed</td><td>1</td></tr><tr><td>CLI applies parsed options to process environment</td><td>passed</td><td>1</td></tr><tr><td>Gateway startup and request handling discovers and composes a subgraph, serves health/admin routes, and enforces roles on real HTTP requests</td><td>passed</td><td>89</td></tr><tr><td>CloudRunAuthManager getIdentityToken should get an identity token for a target URL</td><td>passed</td><td>1</td></tr><tr><td>CloudRunAuthManager getIdentityToken should cache tokens for the same audience</td><td>passed</td><td>0</td></tr><tr><td>CloudRunAuthManager getIdentityToken should extract audience correctly from full URL</td><td>passed</td><td>1</td></tr><tr><td>CloudRunAuthManager getIdentityToken should handle URLs with different paths but same host</td><td>passed</td><td>0</td></tr><tr><td>CloudRunAuthManager clearCache should clear the token cache</td><td>passed</td><td>0</td></tr><tr><td>Cloud Run discovery filters services by labels, graph, name and URL, preserving the configured subgraph name</td><td>passed</td><td>3</td></tr><tr><td>Cloud Run discovery supports the naming convention {&quot;subgraph_name&quot;:&quot;snake&quot;}</td><td>passed</td><td>1</td></tr><tr><td>Cloud Run discovery supports the naming convention {&quot;subgraph-name&quot;:&quot;hyphen&quot;}</td><td>passed</td><td>1</td></tr><tr><td>Cloud Run discovery supports the naming convention {}</td><td>passed</td><td>0</td></tr><tr><td>Cloud Run discovery handles discovery failure {} without crashing startup</td><td>passed</td><td>1</td></tr><tr><td>Cloud Run discovery handles discovery failure {&quot;details&quot;:&quot;permission denied&quot;} without crashing startup</td><td>passed</td><td>0</td></tr><tr><td>Cloud Run discovery handles discovery failure null without crashing startup</td><td>passed</td><td>0</td></tr></tbody></table></div><details><summary>Full check log</summary><pre>
+&gt; test:unit
+&gt; npm --prefix gateway run test:ci -- --runInBand --json --outputFile=reports/unit.json
+
+
+&gt; apollo-cloud-gateway@1.0.3 test:ci
+&gt; jest --ci --coverage --reporters=default --reporters=jest-junit --runInBand --json --outputFile=reports/unit.json
+
+PASS src/__tests__/admin.test.ts
+PASS src/__tests__/session.test.ts
+  ● Console
+
+    console.warn
+      GraphQL gateway not initialized; /graphql endpoint will not be available.
+
+      548 |       console.log(&#39;GraphQL endpoint registered at /graphql&#39;);
+      549 |     } else {
+    &gt; 550 |       console.warn(&#39;GraphQL gateway not initialized; /graphql endpoint will not be available.&#39;);
+          |               ^
+      551 |     }
+      552 |   }
+      553 |
+
+      at ApolloCloudGateway.warn [as setupGraphqlRoute] (src/gateway.ts:550:15)
+      at ApolloCloudGateway.setupGraphqlRoute [as setupExpress] (src/gateway.ts:495:10)
+      at startTestServer (src/__tests__/session.test.ts:72:20)
+      at Object.&lt;anonymous&gt; (src/__tests__/session.test.ts:136:26)
+
+    console.warn
+      GraphQL gateway not initialized; /graphql endpoint will not be available.
+
+      548 |       console.log(&#39;GraphQL endpoint registered at /graphql&#39;);
+      549 |     } else {
+    &gt; 550 |       console.warn(&#39;GraphQL gateway not initialized; /graphql endpoint will not be available.&#39;);
+          |               ^
+      551 |     }
+      552 |   }
+      553 |
+
+      at ApolloCloudGateway.warn [as setupGraphqlRoute] (src/gateway.ts:550:15)
+      at ApolloCloudGateway.setupGraphqlRoute [as setupExpress] (src/gateway.ts:495:10)
+      at startTestServer (src/__tests__/session.test.ts:72:20)
+      at Object.&lt;anonymous&gt; (src/__tests__/session.test.ts:153:26)
+
+    console.warn
+      GraphQL gateway not initialized; /graphql endpoint will not be available.
+
+      548 |       console.log(&#39;GraphQL endpoint registered at /graphql&#39;);
+      549 |     } else {
+    &gt; 550 |       console.warn(&#39;GraphQL gateway not initialized; /graphql endpoint will not be available.&#39;);
+          |               ^
+      551 |     }
+      552 |   }
+      553 |
+
+      at ApolloCloudGateway.warn [as setupGraphqlRoute] (src/gateway.ts:550:15)
+      at ApolloCloudGateway.setupGraphqlRoute [as setupExpress] (src/gateway.ts:495:10)
+      at startTestServer (src/__tests__/session.test.ts:72:20)
+      at Object.&lt;anonymous&gt; (src/__tests__/session.test.ts:173:26)
+
+    console.warn
+      GraphQL gateway not initialized; /graphql endpoint will not be available.
+
+      548 |       console.log(&#39;GraphQL endpoint registered at /graphql&#39;);
+      549 |     } else {
+    &gt; 550 |       console.warn(&#39;GraphQL gateway not initialized; /graphql endpoint will not be available.&#39;);
+          |               ^
+      551 |     }
+      552 |   }
+      553 |
+
+      at ApolloCloudGateway.warn [as setupGraphqlRoute] (src/gateway.ts:550:15)
+      at ApolloCloudGateway.setupGraphqlRoute [as setupExpress] (src/gateway.ts:495:10)
+      at startTestServer (src/__tests__/session.test.ts:72:20)
+      at Object.&lt;anonymous&gt; (src/__tests__/session.test.ts:194:26)
+
+    console.warn
+      GraphQL gateway not initialized; /graphql endpoint will not be available.
+
+      548 |       console.log(&#39;GraphQL endpoint registered at /graphql&#39;);
+      549 |     } else {
+    &gt; 550 |       console.warn(&#39;GraphQL gateway not initialized; /graphql endpoint will not be available.&#39;);
+          |               ^
+      551 |     }
+      552 |   }
+      553 |
+
+      at ApolloCloudGateway.warn [as setupGraphqlRoute] (src/gateway.ts:550:15)
+      at ApolloCloudGateway.setupGraphqlRoute [as setupExpress] (src/gateway.ts:495:10)
+      at startTestServer (src/__tests__/session.test.ts:72:20)
+      at Object.&lt;anonymous&gt; (src/__tests__/session.test.ts:216:26)
+
+    console.log
+      GraphQL endpoint registered at /graphql
+
+      at ApolloCloudGateway.log [as setupGraphqlRoute] (src/gateway.ts:548:15)
+
+    console.log
+      GraphQL endpoint registered at /graphql
+
+      at ApolloCloudGateway.log [as setupGraphqlRoute] (src/gateway.ts:548:15)
+
+    console.log
+      GraphQL endpoint registered at /graphql
+
+      at ApolloCloudGateway.log [as setupGraphqlRoute] (src/gateway.ts:548:15)
+
+PASS src/__tests__/discovery.test.ts
+  ● Console
+
+    console.log
+      Discovered 2 subgraph services from Docker
+
+      at DockerDiscovery.log [as discoverServices] (src/discovery/DockerDiscovery.ts:69:15)
+
+    console.warn
+      Container /invalid-subgraph has subgraph=true but no subgraph.name label
+
+      46 |           
+      47 |           if (!subgraphName) {
+    &gt; 48 |             console.warn(`Container ${containerInfo.Names[0]} has subgraph=true but no subgraph.name label`);
+         |                     ^
+      49 |             continue;
+      50 |           }
+      51 |
+
+      at DockerDiscovery.warn [as discoverServices] (src/discovery/DockerDiscovery.ts:48:21)
+      at Object.&lt;anonymous&gt; (src/__tests__/discovery.test.ts:114:24)
+
+    console.log
+      Discovered 0 subgraph services from Docker
+
+      at DockerDiscovery.log [as discoverServices] (src/discovery/DockerDiscovery.ts:69:15)
+
+    console.log
+      Discovered 1 subgraph services from Docker
+
+      at DockerDiscovery.log [as discoverServices] (src/discovery/DockerDiscovery.ts:69:15)
+
+    console.error
+      Error discovering Docker services: Error: Docker connection failed
+          at Object.&lt;anonymous&gt; (/home/runner/work/helios-gateway/helios-gateway/gateway/src/__tests__/discovery.test.ts:155:63)
+          at Promise.then.completed (/home/runner/work/helios-gateway/helios-gateway/gateway/node_modules/jest-circus/build/utils.js:298:28)
+          at new Promise (&lt;anonymous&gt;)
+          at callAsyncCircusFn (/home/runner/work/helios-gateway/helios-gateway/gateway/node_modules/jest-circus/build/utils.js:231:10)
+          at _callCircusTest (/home/runner/work/helios-gateway/helios-gateway/gateway/node_modules/jest-circus/build/run.js:316:40)
+          at _runTest (/home/runner/work/helios-gateway/helios-gateway/gateway/node_modules/jest-circus/build/run.js:252:3)
+          at _runTestsForDescribeBlock (/home/runner/work/helios-gateway/helios-gateway/gateway/node_modules/jest-circus/build/run.js:126:9)
+          at _runTestsForDescribeBlock (/home/runner/work/helios-gateway/helios-gateway/gateway/node_modules/jest-circus/build/run.js:121:9)
+          at _runTestsForDescribeBlock (/home/runner/work/helios-gateway/helios-gateway/gateway/node_modules/jest-circus/build/run.js:121:9)
+          at run (/home/runner/work/helios-gateway/helios-gateway/gateway/node_modules/jest-circus/build/run.js:71:3)
+          at runAndTransformResultsToJestFormat (/home/runner/work/helios-gateway/helios-gateway/gateway/node_modules/jest-circus/build/legacy-code-todo-rewrite/jestAdapterInit.js:122:21)
+          at jestAdapter (/home/runner/work/helios-gateway/helios-gateway/gateway/node_modules/jest-circus/build/legacy-code-todo-rewrite/jestAdapter.js:79:19)
+          at runTestInternal (/home/runner/work/helios-gateway/helios-gateway/gateway/node_modules/jest-runner/build/runTest.js:367:16)
+          at runTest (/home/runner/work/helios-gateway/helios-gateway/gateway/node_modules/jest-runner/build/runTest.js:444:34)
+
+      70 |       return subgraphServices;
+      71 |     } catch (error) {
+    &gt; 72 |       console.error(&#39;Error discovering Docker services:&#39;, error);
+         |               ^
+      73 |       throw error;
+      74 |     }
+      75 |   }
+
+      at DockerDiscovery.error [as discoverServices] (src/discovery/DockerDiscovery.ts:72:15)
+      at Object.&lt;anonymous&gt; (src/__tests__/discovery.test.ts:157:7)
+
+    console.error
+      Error discovering services: Error: Discovery failed
+          at Object.&lt;anonymous&gt; (/home/runner/work/helios-gateway/helios-gateway/gateway/src/__tests__/discovery.test.ts:191:67)
+          at Promise.then.completed (/home/runner/work/helios-gateway/helios-gateway/gateway/node_modules/jest-circus/build/utils.js:298:28)
+          at new Promise (&lt;anonymous&gt;)
+          at callAsyncCircusFn (/home/runner/work/helios-gateway/helios-gateway/gateway/node_modules/jest-circus/build/utils.js:231:10)
+          at _callCircusTest (/home/runner/work/helios-gateway/helios-gateway/gateway/node_modules/jest-circus/build/run.js:316:40)
+          at _runTest (/home/runner/work/helios-gateway/helios-gateway/gateway/node_modules/jest-circus/build/run.js:252:3)
+          at _runTestsForDescribeBlock (/home/runner/work/helios-gateway/helios-gateway/gateway/node_modules/jest-circus/build/run.js:126:9)
+          at _runTestsForDescribeBlock (/home/runner/work/helios-gateway/helios-gateway/gateway/node_modules/jest-circus/build/run.js:121:9)
+          at _runTestsForDescribeBlock (/home/runner/work/helios-gateway/helios-gateway/gateway/node_modules/jest-circus/build/run.js:121:9)
+          at run (/home/runner/work/helios-gateway/helios-gateway/gateway/node_modules/jest-circus/build/run.js:71:3)
+          at runAndTransformResultsToJestFormat (/home/runner/work/helios-gateway/helios-gateway/gateway/node_modules/jest-circus/build/legacy-code-todo-rewrite/jestAdapterInit.js:122:21)
+          at jestAdapter (/home/runner/work/helios-gateway/helios-gateway/gateway/node_modules/jest-circus/build/legacy-code-todo-rewrite/jestAdapter.js:79:19)
+          at runTestInternal (/home/runner/work/helios-gateway/helios-gateway/gateway/node_modules/jest-runner/build/runTest.js:367:16)
+          at runTest (/home/runner/work/helios-gateway/helios-gateway/gateway/node_modules/jest-runner/build/runTest.js:444:34)
+
+      23 |       return services;
+      24 |     } catch (error) {
+    &gt; 25 |       console.error(&#39;Error discovering services:&#39;, error);
+         |               ^
+      26 |       if (this.lastDiscoveredServices.length === 0) {
+      27 |         console.warn(
+      28 |           &#39;Service discovery failed and there are no previously discovered services; continuing with an empty service list.&#39;
+
+      at ServiceDiscoveryManager.error [as discoverServices] (src/discovery/ServiceDiscoveryManager.ts:25:15)
+      at Object.&lt;anonymous&gt; (src/__tests__/discovery.test.ts:193:24)
+
+    console.warn
+      Service discovery failed and there are no previously discovered services; continuing with an empty service list.
+
+      25 |       console.error(&#39;Error discovering services:&#39;, error);
+      26 |       if (this.lastDiscoveredServices.length === 0) {
+    &gt; 27 |         console.warn(
+         |                 ^
+      28 |           &#39;Service discovery failed and there are no previously discovered services; continuing with an empty service list.&#39;
+      29 |         );
+      30 |       } else {
+
+      at ServiceDiscoveryManager.warn [as discoverServices] (src/discovery/ServiceDiscoveryManager.ts:27:17)
+      at Object.&lt;anonymous&gt; (src/__tests__/discovery.test.ts:193:24)
+
+    console.log
+      Discovered 2 subgraph services from file /tmp/subgraphs.yaml
+
+      at FileDiscovery.log [as discoverServices] (src/discovery/FileDiscovery.ts:62:13)
+
+    console.log
+      Discovered 1 subgraph services from file /tmp/subgraphs.yaml
+
+      at FileDiscovery.log [as discoverServices] (src/discovery/FileDiscovery.ts:62:13)
+
+    console.log
+      Discovered 1 subgraph services from file /tmp/subgraphs.yaml
+
+      at FileDiscovery.log [as discoverServices] (src/discovery/FileDiscovery.ts:62:13)
+
+    console.log
+      Discovered 2 subgraph services from file /tmp/subgraphs.yaml
+
+      at FileDiscovery.log [as discoverServices] (src/discovery/FileDiscovery.ts:62:13)
+
+    console.log
+      Discovered 1 subgraph services from file /tmp/subgraphs.yaml
+
+      at FileDiscovery.log [as discoverServices] (src/discovery/FileDiscovery.ts:62:13)
+
+PASS src/__tests__/schemaRefresh.test.ts
+  ● Console
+
+    console.log
+      Discovered subgraphs (1): subgraph-a
+
+      at ApolloCloudGateway.log [as composeDiscoveredServices] (src/gateway.ts:308:13)
+
+    console.log
+      Schema refresh succeeded with 1 subgraphs.
+
+      at ApolloCloudGateway.log [as refreshSchema] (src/gateway.ts:289:15)
+
+    console.log
+      Discovered subgraphs (1): subgraph-a
+
+      at ApolloCloudGateway.log [as composeDiscoveredServices] (src/gateway.ts:308:13)
+
+    console.error
+      Schema refresh failed while keeping previous schema: Rejected schema
+
+      291 |       );
+      292 |     } catch (error: any) {
+    &gt; 293 |       console.error(
+          |               ^
+      294 |         `Schema refresh failed while keeping previous schema: ${error?.message || String(error)}`
+      295 |       );
+      296 |     } finally {
+
+      at ApolloCloudGateway.error [as refreshSchema] (src/gateway.ts:293:15)
+      at Object.&lt;anonymous&gt; (src/__tests__/schemaRefresh.test.ts:97:5)
+
+    console.log
+      Schema refresh is disabled by ENABLE_SCHEMA_REFRESH=false.
+
+      at ApolloCloudGateway.log [as startSchemaRefreshLoop] (src/gateway.ts:246:15)
+
+    console.log
+      Discovered subgraphs (2): subgraph-a, subgraph-b
+
+      at ApolloCloudGateway.log [as composeDiscoveredServices] (src/gateway.ts:308:13)
+
+    console.log
+      Discovered subgraphs (1): subgraph-b
+
+      at ApolloCloudGateway.log [as composeDiscoveredServices] (src/gateway.ts:308:13)
+
+    console.error
+      No subgraphs could be introspected for composition.
+
+      351 |
+      352 |     if (serviceDefinitions.length === 0) {
+    &gt; 353 |       console.error(&#39;No subgraphs could be introspected for composition.&#39;);
+          |               ^
+      354 |       return {
+      355 |         includedSubgraphs: [],
+      356 |         subgraphSdls: [],
+
+      at ApolloCloudGateway.error [as composeDiscoveredServices] (src/gateway.ts:353:15)
+      at Object.&lt;anonymous&gt; (src/__tests__/schemaRefresh.test.ts:153:20)
+
+    console.log
+      Discovered subgraphs (2): subgraph-a, subgraph-b
+
+      at ApolloCloudGateway.log [as composeDiscoveredServices] (src/gateway.ts:308:13)
+
+    console.warn
+      Excluded subgraphs during refresh: subgraph-b (HTTP 503)
+
+      458 |     }
+      459 |
+    &gt; 460 |     console.warn(
+          |             ^
+      461 |       `Excluded subgraphs during ${phase}: ${excludedSubgraphs
+      462 |         .map(({ service, reason }) =&gt; `${service.name} (${reason})`)
+      463 |         .join(&#39;, &#39;)}`
+
+      at ApolloCloudGateway.warn [as logExcludedSubgraphs] (src/gateway.ts:460:13)
+      at ApolloCloudGateway.logExcludedSubgraphs [as refreshSchema] (src/gateway.ts:275:12)
+      at Object.&lt;anonymous&gt; (src/__tests__/schemaRefresh.test.ts:187:5)
+
+    console.log
+      Schema refresh succeeded with 1 subgraphs.
+
+      at ApolloCloudGateway.log [as refreshSchema] (src/gateway.ts:289:15)
+
+    console.log
+      Discovered subgraphs (1): subgraph-b
+
+      at ApolloCloudGateway.log [as composeDiscoveredServices] (src/gateway.ts:308:13)
+
+    console.error
+      No subgraphs could be introspected for composition.
+
+      351 |
+      352 |     if (serviceDefinitions.length === 0) {
+    &gt; 353 |       console.error(&#39;No subgraphs could be introspected for composition.&#39;);
+          |               ^
+      354 |       return {
+      355 |         includedSubgraphs: [],
+      356 |         subgraphSdls: [],
+
+      at ApolloCloudGateway.error [as composeDiscoveredServices] (src/gateway.ts:353:15)
+      at ApolloCloudGateway.refreshSchema (src/gateway.ts:273:33)
+      at Object.&lt;anonymous&gt; (src/__tests__/schemaRefresh.test.ts:211:5)
+
+    console.warn
+      Excluded subgraphs during refresh: subgraph-b (HTTP 500)
+
+      458 |     }
+      459 |
+    &gt; 460 |     console.warn(
+          |             ^
+      461 |       `Excluded subgraphs during ${phase}: ${excludedSubgraphs
+      462 |         .map(({ service, reason }) =&gt; `${service.name} (${reason})`)
+      463 |         .join(&#39;, &#39;)}`
+
+      at ApolloCloudGateway.warn [as logExcludedSubgraphs] (src/gateway.ts:460:13)
+      at ApolloCloudGateway.logExcludedSubgraphs [as refreshSchema] (src/gateway.ts:275:12)
+      at Object.&lt;anonymous&gt; (src/__tests__/schemaRefresh.test.ts:211:5)
+
+    console.error
+      Schema refresh failed while keeping previous schema.
+
+      276 |
+      277 |       if (!compositionResult.supergraphSdl) {
+    &gt; 278 |         console.error(&#39;Schema refresh failed while keeping previous schema.&#39;);
+          |                 ^
+      279 |         return;
+      280 |       }
+      281 |
+
+      at ApolloCloudGateway.error [as refreshSchema] (src/gateway.ts:278:17)
+      at Object.&lt;anonymous&gt; (src/__tests__/schemaRefresh.test.ts:211:5)
+
+    console.log
+      Discovered subgraphs (2): subgraph-a, subgraph-b
+
+      at ApolloCloudGateway.log [as composeDiscoveredServices] (src/gateway.ts:308:13)
+
+    console.warn
+      Excluded subgraphs during refresh: subgraph-b (HTTP 503)
+
+      458 |     }
+      459 |
+    &gt; 460 |     console.warn(
+          |             ^
+      461 |       `Excluded subgraphs during ${phase}: ${excludedSubgraphs
+      462 |         .map(({ service, reason }) =&gt; `${service.name} (${reason})`)
+      463 |         .join(&#39;, &#39;)}`
+
+      at ApolloCloudGateway.warn [as logExcludedSubgraphs] (src/gateway.ts:460:13)
+      at ApolloCloudGateway.logExcludedSubgraphs [as refreshSchema] (src/gateway.ts:275:12)
+      at Object.&lt;anonymous&gt; (src/__tests__/schemaRefresh.test.ts:246:5)
+
+    console.log
+      Schema refresh succeeded with 1 subgraphs.
+
+      at ApolloCloudGateway.log [as refreshSchema] (src/gateway.ts:289:15)
+
+    console.log
+      Discovered subgraphs (2): subgraph-a, subgraph-b
+
+      at ApolloCloudGateway.log [as composeDiscoveredServices] (src/gateway.ts:308:13)
+
+    console.log
+      Schema refresh succeeded with 2 subgraphs.
+
+      at ApolloCloudGateway.log [as refreshSchema] (src/gateway.ts:289:15)
+
+PASS src/__tests__/rbac.test.ts
+PASS src/__tests__/auth.test.ts
+  ● Console
+
+    console.error
+      Token verification failed: Error: Invalid token
+          at Object.&lt;anonymous&gt; (/home/runner/work/helios-gateway/helios-gateway/gateway/src/__tests__/auth.test.ts:53:41)
+          at Promise.then.completed (/home/runner/work/helios-gateway/helios-gateway/gateway/node_modules/jest-circus/build/utils.js:298:28)
+          at new Promise (&lt;anonymous&gt;)
+          at callAsyncCircusFn (/home/runner/work/helios-gateway/helios-gateway/gateway/node_modules/jest-circus/build/utils.js:231:10)
+          at _callCircusTest (/home/runner/work/helios-gateway/helios-gateway/gateway/node_modules/jest-circus/build/run.js:316:40)
+          at _runTest (/home/runner/work/helios-gateway/helios-gateway/gateway/node_modules/jest-circus/build/run.js:252:3)
+          at _runTestsForDescribeBlock (/home/runner/work/helios-gateway/helios-gateway/gateway/node_modules/jest-circus/build/run.js:126:9)
+          at _runTestsForDescribeBlock (/home/runner/work/helios-gateway/helios-gateway/gateway/node_modules/jest-circus/build/run.js:121:9)
+          at run (/home/runner/work/helios-gateway/helios-gateway/gateway/node_modules/jest-circus/build/run.js:71:3)
+          at runAndTransformResultsToJestFormat (/home/runner/work/helios-gateway/helios-gateway/gateway/node_modules/jest-circus/build/legacy-code-todo-rewrite/jestAdapterInit.js:122:21)
+          at jestAdapter (/home/runner/work/helios-gateway/helios-gateway/gateway/node_modules/jest-circus/build/legacy-code-todo-rewrite/jestAdapter.js:79:19)
+          at runTestInternal (/home/runner/work/helios-gateway/helios-gateway/gateway/node_modules/jest-runner/build/runTest.js:367:16)
+          at runTest (/home/runner/work/helios-gateway/helios-gateway/gateway/node_modules/jest-runner/build/runTest.js:444:34)
+
+      63 |       return this.buildUserContext(decodedToken);
+      64 |     } catch (error) {
+    &gt; 65 |       console.error(&#39;Token verification failed:&#39;, error);
+         |               ^
+      66 |       return null;
+      67 |     }
+      68 |   }
+
+      at FirebaseAuthManager.error [as verifyToken] (src/auth/FirebaseAuthManager.ts:65:15)
+      at Object.&lt;anonymous&gt; (src/__tests__/auth.test.ts:55:12)
+
+    console.error
+      Session cookie verification failed: Error: Revoked cookie
+          at Object.&lt;anonymous&gt; (/home/runner/work/helios-gateway/helios-gateway/gateway/src/__tests__/auth.test.ts:54:47)
+          at Promise.then.completed (/home/runner/work/helios-gateway/helios-gateway/gateway/node_modules/jest-circus/build/utils.js:298:28)
+          at new Promise (&lt;anonymous&gt;)
+          at callAsyncCircusFn (/home/runner/work/helios-gateway/helios-gateway/gateway/node_modules/jest-circus/build/utils.js:231:10)
+          at _callCircusTest (/home/runner/work/helios-gateway/helios-gateway/gateway/node_modules/jest-circus/build/run.js:316:40)
+          at _runTest (/home/runner/work/helios-gateway/helios-gateway/gateway/node_modules/jest-circus/build/run.js:252:3)
+          at _runTestsForDescribeBlock (/home/runner/work/helios-gateway/helios-gateway/gateway/node_modules/jest-circus/build/run.js:126:9)
+          at _runTestsForDescribeBlock (/home/runner/work/helios-gateway/helios-gateway/gateway/node_modules/jest-circus/build/run.js:121:9)
+          at run (/home/runner/work/helios-gateway/helios-gateway/gateway/node_modules/jest-circus/build/run.js:71:3)
+          at runAndTransformResultsToJestFormat (/home/runner/work/helios-gateway/helios-gateway/gateway/node_modules/jest-circus/build/legacy-code-todo-rewrite/jestAdapterInit.js:122:21)
+          at jestAdapter (/home/runner/work/helios-gateway/helios-gateway/gateway/node_modules/jest-circus/build/legacy-code-todo-rewrite/jestAdapter.js:79:19)
+          at runTestInternal (/home/runner/work/helios-gateway/helios-gateway/gateway/node_modules/jest-runner/build/runTest.js:367:16)
+          at runTest (/home/runner/work/helios-gateway/helios-gateway/gateway/node_modules/jest-runner/build/runTest.js:444:34)
+
+      88 |       return this.buildUserContext(decodedToken);
+      89 |     } catch (error) {
+    &gt; 90 |       console.error(&#39;Session cookie verification failed:&#39;, error);
+         |               ^
+      91 |       return null;
+      92 |     }
+      93 |   }
+
+      at FirebaseAuthManager.error [as verifySessionCookie] (src/auth/FirebaseAuthManager.ts:90:15)
+      at Object.&lt;anonymous&gt; (src/__tests__/auth.test.ts:56:12)
+
+    console.error
+      Failed to resolve Firebase user: Error: User not found
+          at Object.&lt;anonymous&gt; (/home/runner/work/helios-gateway/helios-gateway/gateway/src/__tests__/auth.test.ts:67:35)
+
+      112 |       return null;
+      113 |     } catch (error) {
+    &gt; 114 |       console.error(&#39;Failed to resolve Firebase user:&#39;, error);
+          |               ^
+      115 |       return null;
+      116 |     }
+      117 |   }
+
+      at FirebaseAuthManager.error [as getUserByIdentifier] (src/auth/FirebaseAuthManager.ts:114:15)
+      at Object.&lt;anonymous&gt; (src/__tests__/auth.test.ts:68:12)
+
+    console.error
+      Failed to assign roles to Firebase user: Error: Update failed
+          at Object.&lt;anonymous&gt; (/home/runner/work/helios-gateway/helios-gateway/gateway/src/__tests__/auth.test.ts:82:47)
+
+      150 |       };
+      151 |     } catch (error) {
+    &gt; 152 |       console.error(&#39;Failed to assign roles to Firebase user:&#39;, error);
+          |               ^
+      153 |       return null;
+      154 |     }
+      155 |   }
+
+      at FirebaseAuthManager.error [as assignRolesToUser] (src/auth/FirebaseAuthManager.ts:152:15)
+      at Object.&lt;anonymous&gt; (src/__tests__/auth.test.ts:83:12)
+
+PASS src/__tests__/config.test.ts
+PASS src/__tests__/cli.test.ts
+PASS src/__tests__/gateway.test.ts
+  ● Console
+
+    console.log
+      Starting Apollo Cloud Gateway...
+
+      at ApolloCloudGateway.log [as start] (src/gateway.ts:73:13)
+
+    console.log
+      Using file discovery mode
+
+      at ApolloCloudGateway.log [as setupFileDiscovery] (src/gateway.ts:130:13)
+
+    console.log
+      Discovered 1 subgraph services from file /tmp/helios-unit-Pzx3O8/subgraphs.json
+
+      at FileDiscovery.log [as discoverServices] (src/discovery/FileDiscovery.ts:62:13)
+
+    console.log
+      Discovered 1 services at startup
+
+      at ApolloCloudGateway.log [as setupDiscoveryWithProvider] (src/gateway.ts:147:13)
+
+    console.log
+      Building gateway from 1 discovered subgraphs...
+
+      at ApolloCloudGateway.log [as buildGateway] (src/gateway.ts:163:13)
+
+    console.log
+      Discovered subgraphs (1): secured
+
+      at ApolloCloudGateway.log [as composeDiscoveredServices] (src/gateway.ts:308:13)
+
+    console.log
+      Initial composition produced a supergraph with 1 subgraphs.
+
+      at ApolloCloudGateway.log [as buildGateway] (src/gateway.ts:176:13)
+
+    console.log
+      Preloading RBAC policies from composed subgraphs...
+
+      at ApolloCloudGateway.log [as buildGateway] (src/gateway.ts:179:13)
+
+    console.log
+      RBAC policy preload completed.
+
+      at ApolloCloudGateway.log [as buildGateway] (src/gateway.ts:181:13)
+
+    console.log
+      Creating Apollo Gateway instance...
+
+      at ApolloCloudGateway.log [as buildGateway] (src/gateway.ts:183:13)
+
+    console.log
+      Creating Apollo Server instance...
+
+      at ApolloCloudGateway.log [as buildGateway] (src/gateway.ts:213:15)
+
+    console.log
+      Starting Apollo Server...
+
+      at ApolloCloudGateway.log [as buildGateway] (src/gateway.ts:230:15)
+
+    console.log
+      Initial supergraph composition succeeded with 1 subgraphs.
+
+      at ApolloCloudGateway.log [as buildGateway] (src/gateway.ts:232:15)
+
+    console.log
+      Apollo Server started successfully
+
+      at ApolloCloudGateway.log [as buildGateway] (src/gateway.ts:235:15)
+
+    console.log
+      Admin console enabled, setting up routes...
+
+      at ApolloCloudGateway.log [as setupAdminConsole] (src/gateway.ts:558:13)
+
+    console.log
+      Admin console routes configured at /admin/console and /admin/api
+
+      at ApolloCloudGateway.log [as setupAdminConsole] (src/gateway.ts:580:13)
+
+    console.log
+      GraphQL endpoint registered at /graphql
+
+      at ApolloCloudGateway.log [as setupGraphqlRoute] (src/gateway.ts:548:15)
+
+    console.log
+      Schema refresh is disabled by ENABLE_SCHEMA_REFRESH=false.
+
+      at ApolloCloudGateway.log [as startSchemaRefreshLoop] (src/gateway.ts:246:15)
+
+    console.log
+      🚀 Apollo Cloud Gateway ready at http://localhost:0/graphql
+
+      at Server.log (src/gateway.ts:92:15)
+
+PASS src/__tests__/cloudRunAuth.test.ts
+PASS src/__tests__/cloudRunDiscovery.test.ts
+  ● Console
+
+    console.log
+      Discovered projects/p/locations/r/services/pets (subgraph=true,scope=shop,subgraphName=pets-graph),projects/p/locations/r/services/other (subgraph=true,scope=other),not-subgraph (subgraph=false,scope=shop),missing-url (subgraph=true,scope=shop),undefined (subgraph=true,scope=shop),no-labels () services from Cloud Run for parent projects/p/locations/r
+
+      at CloudRunDiscovery.log [as discoverServices] (src/discovery/CloudRunDiscovery.ts:39:21)
+
+    console.log
+      Discovered 1 subgraph services from Cloud Run
+
+      at CloudRunDiscovery.log [as discoverServices] (src/discovery/CloudRunDiscovery.ts:73:21)
+
+    console.log
+      Discovered projects/p/locations/r/services/fallback (subgraph=true,subgraph_name=snake) services from Cloud Run for parent projects/p/locations/us-central1
+
+      at CloudRunDiscovery.log [as discoverServices] (src/discovery/CloudRunDiscovery.ts:39:21)
+
+    console.log
+      Discovered 1 subgraph services from Cloud Run
+
+      at CloudRunDiscovery.log [as discoverServices] (src/discovery/CloudRunDiscovery.ts:73:21)
+
+    console.log
+      Discovered projects/p/locations/r/services/fallback (subgraph=true,subgraph-name=hyphen) services from Cloud Run for parent projects/p/locations/us-central1
+
+      at CloudRunDiscovery.log [as discoverServices] (src/discovery/CloudRunDiscovery.ts:39:21)
+
+    console.log
+      Discovered 1 subgraph services from Cloud Run
+
+      at CloudRunDiscovery.log [as discoverServices] (src/discovery/CloudRunDiscovery.ts:73:21)
+
+    console.log
+      Discovered projects/p/locations/r/services/fallback (subgraph=true) services from Cloud Run for parent projects/p/locations/us-central1
+
+      at CloudRunDiscovery.log [as discoverServices] (src/discovery/CloudRunDiscovery.ts:39:21)
+
+    console.log
+      Discovered 1 subgraph services from Cloud Run
+
+      at CloudRunDiscovery.log [as discoverServices] (src/discovery/CloudRunDiscovery.ts:73:21)
+
+    console.warn
+      Warning: failed to discover Cloud Run services. Gateway will start without subgraphs. Details: API unavailable
+
+      77 |                 (error &amp;&amp; (error.message || error.details)) ||
+      78 |                 &#39;Unknown error during Cloud Run service discovery&#39;;
+    &gt; 79 |             console.warn(
+         |                     ^
+      80 |                 &#39;Warning: failed to discover Cloud Run services. Gateway will start without subgraphs. Details:&#39;,
+      81 |                 message
+      82 |             );
+
+      at CloudRunDiscovery.warn [as discoverServices] (src/discovery/CloudRunDiscovery.ts:79:21)
+      at src/__tests__/cloudRunDiscovery.test.ts:35:12
+
+    console.warn
+      Warning: failed to discover Cloud Run services. Gateway will start without subgraphs. Details: permission denied
+
+      77 |                 (error &amp;&amp; (error.message || error.details)) ||
+      78 |                 &#39;Unknown error during Cloud Run service discovery&#39;;
+    &gt; 79 |             console.warn(
+         |                     ^
+      80 |                 &#39;Warning: failed to discover Cloud Run services. Gateway will start without subgraphs. Details:&#39;,
+      81 |                 message
+      82 |             );
+
+      at CloudRunDiscovery.warn [as discoverServices] (src/discovery/CloudRunDiscovery.ts:79:21)
+      at src/__tests__/cloudRunDiscovery.test.ts:35:12
+
+    console.warn
+      Warning: failed to discover Cloud Run services. Gateway will start without subgraphs. Details: Unknown error during Cloud Run service discovery
+
+      77 |                 (error &amp;&amp; (error.message || error.details)) ||
+      78 |                 &#39;Unknown error during Cloud Run service discovery&#39;;
+    &gt; 79 |             console.warn(
+         |                     ^
+      80 |                 &#39;Warning: failed to discover Cloud Run services. Gateway will start without subgraphs. Details:&#39;,
+      81 |                 message
+      82 |             );
+
+      at CloudRunDiscovery.warn [as discoverServices] (src/discovery/CloudRunDiscovery.ts:79:21)
+      at src/__tests__/cloudRunDiscovery.test.ts:35:12
+
+
+Test Suites: 11 passed, 11 total
+Tests:       113 passed, 113 total
+Snapshots:   0 total
+Time:        8.417 s
+Ran all test suites.
+Test results written to: reports/unit.json
+</pre></details></body></html>
