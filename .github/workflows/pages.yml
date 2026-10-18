@@ -113,7 +113,8 @@ jobs:
       - name: Include all archived quality reports
         run: |
           if [ -d .report-history/reports ]; then
-            cp -R .report-history/reports ./_site/reports
+            # The Jekyll container creates a root-owned output directory.
+            sudo cp -R .report-history/reports ./_site/reports
           fi
 
       - uses: actions/upload-pages-artifact@v3
