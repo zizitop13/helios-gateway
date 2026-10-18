@@ -93,3 +93,9 @@ repository's main-branch push/manual runs are eligible. The archive uses the exa
 `ci/quality-reports` do not interfere with its first publication. Each deployment
 runs regression checks for initial creation, history preservation, and remote
 connection failures before restoring the archive.
+
+Pages artifacts include the workflow run and attempt in their names so retries do
+not select an older upload. When GitHub's built-in branch-based Pages workflow is
+also running, report deployment waits for it to finish before publishing the
+complete site. A final HTTP check verifies the selected build is visible in the
+public report history.

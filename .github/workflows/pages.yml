@@ -119,7 +119,51 @@ jobs:
 
       - uses: actions/upload-pages-artifact@v3
         with:
+          name: github-pages-${{ github.run_id }}-${{ github.run_attempt }}
           path: ./_site
+
+      - name: Wait for competing branch-based Pages builds
+        uses: actions/github-script@v7
+        with:
+          script: |
+            for (let attempt = 0; attempt < 40; attempt++) {
+              const { data } = await github.rest.actions.listWorkflowRuns({
+                ...context.repo,
+                head_sha: context.sha,
+                per_page: 100,
+              });
+              const active = data.workflow_runs.some(run =>
+                run.name === 'pages build and deployment' &&
+                run.event === 'dynamic' && run.status !== 'completed');
+              if (!active) return;
+              if (attempt === 39) throw new Error('The branch-based Pages build did not finish.');
+              core.info('Waiting for the built-in Pages deployment before publishing reports.');
+              await new Promise(resolve => setTimeout(resolve, 5000));
+            }
 
       - uses: actions/deploy-pages@v4
         id: deployment
+        with:
+          artifact_name: github-pages-${{ github.run_id }}-${{ github.run_attempt }}
+
+      - name: Verify published quality report
+        if: steps.report.outputs.available == 'true'
+        env:
+          PAGES_URL: ${{ steps.deployment.outputs.page_url }}
+          REPORT_BUILD: ${{ steps.report.outputs.build_number }}
+        run: |
+          node --input-type=module <<'JS'
+          import { setTimeout as delay } from 'node:timers/promises';
+          const url = new URL('reports/', process.env.PAGES_URL);
+          for (let attempt = 0; attempt < 12; attempt++) {
+            const response = await fetch(url, { signal: AbortSignal.timeout(15000) });
+            const body = await response.text();
+            if (response.ok && body.includes('Quality report history') &&
+                body.includes(`build ${process.env.REPORT_BUILD} `)) {
+              console.log(`Verified quality report: ${url}`);
+              break;
+            }
+            if (attempt === 11) throw new Error(`Quality report is unavailable at ${url} (HTTP ${response.status}).`);
+            await delay(5000);
+          }
+          JS
