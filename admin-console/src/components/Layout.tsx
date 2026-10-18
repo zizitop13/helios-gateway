@@ -1,6 +1,6 @@
-import { AppShell, Burger, Group, NavLink, Title, Button, Text, Image } from '@mantine/core';
+import { AppShell, Burger, Group, NavLink, Title, Button, Text, Image, Menu } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
-import { IconHome, IconDatabase, IconActivity, IconUser, IconLogout, IconShield, IconBrandGraphql, IconMoon, IconSun } from '@tabler/icons-react';
+import { IconHome, IconDatabase, IconActivity, IconUser, IconUsers, IconLogout, IconBrandGraphql, IconMoon, IconSun } from '@tabler/icons-react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../AuthContext';
 import { useTheme } from '../ThemeContext';
@@ -157,8 +157,7 @@ export function Layout({ children }: LayoutProps) {
     { icon: IconHome, label: 'Home', path: '/' },
     { icon: IconDatabase, label: 'Subgraphs', path: '/subgraphs' },
     { icon: IconActivity, label: 'Status', path: '/status' },
-    { icon: IconUser, label: 'User Info', path: '/user' },
-    { icon: IconShield, label: 'Roles', path: '/roles' },
+    { icon: IconUsers, label: 'Users', path: '/users' },
   ];
 
   return (
@@ -206,14 +205,16 @@ export function Layout({ children }: LayoutProps) {
              >
                 Theme
              </Button>
-             <Button
-               leftSection={<IconLogout size={16} />}
-               variant="light"
-               color="red"
-               onClick={handleLogout}
-             >
-               Logout
-             </Button>
+             <Menu position="bottom-end" withinPortal>
+               <Menu.Target>
+                 <Button leftSection={<IconUser size={16} />} variant="light">Profile</Button>
+               </Menu.Target>
+               <Menu.Dropdown>
+                 <Menu.Item leftSection={<IconUser size={16} />} onClick={() => navigate('/profile')}>My profile</Menu.Item>
+                 <Menu.Divider />
+                 <Menu.Item leftSection={<IconLogout size={16} />} color="red" onClick={handleLogout}>Logout</Menu.Item>
+               </Menu.Dropdown>
+             </Menu>
            </Group>
         </Group>
       </AppShell.Header>

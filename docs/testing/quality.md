@@ -35,7 +35,8 @@ Build before running E2E or stress individually. Their fixture runner starts the
 Firebase Auth emulator, seeds four test users with real custom claims, starts all
 four demo subgraphs and the compiled gateway, waits for composition, and cleans
 up its processes on success, failure, or interruption. It uses ports 4400–4402,
-5001–5004, and 9099. Logs are in `reports/local/`.
+5001–5004, and 9099. The Users HTTP contract browser tests also start a Vite
+frontend on port 4403. Logs are in `reports/local/`.
 
 Stress stages run for five seconds each, ramping federated reads through 4, 20,
 and 40 concurrent clients. Every response is checked for correct status and

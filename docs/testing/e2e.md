@@ -11,6 +11,16 @@ The Playwright e2e suite lives in `testing/e2e`. It covers three product surface
 - `gateway`: API tests for the public GraphQL endpoint.
 - `admin-api`: API tests for gateway management endpoints.
 
+The `users-contract` browser project additionally exercises the Users page's
+gateway adapter against intercepted HTTP responses. Playwright starts a Vite
+server on port 4403 with `VITE_USERS_API_MODE=gateway`; Firebase login and other
+admin APIs still use the same isolated local gateway. The tests cover bearer
+auth, search/cursor encoding, selected UID assignment, removing all roles, error
+retries, and late role responses after switching accounts. No missing gateway
+handlers or real Firebase role changes are required. Admin-console BDD scenarios
+exercise the production build's default in-memory preview flow, including single
+role removal, pagination, users without email, profile navigation, and logout.
+
 Organize tests by product surface first, then by behavior. Do not name a broad suite after one concern such as RBAC when it also covers queries, mutations, subscriptions, health, or management behavior.
 
 ## Current Layout
@@ -38,11 +48,14 @@ testing/e2e/
         subscription.client.js
       env.js
       roles.js
-    console/
+    users-contract/
+      users.spec.js
+    admin-console/
       features/
         admin-login.feature
         admin-navigation.feature
         admin-subgraphs.feature
+        admin-users.feature
       pages/
         layout.page.js
         login.page.js
@@ -51,6 +64,7 @@ testing/e2e/
         login.steps.js
         navigation.steps.js
         subgraphs.steps.js
+        users.steps.js
 ```
 
 Generated BDD specs are written under `testing/e2e/src/.features-gen` and should not be treated as source files.
@@ -62,6 +76,7 @@ Generated BDD specs are written under `testing/e2e/src/.features-gen` and should
 - `admin-console` runs generated BDD specs for console features.
 - `gateway` runs `src/gateway/**/*.spec.js` against the GraphQL endpoint.
 - `admin-api` runs `src/admin-api/**/*.spec.js` against the admin API.
+- `users-contract` runs browser scenarios for the Users HTTP adapter against intercepted API responses on the test Vite server.
 
 Keep project names surface-oriented. If provider-specific auth coverage is added, use provider-qualified project names:
 

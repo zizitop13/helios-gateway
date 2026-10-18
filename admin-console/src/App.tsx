@@ -8,7 +8,7 @@ import { HomePage } from './pages/HomePage';
 import { SubgraphsPage } from './pages/SubgraphsPage';
 import { StatusPage } from './pages/StatusPage';
 import { UserPage } from './pages/UserPage';
-import { RolesPage } from './pages/RolesPage';
+import { UsersPage } from './pages/UsersPage';
 import '@mantine/core/styles.css';
 
 function ProtectedRoute({ children }: { children: React.ReactNode }) {
@@ -51,7 +51,7 @@ function AppRoutes() {
         }
       />
       <Route
-        path="/user"
+        path="/profile"
         element={
           <ProtectedRoute>
             <Layout>
@@ -61,15 +61,17 @@ function AppRoutes() {
         }
       />
       <Route
-        path="/roles"
+        path="/users"
         element={
           <ProtectedRoute>
             <Layout>
-              <RolesPage />
+              <UsersPage />
             </Layout>
           </ProtectedRoute>
         }
       />
+      <Route path="/user" element={<Navigate to="/profile" replace />} />
+      <Route path="/roles" element={<Navigate to="/users" replace />} />
     </Routes>
   );
 }
