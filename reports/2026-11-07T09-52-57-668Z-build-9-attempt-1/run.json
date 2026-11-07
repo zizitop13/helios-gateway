@@ -1,0 +1,52 @@
+{
+  "runId": "2026-11-07T09-52-57-668Z-build-9-attempt-1",
+  "startedAt": "2026-11-07T09:52:57.668Z",
+  "results": [
+    {
+      "name": "lint",
+      "exitCode": 0,
+      "passed": true,
+      "durationSeconds": 2.76
+    },
+    {
+      "name": "analysis",
+      "exitCode": 0,
+      "passed": true,
+      "durationSeconds": 2.13
+    },
+    {
+      "name": "build",
+      "exitCode": 0,
+      "passed": true,
+      "durationSeconds": 19.31
+    },
+    {
+      "name": "unit",
+      "exitCode": 0,
+      "passed": true,
+      "durationSeconds": 9.36
+    },
+    {
+      "name": "mutation",
+      "exitCode": 0,
+      "passed": true,
+      "durationSeconds": 775.53
+    },
+    {
+      "name": "e2e",
+      "exitCode": 0,
+      "passed": true,
+      "durationSeconds": 53.59
+    },
+    {
+      "name": "stress",
+      "exitCode": 0,
+      "passed": true,
+      "durationSeconds": 49.21
+    }
+  ],
+  "buildNumber": "9",
+  "attempt": "1",
+  "commit": "b9fa5c9454cee349a864b65b1bd4a41391db04c1",
+  "passed": true
+}

@@ -1,0 +1,2 @@
+Enabling inline tracing for this subgraph. To disable, use ApolloServerPluginInlineTraceDisabled.
+customers-service ready at http://localhost:5003/graphql
