@@ -14,13 +14,18 @@ Feature: Admin Console Navigation
     When I click "Status" in the navigation
     Then I should see a heading "Gateway Status"
 
-  Scenario: Navigate to User Info page
-    When I click "User Info" in the navigation
-    Then I should see a heading "User Info"
+  Scenario: Open my profile from the top-right menu
+    When I open my profile from the header
+    Then I should see a heading "User Information"
 
-  Scenario: Navigate to Roles page
-    When I click "Roles" in the navigation
-    Then I should see a heading "Role Management"
+  Scenario: Navigate to Users page
+    When I click "Users" in the navigation
+    Then I should see a heading "Users"
+    And the old user and role navigation items should be absent
+
+  Scenario: Logout from the profile menu
+    When I log out from the profile menu
+    Then I should see a heading "Admin Console Login"
 
   Scenario: Toggle theme
     When I click the theme button

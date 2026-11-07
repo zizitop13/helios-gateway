@@ -21,14 +21,14 @@ The console requires Firebase authentication. After login, the layout provides p
 | [Home](./home.html) | `/admin/console/` | Dashboard with shortcuts to core console areas. |
 | [Subgraphs](./subgraphs.html) | `/admin/console/subgraphs` | Inspect discovered subgraphs, URLs, labels, and health status. |
 | [Gateway Status](./status.html) | `/admin/console/status` | Monitor uptime, discovery mode, and service count. |
-| [User Information](./user-info.html) | `/admin/console/user` | View the authenticated user's UID, email, roles, and token expiration. |
-| [Role Management](./roles.html) | `/admin/console/roles` | Assign Firebase custom-claim roles by email or UID. |
+| [Users](./users.html) | `/admin/console/users` | Search Firebase users, select an account, and assign or remove roles. |
+| [My profile](./user-info.html) | `/admin/console/profile` | View the authenticated user's UID, email, roles, and token expiration from the header. |
 | [GraphQL Sandbox Health Check](./sandbox.html) | Sidebar action | Check subgraph health before opening the authenticated GraphQL Sandbox. |
 
 ## Navigation
 
 The authenticated console shell includes:
 
-- Header with logo, graph scope when configured, theme toggle, and logout button.
-- Sidebar links for Home, Subgraphs, Status, User Info, Roles, and GraphQL Sandbox.
+- Header with logo, graph scope when configured, theme toggle, and a Profile menu containing My profile and Logout.
+- Sidebar links for Home, Subgraphs, Status, Users, and GraphQL Sandbox.
 - Main content area for the selected page.

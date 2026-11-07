@@ -238,10 +238,139 @@ paths:
         "500":
           $ref: "#/components/responses/InternalServerError"
 
+  /admin/api/users:
+    get:
+      tags: [Admin]
+      summary: List and search Firebase users (TODO - not implemented)
+      description: |
+        TODO: NOT IMPLEMENTED by the gateway. The Users frontend currently uses
+        in-memory sample data by default. This is the contract for a future API.
+        Search is a trimmed, case-insensitive substring match against email,
+        display name, or UID, applied before pagination. An empty search lists all
+        users. Results include disabled accounts and accounts without an email.
+        Use a stable UID ordering. Page tokens are opaque, tied to the search and
+        page size; clients must discard them whenever the search changes.
+      x-implementation-status: not-implemented
+      operationId: getAdminUsers
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: search
+          in: query
+          schema:
+            type: string
+          description: Email, display name, or UID substring; defaults to no filter.
+        - name: pageSize
+          in: query
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 50
+        - name: pageToken
+          in: query
+          schema:
+            type: string
+          description: Opaque nextPageToken returned by the previous response.
+      responses:
+        "200":
+          description: Matching Firebase users and optional cursor for the next page
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ListUsersResponse"
+        "400":
+          description: Invalid page size or page token
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+
+  /admin/api/users/{uid}/roles:
+    get:
+      tags: [Admin]
+      summary: Read a Firebase user's assigned roles (TODO - not implemented)
+      description: |
+        TODO: NOT IMPLEMENTED by the gateway. Returns the user's current custom
+        claim roles, including an empty array when no roles are assigned.
+        The frontend uses a mock with the same response shape until this exists.
+      x-implementation-status: not-implemented
+      operationId: getAdminUserRoles
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: uid
+          in: path
+          required: true
+          schema:
+            type: string
+            minLength: 1
+          description: URL-encoded Firebase UID of the selected user.
+      responses:
+        "200":
+          description: Current roles for the selected user
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AssignedUser"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          description: Firebase user not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+
+  /admin/api/roles:
+    get:
+      tags: [Admin]
+      summary: List roles discovered from subgraph RBAC policies
+      x-implementation-status: implemented
+      operationId: getAdminAvailableRoles
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: Available role hints; administrators may also enter custom roles
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [roles]
+                properties:
+                  roles:
+                    type: array
+                    items:
+                      type: string
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+
   /admin/api/users/roles:
     post:
       tags: [Admin]
       summary: Assign Firebase roles to user
+      description: |
+        Already implemented. Replaces the complete set of custom-claim roles.
+        To assign a role, include it alongside the current roles. To remove a
+        role, omit it from the submitted list. Submit roles: [] to remove all
+        roles. The Users page always identifies the selected user by UID.
+        The user must refresh their ID token before changes take effect.
+      x-implementation-status: implemented
       operationId: postAdminUsersRoles
       security:
         - bearerAuth: []
@@ -501,6 +630,37 @@ components:
       oneOf:
         - required: [uid, roles]
         - required: [email, roles]
+
+    DirectoryUser:
+      type: object
+      required: [uid, provider, disabled]
+      properties:
+        uid:
+          type: string
+          minLength: 1
+        email:
+          type: string
+          format: email
+          description: Omitted when the user has no email address.
+        displayName:
+          type: string
+        provider:
+          type: string
+          enum: [firebase]
+        disabled:
+          type: boolean
+
+    ListUsersResponse:
+      type: object
+      required: [users]
+      properties:
+        users:
+          type: array
+          items:
+            $ref: "#/components/schemas/DirectoryUser"
+        nextPageToken:
+          type: string
+          description: Omitted on the final page. Opaque to clients.
 
     AssignedUser:
       type: object

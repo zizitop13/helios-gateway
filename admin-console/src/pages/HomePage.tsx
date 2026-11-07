@@ -58,13 +58,13 @@ export function HomePage() {
             </Group>
           </Card>
 
-          <Card shadow="sm" padding="lg" radius="md" withBorder component={Link} to="/user" style={{ textDecoration: 'none', color: 'inherit' }}>
+          <Card shadow="sm" padding="lg" radius="md" withBorder component={Link} to="/users" style={{ textDecoration: 'none', color: 'inherit' }}>
             <Group>
               <IconUser size={32} />
               <div style={{ flex: 1 }}>
-                <Text fw={500} size="lg">User Info</Text>
+                <Text fw={500} size="lg">Users</Text>
                 <Text size="sm" c="dimmed">
-                  View your authentication details
+                  Find users and manage their roles
                 </Text>
               </div>
             </Group>

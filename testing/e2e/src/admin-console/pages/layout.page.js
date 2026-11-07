@@ -2,7 +2,8 @@ export class LayoutPage {
   constructor(page) {
     this.page = page;
     this.themeButton = page.getByRole('button', { name: 'Theme' });
-    this.logoutButton = page.getByRole('button', { name: 'Logout' });
+    this.profileButton = page.getByRole('button', { name: 'Profile', exact: true });
+    this.logoutButton = page.getByRole('menuitem', { name: 'Logout' });
     this.sandboxNavItem = page.getByText('GraphQL Sandbox', { exact: true }).first();
     this.sandboxHealthDialog = page.getByRole('dialog', { name: 'GraphQL Sandbox Health Check' });
     this.openSandboxButton = this.sandboxHealthDialog.getByRole('button', { name: 'Open Sandbox' });
@@ -29,7 +30,13 @@ export class LayoutPage {
   }
 
   async logout() {
+    await this.profileButton.click();
     await this.logoutButton.click();
+  }
+
+  async openProfile() {
+    await this.profileButton.click();
+    await this.page.getByRole('menuitem', { name: 'My profile' }).click();
   }
 }
 

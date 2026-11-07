@@ -62,6 +62,31 @@ export interface AvailableRolesResponse {
   roles: string[];
 }
 
+export interface DirectoryUser {
+  uid: string;
+  email?: string;
+  displayName?: string;
+  provider: 'firebase';
+  disabled: boolean;
+}
+
+export interface ListUsersQuery {
+  search?: string;
+  pageSize?: number;
+  pageToken?: string;
+}
+
+export interface ListUsersResponse {
+  users: DirectoryUser[];
+  nextPageToken?: string;
+}
+
+export interface UserRolesResponse {
+  uid: string;
+  email?: string;
+  roles: string[];
+}
+
 export interface FirebaseWebConfig {
   apiKey?: string;
   authDomain?: string;

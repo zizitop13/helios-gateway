@@ -6,7 +6,7 @@
     "e2e:test": "bddgen && playwright test",
     "e2e:test:gateway": "bddgen && playwright test --project=gateway",
     "e2e:test:admin-api": "bddgen && playwright test --project=admin-api",
-    "e2e:test:admin-ui": "bddgen && playwright test --project=admin-console",
+    "e2e:test:admin-ui": "bddgen && playwright test --project=admin-console --project=users-contract",
     "e2e:test:headed": "bddgen && playwright test --headed",
     "e2e:test:debug": "bddgen && playwright test --debug",
     "e2e:test:report": "playwright show-report"

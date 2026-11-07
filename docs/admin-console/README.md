@@ -12,5 +12,5 @@ The Admin Console documentation lives in the section index:
 - [Subgraphs](./subgraphs.html)
 - [Gateway Status](./status.html)
 - [User Information](./user-info.html)
-- [Role Management](./roles.html)
+- [Users](./users.html)
 - [GraphQL Sandbox Health Check](./sandbox.html)

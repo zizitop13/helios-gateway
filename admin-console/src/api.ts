@@ -4,11 +4,14 @@ import type {
   AvailableRolesResponse,
   FirebaseWebConfig,
   GatewayStatus,
+  ListUsersQuery,
+  ListUsersResponse,
   SubgraphHealth,
   SubgraphStreamItem,
   SubgraphsHealthResponse,
   SubgraphsResponse,
   UserInfo,
+  UserRolesResponse,
 } from './types';
 
 const API_BASE = '/admin/api';
@@ -185,6 +188,15 @@ export const api = {
     return response.json();
   },
   getMe: (token: string) => fetchWithAuth<UserInfo>(`${API_BASE}/me`, token),
+  getUsers: (token: string, query: ListUsersQuery = {}) => {
+    const params = new URLSearchParams();
+    if (query.search?.trim()) params.set('search', query.search.trim());
+    if (query.pageSize !== undefined) params.set('pageSize', String(query.pageSize));
+    if (query.pageToken) params.set('pageToken', query.pageToken);
+    return fetchWithAuth<ListUsersResponse>(`${API_BASE}/users?${params}`, token);
+  },
+  getUserRoles: (token: string, uid: string) =>
+    fetchWithAuth<UserRolesResponse>(`${API_BASE}/users/${encodeURIComponent(uid)}/roles`, token),
   getSubgraphs: (token: string) => fetchWithAuth<SubgraphsResponse>(`${API_BASE}/subgraphs`, token),
   streamSubgraphs: (token: string, options: StreamSubgraphsOptions) =>
     streamWithAuth(`${API_BASE}/subgraphs/stream`, token, options),

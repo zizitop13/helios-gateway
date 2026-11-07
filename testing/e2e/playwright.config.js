@@ -48,6 +48,17 @@ export default defineConfig({
     ['html', { open: 'never', outputFolder: 'playwright-report' }],
     ['list'],
   ],
+  // Exercise the real Users HTTP adapter against browser-intercepted contract
+  // responses as well as the production build's in-memory preview adapter.
+  webServer: {
+    command: 'npm --prefix ../../admin-console run dev -- --host 127.0.0.1 --port 4403 --strictPort',
+    url: 'http://127.0.0.1:4403',
+    reuseExistingServer: false,
+    env: {
+      VITE_USERS_API_MODE: 'gateway',
+      VITE_GATEWAY_URL: process.env.ADMIN_CONSOLE_URL || 'http://localhost:4000',
+    },
+  },
   use: {
     baseURL: process.env.ADMIN_CONSOLE_URL || 'http://localhost:4000',
     screenshot: 'only-on-failure',
@@ -61,6 +72,18 @@ export default defineConfig({
       testMatch: '**/*.spec.js',
       use: {
         ...devices['Desktop Chrome'],
+        launchOptions: process.env.PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH
+          ? { executablePath: process.env.PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH }
+          : undefined,
+      },
+    },
+    {
+      name: 'users-contract',
+      testDir: 'src/users-contract',
+      testMatch: '**/*.spec.js',
+      use: {
+        ...devices['Desktop Chrome'],
+        baseURL: 'http://127.0.0.1:4403',
         launchOptions: process.env.PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH
           ? { executablePath: process.env.PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH }
           : undefined,

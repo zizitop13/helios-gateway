@@ -2,6 +2,7 @@
 
 interface ImportMetaEnv {
   readonly VITE_GATEWAY_URL?: string;
+  readonly VITE_USERS_API_MODE?: 'mock' | 'gateway';
   readonly VITE_FIREBASE_API_KEY?: string;
   readonly VITE_FIREBASE_AUTH_DOMAIN?: string;
   readonly VITE_FIREBASE_PROJECT_ID?: string;

@@ -11,12 +11,14 @@ The User Information page shows details for the authenticated Firebase user.
 ## Route
 
 ```text
-/admin/console/user
+/admin/console/profile
 ```
 
 ## Purpose
 
 Use this page to verify the current identity and role claims used by the admin API.
+Open **Profile → My profile** in the top-right corner. The old `/admin/console/user`
+bookmark redirects here. This page is no longer a sidebar item.
 
 ## Data Shown
 
